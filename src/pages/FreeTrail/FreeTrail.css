@@ -1,0 +1,109 @@
+.container-form {
+    padding-left: 8rem;
+    padding-top: 2rem;
+    padding-right: 8rem;
+
+}
+.collapsible {
+    background-color: #dde0e7;
+    color: #000000;
+    cursor: pointer;
+    padding: 18px;
+    font-family: 'Manrope', sans-serif;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 16px;
+    line-height: 32px;
+    font-weight: 700;
+    transition: 0.4s;
+    margin-bottom: 10px;
+}
+
+.collapsible:hover {
+    background-color: #b3b8c0;
+}
+.content {
+    padding: 0 18px;
+    overflow: hidden;
+    background-color: white;
+    margin-bottom: 10px;
+}
+.SKU-cta{
+    width: 100%;
+    margin-bottom:20px;
+    padding:0 40%;
+}
+
+.btn-cancel,
+.btn-apply {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.btn-cancel {
+    background-color: #ddd;
+    color: #555;
+}
+.btn-cancel:hover {
+    background-color: #767676;
+    color: white
+}
+
+.btn-apply {
+    background-color: #000;
+    color: #fff;
+}
+
+.btn-apply:hover {
+    background-color: #797979;
+    color: black;
+}
+button.collapsible .icon {
+    height: 20px;
+    width: 20px;
+}
+
+/* Optional: Adjust the button padding and margins for better layout */
+button.collapsible {
+    padding: 10px 15px;
+    
+}
+
+/* Ensure the icons remain responsive */
+button.collapsible img.icon {
+    height: auto;
+    width: 20px; /* Adjust as needed */
+}
+
+.container-form h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#addLoadDetailsButton{
+    font-size: 20px;
+}
+
+button.collapsible {
+    padding: 10px 15px;
+}
+
+button.collapsible {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    outline: none;
+    font-size: 20px;
+    line-height: 32px;
+    font-weight: 700;
+    transition: 0.4s;
+    height: 60px;
+    border-radius: 10px;
+}

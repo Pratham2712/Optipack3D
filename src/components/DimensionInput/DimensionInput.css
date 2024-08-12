@@ -1,0 +1,46 @@
+.delete-img{
+    height:20px;
+    width: 20px;
+    margin-top:2.9%;
+    cursor: pointer;
+}
+
+input[type="number"],
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.input-row .input {
+    padding: 5px;
+    margin: 5px;
+}
+
+.input-row {
+    display: flex;
+    flex-wrap: nowrap;
+    margin-right: 10px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    width: 100%;
+    align-items: center;
+}
+
+.input-row label {
+    /* font-weight: bold; */
+    flex: 1 0 1%;
+    min-width: 90px;
+    margin-top: 25px;
+    color: #555555;
+    font-size: 14px;
+}
+
+.input-row input, .input-row select {
+    flex: 1 0 1%;
+    padding: 5px;
+    margin-right: 10px;
+}
