@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import Pickr from "@simonwep/pickr";
 import del from "../../assests/delete.png";
 import "./DimensionInput.css";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
 const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
   const [inputs, setInputs] = useState([0, 1, 2]);
@@ -10,6 +13,7 @@ const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
     "rgba(76, 175, 80, 1)", // Color 2
     "rgba(33, 150, 243, 1)", // Color 3
   ]);
+  //functions===================================================================================
   let colorIndex = 0;
   const handleDelete = (index) => {
     if (inputs.length <= 2) {
@@ -18,17 +22,18 @@ const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
     }
     const updatedInputs = inputs.filter((_, i) => i !== index);
     setInputs(updatedInputs);
+    unregister(`sku${index}`);
+    unregister(`grossWeight${index}`);
+    unregister(`rotationAllowed${index}`);
+    unregister(`color${index}`);
   };
 
   const handleInputChange = (index, name, value) => {
     const updatedInputs = [...inputs];
     updatedInputs[index] = { ...updatedInputs[index], [name]: value };
     setInputs(updatedInputs);
-    console.log(updatedInputs);
   };
   const addSku = () => {
-    console.log(inputs.length);
-
     if (inputs.length >= 3) {
       alert("You cannot add more than 3 SKUs!");
       return;
@@ -111,6 +116,7 @@ const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
 
     pickr.on("save", (color, instance) => {
       const rgbaColor = color.toRGBA().toString();
+      setValue(`color${colorIndex}`, rgbaColor);
       currColor.value = rgbaColor;
       currColor.style.border = "1px solid #000";
       currColor.style.backgroundColor = rgbaColor;
@@ -127,17 +133,84 @@ const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
       initializeColorPicker(`colorPicker${index}`, `colorInput${index}`, index);
     });
   }, [inputs]);
+  //submit logic====================================================
+  const onSubmit = (data) => {
+    console.log("submit");
+
+    console.log(data);
+  };
+  //schema and validation==================================
+  const createDefaultValues = () => {
+    const defaultValues = {};
+    autoFillerBox.forEach((box, index) => {
+      defaultValues[`sku${index}`] = `Box${index + 1}`;
+      defaultValues[`grossWeight${index}`] = box["Gross Weight"];
+      defaultValues[`length${index}`] = box["Length"];
+      defaultValues[`width${index}`] = box["Width"];
+      defaultValues[`height${index}`] = box["Height"];
+      defaultValues[`numberOfCases${index}`] = box["Number of Cases"];
+      defaultValues[`volume${index}`] = box["Volume"];
+      defaultValues[`temperature${index}`] = box["Temperature"];
+      defaultValues[`netWeight${index}`] = box["Net Weight"];
+      defaultValues[`rotationAllowed${index}`] = box["Rotation Allowed"] === 1;
+      defaultValues[`color${index}`] = colors[index];
+    });
+    return defaultValues;
+  };
+  const schema = yup.object().shape({
+    // sku0: yup.string().required("SKU is required"),
+    // grossWeight0: yup
+    //   .number()
+    //   .required("Gross Weight is required")
+    //   .typeError("Gross Weight must be a number"),
+    // rotationAllowed0: yup.boolean().required(),
+    // color0: yup.string().required("Color is required"),
+    // sku1: yup.string().required("SKU is required"),
+    // grossWeight1: yup
+    //   .number()
+    //   .required("Gross Weight is required")
+    //   .typeError("Gross Weight must be a number"),
+    // rotationAllowed1: yup.boolean().required(),
+    // color1: yup.string().required("Color is required"),
+    // sku2: yup.string().required("SKU is required"),
+    // grossWeight2: yup
+    //   .number()
+    //   .required("Gross Weight is required")
+    //   .typeError("Gross Weight must be a number"),
+    // rotationAllowed2: yup.boolean().required(),
+    // color2: yup.string().required("Color is required"),
+  });
+  const { control, handleSubmit, setValue, getValues, register, unregister } =
+    useForm({
+      resolver: yupResolver(schema),
+      defaultValues: createDefaultValues(),
+    });
+
   return (
     <div>
       <div className="productFrom">
         {inputs.map((input, index) => (
           <div key={index} className="input-row">
-            <div id={`colorPicker${index}`}></div>
+            <div id={`colorPicker${index}`}>
+              <Controller
+                name={`color${index}`}
+                control={control}
+                defaultValue={colors[index]}
+                render={({ field }) => (
+                  <input
+                    type="hidden"
+                    id={`colorInput${index}`}
+                    defaultValue={field.value}
+                  />
+                )}
+              />
+            </div>
             <input
               type="hidden"
               name={`color${index}`}
+              {...register(`color${index}`)}
               id={`colorInput${index}`}
-              value={input.color || ""}
+              defaultValue={input.color || ""}
             />
             <div className="input">
               <label>Product {index + 1}:</label>
@@ -145,7 +218,8 @@ const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
                 type="text"
                 name={`sku${index}`}
                 required
-                value={input.sku || `Box${index + 1}`}
+                defaultValue={input.sku || `Box${index + 1}`}
+                {...register(`sku${index}`)}
                 onChange={(e) =>
                   handleInputChange(index, "sku", e.target.value)
                 }
@@ -154,11 +228,12 @@ const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
             <div className="input">
               <label>Gross Weight (KGs):</label>
               <input
-                type="text"
+                type="number"
                 name={`grossWeight${index}`}
-                value={
+                defaultValue={
                   input.grossWeight || autoFillerBox[index]["Gross Weight"]
                 }
+                {...register(`grossWeight${index}`)}
                 onChange={(e) =>
                   handleInputChange(index, "grossWeight", e.target.value)
                 }
@@ -167,9 +242,10 @@ const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
             <div className="input">
               <label>Length (mm):</label>
               <input
-                type="text"
+                type="number"
                 name={`length${index}`}
-                value={input.length || autoFillerBox[index]["Length"]}
+                defaultValue={input.length || autoFillerBox[index]["Length"]}
+                {...register(`length${index}`)}
                 onChange={(e) =>
                   handleInputChange(index, "length", e.target.value)
                 }
@@ -178,9 +254,10 @@ const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
             <div className="input">
               <label>Width (mm):</label>
               <input
-                type="text"
+                type="number"
                 name={`width${index}`}
-                value={input.width || autoFillerBox[index]["Width"]}
+                defaultValue={input.width || autoFillerBox[index]["Width"]}
+                {...register(`width${index}`)}
                 onChange={(e) =>
                   handleInputChange(index, "width", e.target.value)
                 }
@@ -189,9 +266,10 @@ const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
             <div className="input">
               <label>Height (mm):</label>
               <input
-                type="text"
+                type="number"
                 name={`height${index}`}
-                value={input.height || autoFillerBox[index]["Height"]}
+                defaultValue={input.height || autoFillerBox[index]["Height"]}
+                {...register(`height${index}`)}
                 onChange={(e) =>
                   handleInputChange(index, "height", e.target.value)
                 }
@@ -200,11 +278,12 @@ const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
             <div className="input">
               <label>Number of Cases:</label>
               <input
-                type="text"
+                type="number"
                 name={`numberOfCases${index}`}
-                value={
+                defaultValue={
                   input.numberOfCases || autoFillerBox[index]["Number of Cases"]
                 }
+                {...register(`numberOfCases${index}`)}
                 onChange={(e) =>
                   handleInputChange(index, "numberOfCases", e.target.value)
                 }
@@ -213,17 +292,20 @@ const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
             <input
               type="hidden"
               name={`volume${index}`}
-              value={autoFillerBox[index]["Volume"]}
+              defaultValue={autoFillerBox[index]["Volume"]}
+              {...register(`volume${index}`)}
             />
             <input
               type="hidden"
               name={`temperature${index}`}
-              value={autoFillerBox[index]["Temperature"]}
+              defaultValue={autoFillerBox[index]["Temperature"]}
+              {...register(`temperature${index}`)}
             />
             <input
               type="hidden"
               name={`netWeight${index}`}
-              value={autoFillerBox[index]["Net Weight"]}
+              defaultValue={autoFillerBox[index]["Net Weight"]}
+              {...register(`netWeight${index}`)}
             />
             <div className="input checkbox-label">
               <label for={`tilt${index}`}>Tilt Allowed:</label>
@@ -234,6 +316,7 @@ const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
                   autoFillerBox[index]["Rotation Allowed"] === 1 ? true : false
                 }
                 id={`tilt${index}`}
+                {...register(`rotationAllowed${index}`)}
                 onClick={(e) => (e.target.value = !e.target.value)}
               />
             </div>
@@ -253,7 +336,7 @@ const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
         <button
           type="button"
           className="btn-apply"
-          onClick={() => setInputSuccess(true)}
+          onClick={handleSubmit(onSubmit)}
         >
           Submit
         </button>
@@ -263,3 +346,39 @@ const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
 };
 
 export default DimensionInput;
+
+// defaultValues: {
+//   sku0: "Box1",
+//   grossWeight0: autoFillerBox[0]["Gross Weight"],
+//   length0: autoFillerBox[0]["Length"],
+//   width0: autoFillerBox[0]["Width"],
+//   height0: autoFillerBox[0]["Height"],
+//   numberOfCases0: autoFillerBox[0]["Number of Cases"],
+//   volume0: autoFillerBox[0]["Volume"],
+//   temperature0: autoFillerBox[0]["Temperature"],
+//   netWeight0: autoFillerBox[0]["Net Weight"],
+//   rotationAllowed0: true,
+//   color0: colors[0],
+//   sku1: "Box2",
+//   grossWeight1: autoFillerBox[1]["Gross Weight"],
+//   length1: autoFillerBox[1]["Length"],
+//   width1: autoFillerBox[1]["Width"],
+//   height1: autoFillerBox[1]["Height"],
+//   numberOfCases1: autoFillerBox[1]["Number of Cases"],
+//   volume1: autoFillerBox[1]["Volume"],
+//   temperature1: autoFillerBox[1]["Temperature"],
+//   netWeight1: autoFillerBox[1]["Net Weight"],
+//   rotationAllowed1: true,
+//   color1: colors[1],
+//   sku2: "Box3",
+//   grossWeight2: autoFillerBox[2]["Gross Weight"],
+//   length2: autoFillerBox[2]["Length"],
+//   width2: autoFillerBox[2]["Width"],
+//   height2: autoFillerBox[2]["Height"],
+//   numberOfCases2: autoFillerBox[2]["Number of Cases"],
+//   volume2: autoFillerBox[2]["Volume"],
+//   temperature2: autoFillerBox[2]["Temperature"],
+//   netWeight2: autoFillerBox[2]["Net Weight"],
+//   rotationAllowed2: true,
+//   color2: colors[2],
+// },

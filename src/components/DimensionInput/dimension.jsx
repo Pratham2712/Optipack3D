@@ -103,6 +103,8 @@ const DimensionInput = () => {
       initializeColorPicker(`colorPicker${index}`, `colorInput${index}`, index);
     });
   }, [inputs]);
+  //schema and validation==================================
+
   return (
     <div>
       <div className="productFrom">
