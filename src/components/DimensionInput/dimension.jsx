@@ -3,7 +3,7 @@ import Pickr from "@simonwep/pickr";
 import del from "../../assests/delete.png";
 import "./DimensionInput.css";
 
-const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
+const DimensionInput = () => {
   const [inputs, setInputs] = useState([0, 1, 2]);
   const [colors, setColors] = useState([
     "rgba(244, 67, 54, 1)", // Color 1
@@ -26,31 +26,7 @@ const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
     setInputs(updatedInputs);
     console.log(updatedInputs);
   };
-  const addSku = () => {
-    console.log(inputs.length);
 
-    if (inputs.length >= 3) {
-      alert("You cannot add more than 3 SKUs!");
-      return;
-    }
-
-    const newIndex = inputs.length;
-    const newInput = {
-      sku: `Box${newIndex + 1}`,
-      grossWeight: autoFillerBox[newIndex]["Gross Weight"],
-      netWeight: autoFillerBox[newIndex]["Net Weight"],
-      volume: autoFillerBox[newIndex].Volume,
-      temperature: autoFillerBox[newIndex].Temperature,
-      length: autoFillerBox[newIndex].Length,
-      width: autoFillerBox[newIndex].Width,
-      height: autoFillerBox[newIndex].Height,
-      numberOfCases: autoFillerBox[newIndex]["Number of Cases"],
-      rotationAllowed: autoFillerBox[newIndex]["Rotation Allowed"],
-      color: colors[newIndex], // Automatically assign the next color
-    };
-
-    setInputs([...inputs, newInput]);
-  };
   let autoFillerBox = [
     {
       "Gross Weight": 0.78,
@@ -164,77 +140,21 @@ const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
                 }
               />
             </div>
-            <div className="input">
-              <label>Length (mm):</label>
-              <input
-                type="text"
-                name={`length${index}`}
-                value={input.length || autoFillerBox[index]["Length"]}
-                onChange={(e) =>
-                  handleInputChange(index, "length", e.target.value)
-                }
-              />
-            </div>
-            <div className="input">
-              <label>Width (mm):</label>
-              <input
-                type="text"
-                name={`width${index}`}
-                value={input.width || autoFillerBox[index]["Width"]}
-                onChange={(e) =>
-                  handleInputChange(index, "width", e.target.value)
-                }
-              />
-            </div>
-            <div className="input">
-              <label>Height (mm):</label>
-              <input
-                type="text"
-                name={`height${index}`}
-                value={input.height || autoFillerBox[index]["Height"]}
-                onChange={(e) =>
-                  handleInputChange(index, "height", e.target.value)
-                }
-              />
-            </div>
-            <div className="input">
-              <label>Number of Cases:</label>
-              <input
-                type="text"
-                name={`numberOfCases${index}`}
-                value={
-                  input.numberOfCases || autoFillerBox[index]["Number of Cases"]
-                }
-                onChange={(e) =>
-                  handleInputChange(index, "numberOfCases", e.target.value)
-                }
-              />
-            </div>
-            <input
-              type="hidden"
-              name={`volume${index}`}
-              value={autoFillerBox[index]["Volume"]}
-            />
-            <input
-              type="hidden"
-              name={`temperature${index}`}
-              value={autoFillerBox[index]["Temperature"]}
-            />
-            <input
-              type="hidden"
-              name={`netWeight${index}`}
-              value={autoFillerBox[index]["Net Weight"]}
-            />
             <div className="input checkbox-label">
-              <label for={`tilt${index}`}>Tilt Allowed:</label>
+              <label>Tilt Allowed:</label>
               <input
                 type="checkbox"
                 name={`rotationAllowed${index}`}
-                defaultChecked={
+                checked={
                   autoFillerBox[index]["Rotation Allowed"] === 1 ? true : false
                 }
-                id={`tilt${index}`}
-                onClick={(e) => (e.target.value = !e.target.value)}
+                onChange={(e) =>
+                  handleInputChange(
+                    index,
+                    "rotationAllowed",
+                    e.target.checked ? 1 : 0
+                  )
+                }
               />
             </div>
             <img
@@ -247,14 +167,10 @@ const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
         ))}
       </div>
       <div class="SKU-cta">
-        <button type="button" className="btn-apply" onClick={() => addSku()}>
+        <button type="button" className="btn-apply" onClick={addSku}>
           Add SKU
         </button>
-        <button
-          type="button"
-          className="btn-apply"
-          onClick={() => setInputSuccess(true)}
-        >
+        <button type="button" className="btn-apply" onclick="finishLoading()">
           Submit
         </button>
       </div>

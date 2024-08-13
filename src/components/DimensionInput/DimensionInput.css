@@ -44,3 +44,12 @@ input[type="text"] {
     padding: 5px;
     margin-right: 10px;
 }
+.SKU-cta{
+    display: flex;
+    justify-content: space-around;
+}
+
+input[type="checkbox"] {
+    cursor: pointer;
+}
+

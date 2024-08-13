@@ -4,10 +4,15 @@ import Sidebar from "../../components/Sidebar/Sidebar";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 import unlock from "../../assests/unlock.png";
 import lock from "../../assests/lock.png";
+import tick from "../../assests/tick.png";
 import DimensionInput from "../../components/DimensionInput/DimensionInput";
+import ContainerDetails from "../../components/ContainerDetails/ContainerDetails";
 
 const FreeTrail = () => {
   const [showInput, setShowInput] = useState(false);
+  const [inputSuccess, setInputSuccess] = useState(false);
+  const [showCont, setShowCont] = useState(false);
+  console.log(inputSuccess);
 
   return (
     <div>
@@ -23,10 +28,11 @@ const FreeTrail = () => {
             onClick={() => {
               setShowInput(!showInput);
             }}
+            style={{ background: inputSuccess ? "#CFFBBF" : "" }}
           >
             Add load details
             <img
-              src={unlock}
+              src={inputSuccess ? tick : unlock}
               alt="Lock Icon"
               id="addLoadDetailsIcon"
               className="icon"
@@ -36,61 +42,44 @@ const FreeTrail = () => {
             <input type="hidden" id="numTypes" name="numTypes" value="3" />
 
             {/* <!-- Prefilled SKUs will be generated here --> */}
-            {showInput && <DimensionInput />}
+            {showInput && (
+              <DimensionInput
+                inputSuccess={inputSuccess}
+                setInputSuccess={setInputSuccess}
+              />
+            )}
           </div>
-          <button type="button" class="collapsible" id="addContainerDetails">
+          <button
+            type="button"
+            className="collapsible"
+            id="addContainerDetails"
+            onClick={() => {
+              setShowCont(!showCont);
+            }}
+          >
             Add Container details
             <img
-              src={lock}
+              src={inputSuccess ? unlock : lock}
               alt="Lock Icon"
               id="addContainerDetailsIcon"
-              class="icon"
+              className="icon"
             />
           </button>
           <div class="content">
-            <div id="containerDetails" class="container-details-container">
-              <input
-                type="hidden"
-                id="totalContainers"
-                name="totalContainers"
-                value="1"
-              />
-              <label for="numContainers" class="num">
-                Number of Containers:
-              </label>
-              <input
-                type="number"
-                id="numContainers"
-                name="numContainers"
-                min="1"
-                max="2"
-                value="1"
-                class="num-containers-input"
-              />
-              <div id="typeInputs" class="container-types">
-                {/* <!-- Dynamic inputs for the container type will be generated here --> */}
-              </div>
-            </div>
-            <div class="button-container">
-              <button type="button" class="btn-apply" id="AddContainer">
-                Add Container
-              </button>
-              <button
-                type="button"
-                class="btn-apply"
-                onclick="finishLoadingContainer()"
-              >
-                Submit
-              </button>
-            </div>
+            {inputSuccess && showCont && <ContainerDetails />}
           </div>
 
-          <button type="button" class="collapsible" id="optimizeButton">
+          <button type="button" className="collapsible" id="optimizeButton">
             Add Optimization constraints
-            <img src={lock} alt="Lock Icon" class="icon" />
+            <img src={lock} alt="Lock Icon" className="icon" />
           </button>
           <div class="content">
             {/* <!-- Add optimization constraints content here if needed --> */}
+          </div>
+          <div className="optimize">
+            <button type="submit" id="final" className="btn-apply">
+              Optimize
+            </button>
           </div>
         </form>
       </div>

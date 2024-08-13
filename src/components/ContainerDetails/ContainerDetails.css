@@ -1,0 +1,24 @@
+.container-types {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.container-row {
+    display: flex;
+    flex-direction: column;
+}
+.container-image{
+    height: 150px;
+    width: 300px;
+}
+.button-container{
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+select{
+    margin-top: 1rem;
+    padding: 0.5rem 0.5rem;
+}
