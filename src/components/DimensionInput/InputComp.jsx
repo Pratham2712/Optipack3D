@@ -1,48 +1,94 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import Pickr from "@simonwep/pickr";
+import del from "../../assests/delete.png";
+import "./DimensionInput.css";
+import { autoFillerBox } from "../../Util/data";
 
-const InputComp = () => {
+const InputComp = ({ inputs, setInputs, handleInputChange }) => {
+  const [colors, setColors] = useState([
+    "rgba(244, 67, 54, 1)", // Color 1
+    "rgba(76, 175, 80, 1)", // Color 2
+    "rgba(33, 150, 243, 1)", // Color 3
+  ]);
+  const handleDelete = (index) => {
+    if (inputs.length <= 2) {
+      alert("You need to keep at least 2 SKUs!");
+      return;
+    }
+    setInputs(inputs.filter((_, i) => i !== index));
+  };
+  const initializeColorPicker = (pickerId, colorInputId, colorIndex) => {
+    const colorPickerElement = document.getElementById(pickerId);
+    const colorInputElement = document.getElementById(colorInputId);
+
+    if (!colorPickerElement || !colorInputElement) return;
+    const pickr = Pickr.create({
+      el: "#" + pickerId,
+      theme: "nano",
+      swatches: ["rgba(244, 67, 54, 1)"],
+      default: colors[colorIndex],
+      components: {
+        preview: true,
+        hue: true,
+        interaction: {
+          save: true,
+          cancel: true,
+        },
+      },
+    });
+
+    const currColor = document.getElementById(colorInputId);
+    currColor.value = colors[colorIndex];
+
+    pickr.on("save", (color, instance) => {
+      const rgbaColor = color.toRGBA().toString();
+      currColor.value = rgbaColor;
+      currColor.style.border = "1px solid #000";
+      currColor.style.backgroundColor = rgbaColor;
+      pickr.hide();
+    });
+
+    pickr.on("cancel", (instance) => {
+      pickr.hide();
+    });
+  };
+
+  useEffect(() => {
+    inputs.forEach((_, index) => {
+      initializeColorPicker(`colorPicker${index}`, `colorInput${index}`, index);
+    });
+  }, [inputs]);
+
   return (
     <div>
       {inputs.map((input, index) => (
-        <div key={index} className="input-row">
-          <div id={`colorPicker${index}`}>
-            <Controller
-              name={`color${index}`}
-              control={control}
-              {...register(`color${index}`)}
-              render={({ field }) => (
-                <input
-                  type="hidden"
-                  id={`colorInput${index}`}
-                  defaultValue={field.value}
-                />
-              )}
-            />
-          </div>
+        <div key={input} className="input-row">
+          <div id={`colorPicker${input}`}></div>
           <input
             type="hidden"
-            name={`color${index}`}
-            {...register(`color${index}`)}
-            id={`colorInput${index}`}
+            name={`color${input}`}
+            id={`colorInput${input}`}
+            onChange={(e) => handleInputChange(input, "color", e.target.value)}
           />
           <div className="input">
-            <label>Product {index + 1}:</label>
+            <label>Product {input + 1}:</label>
             <input
               type="text"
-              name={`sku${index}`}
+              name={`sku${input}`}
               required
-              {...register(`sku${index}`)}
-              onChange={(e) => handleInputChange(index, "sku", e.target.value)}
+              defaultValue={`Box${input + 1}`}
+              onChange={(e) => handleInputChange(input, "sku", e.target.value)}
             />
           </div>
           <div className="input">
             <label>Gross Weight (KGs):</label>
             <input
               type="number"
-              name={`grossWeight${index}`}
-              {...register(`grossWeight${index}`)}
+              name={`grossWeight${input}`}
+              required
+              defaultValue={autoFillerBox[input]["Gross Weight"]}
               onChange={(e) =>
-                handleInputChange(index, "grossWeight", e.target.value)
+                handleInputChange(input, "grossWeight", e.target.value)
               }
             />
           </div>
@@ -50,10 +96,11 @@ const InputComp = () => {
             <label>Length (mm):</label>
             <input
               type="number"
-              name={`length${index}`}
-              {...register(`length${index}`)}
+              name={`length${input}`}
+              required
+              defaultValue={autoFillerBox[input]["Length"]}
               onChange={(e) =>
-                handleInputChange(index, "length", e.target.value)
+                handleInputChange(input, "length", e.target.value)
               }
             />
           </div>
@@ -61,10 +108,11 @@ const InputComp = () => {
             <label>Width (mm):</label>
             <input
               type="number"
-              name={`width${index}`}
-              {...register(`width${index}`)}
+              name={`width${input}`}
+              required
+              defaultValue={autoFillerBox[input]["Width"]}
               onChange={(e) =>
-                handleInputChange(index, "width", e.target.value)
+                handleInputChange(input, "width", e.target.value)
               }
             />
           </div>
@@ -72,10 +120,11 @@ const InputComp = () => {
             <label>Height (mm):</label>
             <input
               type="number"
-              name={`height${index}`}
-              {...register(`height${index}`)}
+              name={`height${input}`}
+              required
+              defaultValue={autoFillerBox[input]["Height"]}
               onChange={(e) =>
-                handleInputChange(index, "height", e.target.value)
+                handleInputChange(input, "height", e.target.value)
               }
             />
           </div>
@@ -83,42 +132,48 @@ const InputComp = () => {
             <label>Number of Cases:</label>
             <input
               type="number"
-              name={`numberOfCases${index}`}
-              {...register(`numberOfCases${index}`)}
+              name={`numberOfCases${input}`}
+              required
+              defaultValue={autoFillerBox[input]["Number of Cases"]}
               onChange={(e) =>
-                handleInputChange(index, "numberOfCases", e.target.value)
+                handleInputChange(input, "numberOfCases", e.target.value)
               }
             />
           </div>
           <input
             type="hidden"
-            name={`volume${index}`}
-            {...register(`volume${index}`)}
+            name={`volume${input}`}
+            defaultValue={autoFillerBox[input]["Volume"]}
           />
           <input
             type="hidden"
-            name={`temperature${index}`}
-            {...register(`temperature${index}`)}
+            name={`temperature${input}`}
+            defaultValue={autoFillerBox[input]["Temperature"]}
           />
           <input
             type="hidden"
-            name={`netWeight${index}`}
-            {...register(`netWeight${index}`)}
+            name={`netWeight${input}`}
+            defaultValue={autoFillerBox[input]["Net Weight"]}
           />
           <div className="input checkbox-label">
-            <label for={`tilt${index}`}>Tilt Allowed:</label>
+            <label for={`tilt${input}`}>Tilt Allowed:</label>
             <input
               type="checkbox"
-              name={`rotationAllowed${index}`}
-              id={`tilt${index}`}
-              {...register(`rotationAllowed${index}`)}
+              name={`rotationAllowed${input}`}
+              defaultChecked={
+                autoFillerBox[input]["Rotation Allowed"] === 1 ? true : false
+              }
+              id={`tilt${input}`}
               onClick={(e) => (e.target.value = !e.target.value)}
+              onChange={(e) =>
+                handleInputChange(input, "rotationAllowed", e.target.checked)
+              }
             />
           </div>
           <img
             src={del}
             className="delete-img"
-            onClick={() => handleDelete(index)}
+            onClick={() => handleDelete(input)}
             alt="Delete"
           />
         </div>
