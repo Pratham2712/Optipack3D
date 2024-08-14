@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 import InputComp from "./InputComp";
 import { autoFillerBox } from "../../Util/data";
@@ -12,6 +13,9 @@ const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
   ]);
   const [skuData, setSkuData] = useState({
     numTypes: inputs.length,
+    totalContainers: 1,
+    numContainers: 1,
+    containerType1: "General Purpose container 20'",
     color0: colors[0],
     color1: colors[1],
     color2: colors[2],
@@ -46,7 +50,6 @@ const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
     rotationAllowed1: autoFillerBox[1]["Rotation Allowed"] === 1 ? "on" : "off",
     rotationAllowed2: autoFillerBox[2]["Rotation Allowed"] === 1 ? "on" : "off",
   });
-  console.log(skuData);
 
   //functions===================================================================================
   const handleInputChange = (index, field, value) => {
@@ -64,12 +67,96 @@ const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
     while (inputs.includes(newIndex)) {
       newIndex++;
     }
+    const newSkuData = {
+      [`color${newIndex}`]: colors[newIndex] || "",
+      [`sku${newIndex}`]: `Box${newIndex + 1}`,
+      [`grossWeight${newIndex}`]: autoFillerBox[newIndex]["Gross Weight"] || "",
+      [`length${newIndex}`]: autoFillerBox[newIndex].Length || "",
+      [`width${newIndex}`]: autoFillerBox[newIndex].Width || "",
+      [`height${newIndex}`]: autoFillerBox[newIndex].Height || "",
+      [`numberOfCases${newIndex}`]:
+        autoFillerBox[newIndex]["Number of Cases"] || "",
+      [`volume${newIndex}`]: autoFillerBox[newIndex].Volume || "",
+      [`temperature${newIndex}`]: autoFillerBox[newIndex].Temperature || "",
+      [`netWeight${newIndex}`]: autoFillerBox[newIndex]["Net Weight"] || "",
+      [`rotationAllowed${newIndex}`]:
+        autoFillerBox[newIndex]["Rotation Allowed"] === 1 ? "on" : "off",
+      numTypes: 3,
+    };
+
+    // Update both inputs and skuData states
+    setInputs([...inputs, newIndex]);
+    setSkuData((prevData) => ({
+      ...prevData,
+      ...newSkuData,
+    }));
     setInputs([...inputs, newIndex]);
   };
 
+  function getCsrfToken() {
+    const tokenElement = document.querySelector('meta[name="csrf-token"]');
+    return tokenElement ? tokenElement.getAttribute("content") : "";
+  }
+
   //submit logic====================================================
-  const onSubmit = () => {
-    console.log(skuData);
+  const onSubmit = async () => {
+    const requiredFields = [
+      "length",
+      "width",
+      "height",
+      "numberOfCases",
+      "grossWeight",
+      "sku",
+      "color",
+    ];
+
+    const uniqueColors = new Set();
+    let isValid = true;
+
+    inputs.forEach((index) => {
+      requiredFields.forEach((field) => {
+        const key = `${field}${index}`;
+        if (!skuData[key]) {
+          alert(`Missing value for ${key}`);
+          isValid = false;
+        }
+      });
+
+      // Check if color is unique
+      const colorKey = `color${index}`;
+      const colorValue = skuData[colorKey];
+      if (uniqueColors.has(colorValue)) {
+        alert(`Color is duplicated!`);
+        isValid = false;
+      } else {
+        uniqueColors.add(colorValue);
+      }
+    });
+
+    if (isValid) {
+      console.log("SKU Data is valid:", skuData);
+      console.log(getCsrfToken());
+
+      try {
+        const response = await axios.post(
+          "http://127.0.0.1:8000/freeOutput",
+          skuData,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": getCsrfToken(), // Include CSRF token
+            },
+          }
+        );
+
+        console.log("Success:", response.data);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+      setInputSuccess(true);
+    } else {
+      console.error("Validation failed. Please check the console for details.");
+    }
   };
 
   return (
@@ -80,6 +167,7 @@ const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
           setInputs={setInputs}
           skuData={skuData}
           handleInputChange={handleInputChange}
+          setSkuData={setSkuData}
         />
       </form>
       <div class="SKU-cta">

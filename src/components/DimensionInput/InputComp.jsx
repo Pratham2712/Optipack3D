@@ -4,7 +4,13 @@ import del from "../../assests/delete.png";
 import "./DimensionInput.css";
 import { autoFillerBox } from "../../Util/data";
 
-const InputComp = ({ inputs, setInputs, handleInputChange }) => {
+const InputComp = ({
+  inputs,
+  setInputs,
+  handleInputChange,
+  setSkuData,
+  skuData,
+}) => {
   const [colors, setColors] = useState([
     "rgba(244, 67, 54, 1)", // Color 1
     "rgba(76, 175, 80, 1)", // Color 2
@@ -15,7 +21,23 @@ const InputComp = ({ inputs, setInputs, handleInputChange }) => {
       alert("You need to keep at least 2 SKUs!");
       return;
     }
-    setInputs(inputs.filter((_, i) => i !== index));
+    const newInputs = inputs.filter((_, i) => i !== index);
+    setInputs(newInputs);
+    const newSkuData = { ...skuData };
+    delete newSkuData[`color${index}`];
+    delete newSkuData[`sku${index}`];
+    delete newSkuData[`grossWeight${index}`];
+    delete newSkuData[`length${index}`];
+    delete newSkuData[`width${index}`];
+    delete newSkuData[`height${index}`];
+    delete newSkuData[`numberOfCases${index}`];
+    delete newSkuData[`volume${index}`];
+    delete newSkuData[`temperature${index}`];
+    delete newSkuData[`netWeight${index}`];
+    delete newSkuData[`rotationAllowed${index}`];
+    newSkuData.numTypes = newInputs.length;
+    // Update the states
+    setSkuData(newSkuData);
   };
   const initializeColorPicker = (pickerId, colorInputId, colorIndex) => {
     const colorPickerElement = document.getElementById(pickerId);
@@ -41,7 +63,12 @@ const InputComp = ({ inputs, setInputs, handleInputChange }) => {
     currColor.value = colors[colorIndex];
 
     pickr.on("save", (color, instance) => {
-      const rgbaColor = color.toRGBA().toString();
+      const rgbaArray = color.toRGBA().map((val, index) => {
+        return index < 3 ? Math.round(val) : val;
+      });
+
+      const rgbaColor = `rgba(${rgbaArray[0]}, ${rgbaArray[1]}, ${rgbaArray[2]}, ${rgbaArray[3]})`;
+      setSkuData((prev) => ({ ...prev, [`color${colorIndex}`]: rgbaColor }));
       currColor.value = rgbaColor;
       currColor.style.border = "1px solid #000";
       currColor.style.backgroundColor = rgbaColor;
@@ -166,7 +193,11 @@ const InputComp = ({ inputs, setInputs, handleInputChange }) => {
               id={`tilt${input}`}
               onClick={(e) => (e.target.value = !e.target.value)}
               onChange={(e) =>
-                handleInputChange(input, "rotationAllowed", e.target.checked)
+                handleInputChange(
+                  input,
+                  "rotationAllowed",
+                  e.target.checked ? "on" : "off"
+                )
               }
             />
           </div>
