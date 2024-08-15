@@ -144,7 +144,7 @@ const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
           {
             headers: {
               "Content-Type": "application/json",
-              "X-CSRFToken": getCsrfToken(), // Include CSRF token
+              //"X-CSRFToken": getCsrfToken(), // Include CSRF token
             },
           }
         );

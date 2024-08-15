@@ -1,9 +1,9 @@
 import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { free_output, free_trail, User_root } from "./constants/links";
-import Home from "./pages/Home";
 import FreeTrail from "./pages/FreeTrail/FreeTrail";
 import FreeOutput from "./pages/FreeOutput";
+import Home from "./pages/Home/Home";
 
 const Routess = () => {
   return (
