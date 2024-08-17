@@ -1,5 +1,9 @@
 import React from "react";
-
+import "./AboutnRoles.css";
+import shippingcoord from "../../assests/shippingcoord.jpg";
+import loadingteam from "../../assests/loadingteam.jpg";
+import leadershipteam from "../../assests/leadershipteam.jpg";
+import loadplanner from "../../assests/loadplanner.jpg";
 const AboutnRoles = () => {
   return (
     <div>
@@ -22,16 +26,20 @@ const AboutnRoles = () => {
       <div className="emphasized">
         Get Started with OptiPack3D
         <div className="emphasized_buttons">
-          <a href="#" className="btn" style={{ backgroundColor: "#1469C2" }}>
-            Start Free Trial
-          </a>
-          <a
-            href="#"
-            className="btn-secondary"
-            style={{ backgroundColor: "rgb(187, 187, 187)" }}
-          >
-            Request a Demo
-          </a>
+          <div>
+            <a href="#" className="btn" style={{ backgroundColor: "#1469C2" }}>
+              Start Free Trial
+            </a>
+          </div>
+          <div>
+            <a
+              href="#"
+              className="btn-secondary"
+              style={{ backgroundColor: "rgb(187, 187, 187)" }}
+            >
+              Request a Demo
+            </a>
+          </div>
         </div>
       </div>
 
@@ -39,25 +47,22 @@ const AboutnRoles = () => {
         <h2>Roles</h2>
         <div className="team">
           <div className="team-member">
-            <img src="static/images/loadingteam.jpg" alt="Loading Team" />
+            <img src={loadingteam} alt="Loading Team" />
             <p>Loading team</p>
             <p>Final set of loaders responsible for executing load plans</p>
           </div>
           <div className="team-member">
-            <img
-              src="static/images/shippingcoord.jpg"
-              alt="Shipping Coordinator"
-            />
+            <img src={shippingcoord} alt="Shipping Coordinator" />
             <p>Shipping Coordinator</p>
             <p>End -to-End management of freight </p>
           </div>
           <div className="team-member">
-            <img src="static/images/loadplanner.jpg" alt="Load Planner" />
+            <img src={loadplanner} alt="Load Planner" />
             <p>Load Planner</p>
             <p>Set of user responsible for creating right loads to dispatch;</p>
           </div>
           <div className="team-member">
-            <img src="static/images/leadershipteam.jpg" alt="Leadership Team" />
+            <img src={leadershipteam} alt="Leadership Team" />
             <p>Leadership team</p>
             <p>Track key performance metrics and drive productivity agenda</p>
           </div>
