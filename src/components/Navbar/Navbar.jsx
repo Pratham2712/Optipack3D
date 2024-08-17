@@ -1,19 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import logo from "../../assests/logo.png";
 import "./Navbar.css";
 import { NavLink } from "react-router-dom";
 import { free_trail } from "../../constants/links";
 
 const Navbar = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
   return (
     <>
       <nav>
-        <img
-          src={logo}
-          style={{ height: "40px", width: "55px", margin: "10px" }}
-        />
-        <div class="logo">OptiPack3D</div>
-        <div class="CTA">
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <img
+            src={logo}
+            style={{ height: "40px", width: "55px", margin: "10px" }}
+          />
+          <div class="logo">OptiPack3D</div>
+        </div>
+        <div className={`CTA ${menuOpen ? "open" : ""}`}>
           <ul>
             <li>
               <a href="#">Home</a>
@@ -35,7 +42,7 @@ const Navbar = () => {
             </li>
           </ul>
         </div>
-        <div class="nav-buttons">
+        <div className={`nav-buttons ${menuOpen ? "open" : ""}`}>
           <NavLink
             to={free_trail}
             style={{
@@ -47,7 +54,10 @@ const Navbar = () => {
             Free Trail
           </NavLink>
 
-          <a class="btn-secondary">Login/Signup</a>
+          <a className="btn-secondary">Login/Signup</a>
+        </div>
+        <div className="menu-icon" onClick={toggleMenu}>
+          {menuOpen ? <span>&#10005;</span> : <span>&#9776;</span>}
         </div>
       </nav>
     </>

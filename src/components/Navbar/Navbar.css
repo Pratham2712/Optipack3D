@@ -22,6 +22,7 @@ nav {
     color: #000;
     padding: 10px 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
 }
 
 nav .logo {
@@ -37,6 +38,7 @@ nav .logo {
     font-size: 14px;
     font-weight: 500;
     line-height: 21px;
+    transition: all 0.3s ease-in-out;
 }
 
 nav ul {
@@ -146,9 +148,6 @@ main {
     transition: all 0.3s ease;
 }
 
-.hero-buttons .btn {
-    background-color: wheat;
-}
 
 .btn-secondary {
     background-color: black;
@@ -298,57 +297,102 @@ main {
     height: auto;
 }
 
-@media (max-width: 768px) {
+.menu-icon {
+    display: none;
+    font-size: 2rem;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .menu-icon span {
+    display: inline-block;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+/* Media Queries */
+@media (max-width: 900px) {
+    .CTA {
+      display: none;
+      flex-direction: column;
+      position: absolute;
+      top: 60px;
+      left: 0;
+      width: 100%;
+      background-color: white;
+      padding: 20px;
+      margin-top: 3rem;
+      right: 0;
+      transition: all 0.3s ease-in-out;
+      transform: translateX(-20px);
+    }
+    .nav-buttons{
+        padding-left: 10rem;
+    }
+  
+    .menu-icon {
+      display: block;
+    }
+  
+    .CTA.open {
+      display: flex;
+      width: 35%;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      align-items: center;
+      z-index: 1;
+      transform: translateX(0);
+      margin-top: 4rem;
+    }
+  
+    .CTA ul {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .CTA ul li {
+      margin: 10px 0;
+    }
+    .menu-icon.open span {
+        transform: rotate(90deg);
+      }
+    
+  
     nav {
-        flex-direction: column;
-        align-items: flex-start;
+      position: relative;
     }
-
-    nav ul {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .nav-buttons {
-        flex-direction: column;
-        gap: 10px;
-        margin-top: 10px;
-    }
-
-    .hero-content {
-        left: 50%;
-        transform: translate(-50%, -50%);
-        text-align: center;
-    }
-
-    .hero-buttons {
-        flex-direction: column;
+  }
+  @media (max-width: 600px) {
+    .CTA.open {
+        display: flex;
+        width: 50%;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         align-items: center;
-    }
-
-    .hero-buttons .btn, .hero-buttons .btn-secondary {
-        width: 100%;
-    }
-
-    .emphasized .emphasized_buttons a {
-        width: 100%;
-    }
-}
-
-@media (max-width: 480px) {
-    .hero-content h1 {
-        font-size: 2rem;
-    }
-
-    .hero-content p {
-        font-size: 1rem;
-    }
-
-    .nav-buttons .btn, .nav-buttons .btn-secondary {
-        padding: 8px 12px;
-    }
-
-    .hero-buttons .btn, .hero-buttons .btn-secondary {
-        padding: 8px 12px;
-    }
-}
+        z-index: 1;
+        transform: translateX(0);
+        margin-top: 1.4rem;
+      }
+    .nav-buttons {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 450px;
+        width: 50%;
+        background-color: white;
+        padding: 20px;
+        opacity: 0;
+        transform: translateX(20px);
+        z-index: 1;
+        margin: 0;
+        right: 0;
+        padding: 0.5rem 0.5rem;
+      }
+      .nav-buttons.open {
+        display: flex;
+        opacity: 1;
+        transform: translateX(0);
+  
+      }
+      .btn, .btn-secondary {
+        font-size: 0.9rem;
+      }
+  }
