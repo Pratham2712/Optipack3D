@@ -169,21 +169,7 @@ main {
     margin-bottom: 30px;
 }
 
-.features-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-}
 
-.feature-card {
-    background: white;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    width: 200px;
-    text-align: left;
-}
 
 .feature-card-inner {
     font-weight: 400;
@@ -197,30 +183,10 @@ main {
     width: 24px;
 }
 
-.heading {
-    display: flex;
-}
 
-.heading img {
-    padding-top: 14px;
-    margin-right: 3px;
-}
 
-.steps, .team {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-}
 
-.step, .team-member {
-    background: white;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    width: 200px;
-    text-align: left;
-}
+
 
 .emphasized {
     text-align: center;

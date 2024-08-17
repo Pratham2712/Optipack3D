@@ -1,0 +1,43 @@
+.step, .team-member {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    background: white;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 250px;
+    height: 200px;
+    text-align: left;
+    
+}
+.steps, .team {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+@media (max-width: 650px) {
+    .step, .team-member {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        width: 171px;
+        height: 200px;
+        text-align: left;
+    }
+    .steps, .team {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+    }
+
+    .features h2, .how-it-works h2, .about h2 {
+        font-size: 30px;
+        margin-top: 30px;
+    }
+}

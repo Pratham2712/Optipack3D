@@ -3,6 +3,10 @@ import Navbar from "../../components/Navbar/Navbar";
 import "./Home.css";
 import home_container from "../../assests/home_container.png";
 
+import KeyFeature from "../../components/KeyFeature/KeyFeature";
+import "../../components/KeyFeature/KeyFeature.css";
+import HowItWork from "../../components/HowItWork/HowItWork";
+import AboutnRoles from "../../components/AboutnRoles/AboutnRoles";
 const Home = () => {
   return (
     <div>
@@ -27,6 +31,15 @@ const Home = () => {
               </div>
             </div>
           </section>
+        </div>
+        <section class="features">
+          <KeyFeature />
+        </section>
+        <section class="how-it-works">
+          <HowItWork />
+        </section>
+        <div>
+          <AboutnRoles />
         </div>
       </main>
     </div>
