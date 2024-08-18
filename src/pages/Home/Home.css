@@ -35,15 +35,8 @@
 }
 
 
-.features, .how-it-works, .about {
-    padding: 50px 20px;
-    text-align: center;
-}
 
-.features h2, .how-it-works h2, .about h2 {
-    font-size: 36px;
-    margin-bottom: 30px;
-}
+
 
 @media (max-width: 900px) {
     .outer_img_box {

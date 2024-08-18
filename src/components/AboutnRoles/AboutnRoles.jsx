@@ -11,15 +11,7 @@ const AboutnRoles = () => {
         Practical. Simple.
         <div>Optimal.</div>
       </div>
-      <p
-        style={{
-          textAlign: "center",
-          marginTop: "50px",
-          color: "grey",
-          fontSize: "25px",
-          wordSpacing: "5px",
-        }}
-      >
+      <p className="tag">
         Execution ready, pragmatic and easy way of building 3d loads
       </p>
 
@@ -84,16 +76,8 @@ const AboutnRoles = () => {
           creating robust, resilient, and responsive systems that adapt to
           market demands and drive long-term business success.
         </p>
-        <h3>Contact Us:</h3>
-        <div
-          className="contact"
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            maxWidth: "80%",
-            marginLeft: "130px",
-          }}
-        >
+        <h3 style={{ marginTop: "3rem" }}>Contact Us:</h3>
+        <div className="contact">
           <p>Phone: +91 88401970291</p>
           <p>
             Email:{" "}

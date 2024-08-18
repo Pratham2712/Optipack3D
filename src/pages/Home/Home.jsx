@@ -7,6 +7,7 @@ import KeyFeature from "../../components/KeyFeature/KeyFeature";
 import "../../components/KeyFeature/KeyFeature.css";
 import HowItWork from "../../components/HowItWork/HowItWork";
 import AboutnRoles from "../../components/AboutnRoles/AboutnRoles";
+import Footer from "../../components/Footer/Footer";
 const Home = () => {
   return (
     <div>
@@ -42,6 +43,7 @@ const Home = () => {
           <AboutnRoles />
         </div>
       </main>
+      <Footer />
     </div>
   );
 };

@@ -1,0 +1,9 @@
+@media (max-width: 600px) {
+    .footer-cta {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(113px, 2fr));
+        gap: 20px;
+        justify-content: center;
+        margin: 0 auto;
+    }
+}
