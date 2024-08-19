@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-
+import Cookies from "js-cookie";
 import InputComp from "./InputComp";
 import { autoFillerBox } from "../../Util/data";
 
@@ -93,11 +93,6 @@ const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
     setInputs([...inputs, newIndex]);
   };
 
-  function getCsrfToken() {
-    const tokenElement = document.querySelector('meta[name="csrf-token"]');
-    return tokenElement ? tokenElement.getAttribute("content") : "";
-  }
-
   //submit logic====================================================
   const onSubmit = async () => {
     const requiredFields = [
@@ -135,7 +130,7 @@ const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
 
     if (isValid) {
       console.log("SKU Data is valid:", skuData);
-      console.log(getCsrfToken());
+      console.log(Cookies.get("csrftoken"));
 
       try {
         const response = await axios.post(
@@ -144,20 +139,34 @@ const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
           {
             headers: {
               "Content-Type": "application/json",
-              //"X-CSRFToken": getCsrfToken(), // Include CSRF token
+              "X-CSRFToken": Cookies.get("csrftoken"), // Include CSRF token
             },
           }
         );
-
         console.log("Success:", response.data);
       } catch (error) {
         console.error("Error:", error);
+        console.log(Cookies.get("csrftoken"));
       }
       setInputSuccess(true);
     } else {
       console.error("Validation failed. Please check the console for details.");
     }
   };
+
+  useEffect(() => {
+    const fetchCsrfToken = async () => {
+      try {
+        await axios.get("http://127.0.0.1:8000/get-csrf-token");
+      } catch (error) {
+        console.error("Error fetching CSRF token:", error);
+        const csrfToken = Cookies.get("csrftoken");
+        console.log("CSRF Token:", csrfToken);
+      }
+    };
+
+    fetchCsrfToken();
+  }, []);
 
   return (
     <div>
