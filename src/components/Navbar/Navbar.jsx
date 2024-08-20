@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import logo from "../../assests/logo.png";
 import "./Navbar.css";
 import { NavLink } from "react-router-dom";
-import { free_trail } from "../../constants/links";
+import { free_trail, join } from "../../constants/links";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -53,8 +53,16 @@ const Navbar = () => {
           >
             Free Trail
           </NavLink>
-
-          <a className="btn-secondary">Login/Signup</a>
+          <NavLink
+            to={join}
+            style={{
+              width: "100%",
+              textDecoration: "none",
+            }}
+            className="btn-secondary"
+          >
+            Login/Signup
+          </NavLink>
         </div>
         <div className="menu-icon" onClick={toggleMenu}>
           {menuOpen ? <span>&#10005;</span> : <span>&#9776;</span>}
