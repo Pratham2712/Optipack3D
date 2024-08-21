@@ -157,7 +157,7 @@ const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
   useEffect(() => {
     const fetchCsrfToken = async () => {
       try {
-        await axios.get("http://127.0.0.1:8000/get-csrf-token");
+        await axios.get("http://127.0.0.1:8000/get_csrf_token");
       } catch (error) {
         console.error("Error fetching CSRF token:", error);
         const csrfToken = Cookies.get("csrftoken");
