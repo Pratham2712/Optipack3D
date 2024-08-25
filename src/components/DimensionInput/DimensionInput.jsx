@@ -127,6 +127,28 @@ const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
         uniqueColors.add(colorValue);
       }
     });
+    const filteredSkuData = {
+      totalContainers: 1,
+      numContainers: 1,
+      numTypes: inputs.length,
+      containerType1: "General Purpose container 20'",
+    };
+    inputs.forEach((index, i) => {
+      Object.keys(skuData).forEach((key) => {
+        if (key.endsWith(index)) {
+          // Adjust the key to remove the index and replace with sequential index
+          const newKey = key.replace(`${index}`, `${i}`);
+          filteredSkuData[newKey] = skuData[key];
+        }
+      });
+    });
+
+    console.log(filteredSkuData);
+
+    const formData = new FormData();
+    Object.keys(filteredSkuData).forEach((key) => {
+      formData.append(key, filteredSkuData[key]);
+    });
 
     if (isValid) {
       console.log("SKU Data is valid:", skuData);
@@ -135,10 +157,10 @@ const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
       try {
         const response = await axios.post(
           "http://127.0.0.1:8000/freeOutput",
-          skuData,
+          formData,
           {
             headers: {
-              "Content-Type": "application/json",
+              "Content-Type": "application/form-data",
               //"X-CSRFToken": Cookies.get("csrftoken"), // Include CSRF token
             },
           }
