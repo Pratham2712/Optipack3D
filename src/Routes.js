@@ -9,11 +9,11 @@ import {
   User_root,
 } from "./constants/links";
 import FreeTrail from "./pages/FreeTrail/FreeTrail";
-import FreeOutput from "./pages/FreeOutput";
 import Home from "./pages/Home/Home";
 import Join from "./pages/Join/Join";
 import Login from "./pages/Login/Login";
 import Signup from "./pages/Signup/Signup";
+import FreeOutput from "./pages/FreeOutput/FreeOutput";
 
 const Routess = () => {
   return (

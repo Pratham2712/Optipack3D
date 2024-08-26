@@ -3,8 +3,13 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import InputComp from "./InputComp";
 import { autoFillerBox } from "../../Util/data";
-
+import { useDispatch } from "react-redux";
+import { getDataThunk } from "../../redux/Slices/mainSlice";
+import { useNavigate } from "react-router-dom";
+import { free_output } from "../../constants/links";
 const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [inputs, setInputs] = useState([0, 1, 2]);
   const [colors, setColors] = useState([
     "rgba(244, 67, 54, 1)", // Color 1
@@ -152,43 +157,17 @@ const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
 
     if (isValid) {
       console.log("SKU Data is valid:", skuData);
-      console.log(Cookies.get("csrftoken"));
 
-      try {
-        const response = await axios.post(
-          "http://127.0.0.1:8000/freeOutput",
-          formData,
-          {
-            headers: {
-              "Content-Type": "application/form-data",
-              //"X-CSRFToken": Cookies.get("csrftoken"), // Include CSRF token
-            },
-          }
-        );
-        console.log("Success:", response.data);
-      } catch (error) {
-        console.error("Error:", error);
-        console.log(Cookies.get("csrftoken"));
-      }
-      setInputSuccess(true);
+      dispatch(getDataThunk(formData)).then((data) => {
+        if (data?.payload) {
+          setInputSuccess(true);
+          navigate(free_output);
+        }
+      });
     } else {
       console.error("Validation failed. Please check the console for details.");
     }
   };
-
-  useEffect(() => {
-    const fetchCsrfToken = async () => {
-      try {
-        await axios.get("http://127.0.0.1:8000/get_csrf_token");
-      } catch (error) {
-        console.error("Error fetching CSRF token:", error);
-        const csrfToken = Cookies.get("csrftoken");
-        console.log("CSRF Token:", csrfToken);
-      }
-    };
-
-    fetchCsrfToken();
-  }, []);
 
   return (
     <div>
