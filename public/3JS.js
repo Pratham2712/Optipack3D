@@ -1,8 +1,10 @@
 import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/Addons.js";
-import { FontLoader } from "three/examples/jsm/Addons.js";
-import { TextGeometry } from "three/examples/jsm/Addons.js";
-import { GLTFLoader } from "three/examples/jsm/Addons.js";
+import { OrbitControls } from "../node_modules/three/examples/jsm/controls/OrbitControls.js";
+//import { OrbitControls } from "/three/examples/jsm/controls/OrbitControls.js";
+import { FontLoader } from "/three/examples/jsm/loaders/FontLoader.js";
+import { TextGeometry } from "/three/examples/jsm/geometries/TextGeometry.js";
+import { GLTFLoader } from "/three/examples/jsm/loaders/GLTFLoader.js";
+
 // Renderer setup
 
 document.addEventListener("DOMContentLoaded", () => {

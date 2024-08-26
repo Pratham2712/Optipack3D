@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import Cookies from "js-cookie";
 import InputComp from "./InputComp";
 import { autoFillerBox } from "../../Util/data";
 import { useDispatch } from "react-redux";
@@ -148,8 +146,6 @@ const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
       });
     });
 
-    console.log(filteredSkuData);
-
     const formData = new FormData();
     Object.keys(filteredSkuData).forEach((key) => {
       formData.append(key, filteredSkuData[key]);
@@ -161,7 +157,7 @@ const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
       dispatch(getDataThunk(formData)).then((data) => {
         if (data?.payload) {
           setInputSuccess(true);
-          navigate(free_output);
+          navigate(free_output, { state: { filteredSkuData } });
         }
       });
     } else {
