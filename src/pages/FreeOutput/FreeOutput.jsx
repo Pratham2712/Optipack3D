@@ -36,17 +36,22 @@ const FreeOutput = () => {
   const containerInf = useSelector(
     (state) => state.rootReducer.mainSlice.data.data.container_inf
   );
+  localStorage.setItem("threed_paths", JSON.stringify(threedPaths?.[0]));
+  localStorage.setItem("container_inf", JSON.stringify(containerInf?.[0]));
   const iframeSrc = `three_render.html`;
   // const iframeSrc = `public/three_render.html?threed_paths=${encodeURIComponent(
   //   threedPaths?.[0]
   // )}&container_inf=${encodeURIComponent(containerInf?.[0])}`;
-  if (!containerType) {
-    const formData = new FormData();
-    Object.keys(filteredSkuData).forEach((key) => {
-      formData.append(key, filteredSkuData[key]);
-    });
-    dispatch(getDataThunk(formData));
-  }
+  useEffect(() => {
+    if (!containerType) {
+      const formData = new FormData();
+      Object.keys(filteredSkuData).forEach((key) => {
+        formData.append(key, filteredSkuData[key]);
+      });
+      dispatch(getDataThunk(formData));
+    }
+  }, []);
+
   return (
     <>
       {loading ? (

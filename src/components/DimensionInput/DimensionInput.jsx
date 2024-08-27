@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import InputComp from "./InputComp";
 import { autoFillerBox } from "../../Util/data";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getDataThunk } from "../../redux/Slices/mainSlice";
 import { useNavigate } from "react-router-dom";
 import { free_output } from "../../constants/links";
+import Loader from "../Loader/Loader";
 const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -53,7 +54,8 @@ const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
     rotationAllowed1: autoFillerBox[1]["Rotation Allowed"] === 1 ? "on" : "off",
     rotationAllowed2: autoFillerBox[2]["Rotation Allowed"] === 1 ? "on" : "off",
   });
-
+  //useSelector=======================================================================================
+  const loading = useSelector((state) => state.rootReducer.mainSlice.loading);
   //functions===================================================================================
   const handleInputChange = (index, field, value) => {
     setSkuData((prevData) => ({
@@ -166,25 +168,40 @@ const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
   };
 
   return (
-    <div>
-      <form className="productFrom">
-        <InputComp
-          inputs={inputs}
-          setInputs={setInputs}
-          skuData={skuData}
-          handleInputChange={handleInputChange}
-          setSkuData={setSkuData}
-        />
-      </form>
-      <div class="SKU-cta">
-        <button type="button" className="btn-apply" onClick={() => addSku()}>
-          Add SKU
-        </button>
-        <button type="button" className="btn-apply" onClick={() => onSubmit()}>
-          Submit
-        </button>
-      </div>
-    </div>
+    <>
+      {" "}
+      {loading ? (
+        <Loader />
+      ) : (
+        <div>
+          <form className="productFrom">
+            <InputComp
+              inputs={inputs}
+              setInputs={setInputs}
+              skuData={skuData}
+              handleInputChange={handleInputChange}
+              setSkuData={setSkuData}
+            />
+          </form>
+          <div class="SKU-cta">
+            <button
+              type="button"
+              className="btn-apply"
+              onClick={() => addSku()}
+            >
+              Add SKU
+            </button>
+            <button
+              type="button"
+              className="btn-apply"
+              onClick={() => onSubmit()}
+            >
+              Submit
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

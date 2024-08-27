@@ -1,15 +1,32 @@
-import * as THREE from "three";
-import { OrbitControls } from "../node_modules/three/examples/jsm/controls/OrbitControls.js";
-//import { OrbitControls } from "/three/examples/jsm/controls/OrbitControls.js";
-import { FontLoader } from "/three/examples/jsm/loaders/FontLoader.js";
-import { TextGeometry } from "/three/examples/jsm/geometries/TextGeometry.js";
-import { GLTFLoader } from "/three/examples/jsm/loaders/GLTFLoader.js";
-
+import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js";
+import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/controls/OrbitControls.js";
+import { FontLoader } from "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/loaders/FontLoader.js";
+import { TextGeometry } from "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/geometries/TextGeometry.js";
+import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/loaders/GLTFLoader.js";
 // Renderer setup
 
 document.addEventListener("DOMContentLoaded", () => {
-  const threedPath = window.threedPath;
-  const containerInfPath = window.containerInfPath;
+  const threedPath = JSON.parse(localStorage.getItem("threed_paths"));
+  const containerInfPath = JSON.parse(localStorage.getItem("container_inf"));
+
+  function getLocalStorageItem(key) {
+    return new Promise((resolve, reject) => {
+      const item = localStorage.getItem(key);
+
+      if (item) {
+        try {
+          resolve(JSON.parse(item));
+        } catch (error) {
+          reject(
+            new Error(`Error parsing JSON from localStorage for key: ${key}`)
+          );
+        }
+      } else {
+        reject(new Error(`No item found in localStorage for key: ${key}`));
+      }
+    });
+  }
+
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -37,15 +54,12 @@ document.addEventListener("DOMContentLoaded", () => {
   // orbit.update();
 
   const textureLoader = new THREE.TextureLoader();
-  const rustyTexture = textureLoader.load(
-    "/static/images/rust3.png",
-    function (texture) {
-      // Adjust texture wrapping and repeat as needed
-      texture.wrapS = THREE.RepeatWrapping;
-      texture.wrapT = THREE.RepeatWrapping;
-      texture.repeat.set(1, 1); // Adjust these values to control how the texture is repeated
-    }
-  );
+  const rustyTexture = textureLoader.load("/rust3.png", function (texture) {
+    // Adjust texture wrapping and repeat as needed
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(1, 1); // Adjust these values to control how the texture is repeated
+  });
 
   let containerWidth;
   let containerHeight;
@@ -53,13 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Function to initialize container dimensions
   function fetchContainerDimensions() {
-    return fetch(containerInfPath)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
+    return getLocalStorageItem("container_inf")
       .then((containerInfo) => {
         containerWidth = containerInfo.containerWidth;
         containerHeight = containerInfo.containerHeight;
@@ -328,7 +336,7 @@ document.addEventListener("DOMContentLoaded", () => {
       yPosition = yPos; // Store original y position
       const loader = new FontLoader();
       loader.load(
-        "/static/node_modules/three/examples/fonts/optimer_bold.typeface.json",
+        "/three/examples/fonts/optimer_bold.typeface.json",
         (font) => {
           const textGeometry = new TextGeometry(yPos.toString() + "mm", {
             font: font,
@@ -463,11 +471,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // };
 
     // Load coordinates from JSON file and create boxes
-    fetch(threedPath)
-      .then((response) => response.json())
+    getLocalStorageItem("threed_paths")
       .then((data) => {
-        const boxes = data.filter((item) => item.start && item.end);
-        const lastBoxYItem = data.find((item) => item.last_box_y !== undefined);
+        const boxes = data?.filter((item) => item.start && item.end);
+        const lastBoxYItem = data?.find(
+          (item) => item.last_box_y !== undefined
+        );
 
         if (boxes.length > 0) {
           createSmallBoxesFromCoordinates(boxes);
@@ -622,7 +631,7 @@ document.addEventListener("DOMContentLoaded", () => {
     sideViewButton.addEventListener("click", setSideView);
 
     const gltfLoader = new GLTFLoader();
-    gltfLoader.load("/static/3dmodels/group1.gltf", (gltf) => {
+    gltfLoader.load("/3dmodels/group1.gltf", (gltf) => {
       const model = gltf.scene;
 
       // Scale the model to fit into the viewport

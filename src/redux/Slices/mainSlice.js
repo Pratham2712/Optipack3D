@@ -10,18 +10,21 @@ import axios from "axios";
 
 axios.defaults.withCredentials = true;
 
-export const getDataThunk = createAsyncThunk("/freeOutput", async (data) => {
-  try {
-    const res = await axios.post(`${BASE_URL}/freeOutput`, data, {
-      headers: {
-        "Content-Type": "application/form-data",
-      },
-    });
-    return res.data;
-  } catch (error) {
-    return error.response.data;
+export const getDataThunk = createAsyncThunk(
+  "/freeOutputJson",
+  async (data) => {
+    try {
+      const res = await axios.post(`${BASE_URL}/freeOutputJson`, data, {
+        headers: {
+          "Content-Type": "application/form-data",
+        },
+      });
+      return res.data;
+    } catch (error) {
+      return error.response.data;
+    }
   }
-});
+);
 
 const initialState = {
   loading: false,
@@ -55,7 +58,6 @@ const mainSlice = createSlice({
         state.loading = true;
       })
       .addCase(getDataThunk.fulfilled, (state, { payload }) => {
-        console.log("suces", payload);
         if (payload) {
           state.data.data = payload;
           state.loading = false;
