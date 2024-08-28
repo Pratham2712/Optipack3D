@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { getDataThunk } from "../../redux/Slices/mainSlice";
 import Loader from "../../components/Loader/Loader";
+import premium from "../../assests/premium.png";
 
 const FreeOutput = () => {
   const location = useLocation();
@@ -61,9 +62,9 @@ const FreeOutput = () => {
           <Breadcrumb />
           <Sidebar />
           <div className="order-details">
-            <div class="head">
+            <div className="head">
               <h1>Loading Pattern</h1>
-              <span class="info-icon">
+              <span className="info-icon">
                 <img src={infoIcon} alt="Info Icon" />
                 <span className="tooltip">
                   Our algorithm elegantly mirrors real-world constraints by
@@ -107,15 +108,54 @@ const FreeOutput = () => {
             </div>
             <div className="content-wrapper">
               <div className="contenter-view">
-                <button id="fullscreen-button" class="btn-cancel">
+                <button id="fullscreen-button" className="btn-cancel">
                   Fullscreen View
                 </button>
-                <iframe
-                  id="threejs-frame"
-                  src={iframeSrc}
-                  width="800"
-                  height="600"
-                ></iframe>
+                <div className="iframe-div">
+                  <iframe
+                    id="threejs-frame"
+                    className="iframe"
+                    src={iframeSrc}
+                    style={{ alignSelf: "center" }}
+                  ></iframe>
+                </div>
+              </div>
+              <div className="block-elements">
+                <div className="sku-heading"></div>
+                <div className="sku-details"></div>
+                <div className="features">
+                  <h3>
+                    Edit Loading Pattern
+                    <img className="premium-icon" src={premium} />
+                  </h3>
+                  <button className="btn-apply" id="edit-pattern">
+                    Edit Pattern
+                  </button>
+                </div>
+                <div className="features">
+                  <h3>
+                    Share/Export Loading
+                    <img className="premium-icon" src={premium} />
+                  </h3>
+                  <input
+                    type="email"
+                    className="features-input"
+                    placeholder="Enter your email"
+                  />
+                  <br />
+                  <button className="btn-apply" id="share-loading">
+                    Share
+                  </button>
+                </div>
+                <div className="features">
+                  <h3>
+                    3d Loading Animation
+                    <img className="premium-icon" src={premium} />
+                  </h3>
+                  <button className="btn-apply" id="Loading-Animation">
+                    See Loading Animation
+                  </button>
+                </div>
               </div>
             </div>
           </div>

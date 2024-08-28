@@ -1,55 +1,97 @@
-.delete-img{
-    height:20px;
-    width: 20px;
-    margin-top:2.9%;
-    cursor: pointer;
+.delete-img {
+  height: 20px;
+  width: 20px;
+  margin-top: 2.9%;
+  cursor: pointer;
 }
 
 input[type="number"],
 input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 16px;
-    box-sizing: border-box;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+  box-sizing: border-box;
 }
 
 .input-row .input {
-    padding: 5px;
-    margin: 5px;
+  padding: 5px;
+  margin: 5px;
 }
 
 .input-row {
-    display: flex;
-    flex-wrap: nowrap;
-    margin-right: 10px;
-    margin-bottom: 20px;
-    margin-top: 20px;
-    width: 100%;
-    align-items: center;
+  display: flex;
+  flex-wrap: nowrap;
+  margin-right: 10px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  width: 100%;
+  align-items: center;
 }
 
 .input-row label {
-    /* font-weight: bold; */
-    flex: 1 0 1%;
-    min-width: 90px;
-    margin-top: 25px;
-    color: #555555;
-    font-size: 14px;
+  /* font-weight: bold; */
+  flex: 1 0 1%;
+  min-width: 90px;
+  margin-top: 25px;
+  color: #555555;
+  font-size: 14px;
 }
 
-.input-row input, .input-row select {
-    flex: 1 0 1%;
-    padding: 5px;
-    margin-right: 10px;
+.input-row input,
+.input-row select {
+  flex: 1 0 1%;
+  padding: 5px;
+  margin-right: 10px;
 }
-.SKU-cta{
-    display: flex;
-    justify-content: space-around;
+.SKU-cta {
+  display: flex;
+  justify-content: center;
 }
 
 input[type="checkbox"] {
-    cursor: pointer;
+  cursor: pointer;
 }
-
+.all-inputs {
+  display: flex;
+  flex-direction: column;
+}
+button.pcr-button {
+  height: 3em;
+  width: 14em;
+}
+@media (max-width: 1000px) {
+  .input-row {
+    flex-direction: column;
+  }
+  .all-inputs {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  button.pcr-button {
+    height: 3em;
+    width: 14em;
+  }
+}
+@media (max-width: 800px) {
+  .input-row {
+    width: 50%;
+    margin: 0.5rem 0rem;
+  }
+  .all-inputs {
+    flex-wrap: wrap;
+  }
+}
+@media (max-width: 600px) {
+  .input-row {
+    width: 50%;
+  }
+  .all-inputs {
+    flex-wrap: wrap;
+  }
+  .content {
+    padding: 0;
+  }
+}

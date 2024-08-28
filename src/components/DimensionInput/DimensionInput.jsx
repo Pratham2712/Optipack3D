@@ -1,105 +1,22 @@
 import React, { useEffect, useState } from "react";
 import InputComp from "./InputComp";
-import { autoFillerBox } from "../../Util/data";
-import { useDispatch, useSelector } from "react-redux";
-import { getDataThunk } from "../../redux/Slices/mainSlice";
-import { useNavigate } from "react-router-dom";
-import { free_output } from "../../constants/links";
 import Loader from "../Loader/Loader";
-const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const [inputs, setInputs] = useState([0, 1, 2]);
+
+const DimensionInput = ({
+  setInputSuccess,
+  skuData,
+  setSkuData,
+  inputs,
+  setInputs,
+  handleInputChange,
+}) => {
   const [colors, setColors] = useState([
     "rgba(244, 67, 54, 1)", // Color 1
     "rgba(76, 175, 80, 1)", // Color 2
     "rgba(33, 150, 243, 1)", // Color 3
   ]);
-  const [skuData, setSkuData] = useState({
-    numTypes: inputs.length,
-    totalContainers: 1,
-    numContainers: 1,
-    containerType1: "General Purpose container 20'",
-    color0: colors[0],
-    color1: colors[1],
-    color2: colors[2],
-    sku0: "Box1",
-    sku1: "Box2",
-    sku2: "Box3",
-    grossWeight0: autoFillerBox[0]["Gross Weight"],
-    grossWeight1: autoFillerBox[1]["Gross Weight"],
-    grossWeight2: autoFillerBox[2]["Gross Weight"],
-    length0: autoFillerBox[0].Length,
-    length1: autoFillerBox[1].Length,
-    length2: autoFillerBox[2].Length,
-    width0: autoFillerBox[0].Width,
-    width1: autoFillerBox[1].Width,
-    width2: autoFillerBox[2].Width,
-    height0: autoFillerBox[0].Height,
-    height1: autoFillerBox[1].Height,
-    height2: autoFillerBox[2].Height,
-    numberOfCases0: autoFillerBox[0]["Number of Cases"],
-    numberOfCases1: autoFillerBox[1]["Number of Cases"],
-    numberOfCases2: autoFillerBox[2]["Number of Cases"],
-    volume0: autoFillerBox[0].Volume,
-    volume1: autoFillerBox[1].Volume,
-    volume2: autoFillerBox[2].Volume,
-    temperature0: autoFillerBox[0].Temperature,
-    temperature1: autoFillerBox[1].Temperature,
-    temperature2: autoFillerBox[2].Temperature,
-    netWeight0: autoFillerBox[0]["Net Weight"],
-    netWeight1: autoFillerBox[1]["Net Weight"],
-    netWeight2: autoFillerBox[2]["Net Weight"],
-    rotationAllowed0: autoFillerBox[0]["Rotation Allowed"] === 1 ? "on" : "off",
-    rotationAllowed1: autoFillerBox[1]["Rotation Allowed"] === 1 ? "on" : "off",
-    rotationAllowed2: autoFillerBox[2]["Rotation Allowed"] === 1 ? "on" : "off",
-  });
-  //useSelector=======================================================================================
-  const loading = useSelector((state) => state.rootReducer.mainSlice.loading);
-  //functions===================================================================================
-  const handleInputChange = (index, field, value) => {
-    setSkuData((prevData) => ({
-      ...prevData,
-      [`${field}${index}`]: value,
-    }));
-  };
-  const addSku = () => {
-    if (inputs.length >= 3) {
-      alert("You cannot add more than 3 SKUs!");
-      return;
-    }
-    let newIndex = 0;
-    while (inputs.includes(newIndex)) {
-      newIndex++;
-    }
-    const newSkuData = {
-      [`color${newIndex}`]: colors[newIndex] || "",
-      [`sku${newIndex}`]: `Box${newIndex + 1}`,
-      [`grossWeight${newIndex}`]: autoFillerBox[newIndex]["Gross Weight"] || "",
-      [`length${newIndex}`]: autoFillerBox[newIndex].Length || "",
-      [`width${newIndex}`]: autoFillerBox[newIndex].Width || "",
-      [`height${newIndex}`]: autoFillerBox[newIndex].Height || "",
-      [`numberOfCases${newIndex}`]:
-        autoFillerBox[newIndex]["Number of Cases"] || "",
-      [`volume${newIndex}`]: autoFillerBox[newIndex].Volume || "",
-      [`temperature${newIndex}`]: autoFillerBox[newIndex].Temperature || "",
-      [`netWeight${newIndex}`]: autoFillerBox[newIndex]["Net Weight"] || "",
-      [`rotationAllowed${newIndex}`]:
-        autoFillerBox[newIndex]["Rotation Allowed"] === 1 ? "on" : "off",
-      numTypes: 3,
-    };
 
-    // Update both inputs and skuData states
-    setInputs([...inputs, newIndex]);
-    setSkuData((prevData) => ({
-      ...prevData,
-      ...newSkuData,
-    }));
-    setInputs([...inputs, newIndex]);
-  };
-
-  //submit logic====================================================
-  const onSubmit = async () => {
+  const validate = () => {
     const requiredFields = [
       "length",
       "width",
@@ -109,7 +26,6 @@ const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
       "sku",
       "color",
     ];
-
     const uniqueColors = new Set();
     let isValid = true;
 
@@ -132,44 +48,12 @@ const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
         uniqueColors.add(colorValue);
       }
     });
-    const filteredSkuData = {
-      totalContainers: 1,
-      numContainers: 1,
-      numTypes: inputs.length,
-      containerType1: "General Purpose container 20'",
-    };
-    inputs.forEach((index, i) => {
-      Object.keys(skuData).forEach((key) => {
-        if (key.endsWith(index)) {
-          // Adjust the key to remove the index and replace with sequential index
-          const newKey = key.replace(`${index}`, `${i}`);
-          filteredSkuData[newKey] = skuData[key];
-        }
-      });
-    });
-
-    const formData = new FormData();
-    Object.keys(filteredSkuData).forEach((key) => {
-      formData.append(key, filteredSkuData[key]);
-    });
-
     if (isValid) {
-      console.log("SKU Data is valid:", skuData);
-
-      dispatch(getDataThunk(formData)).then((data) => {
-        if (data?.payload) {
-          setInputSuccess(true);
-          navigate(free_output, { state: { filteredSkuData } });
-        }
-      });
-    } else {
-      console.error("Validation failed. Please check the console for details.");
+      setInputSuccess(true);
     }
   };
-
   return (
     <>
-      {" "}
       {loading ? (
         <Loader />
       ) : (
@@ -188,14 +72,11 @@ const DimensionInput = ({ inputSuccess, setInputSuccess }) => {
               type="button"
               className="btn-apply"
               onClick={() => addSku()}
+              style={{ marginRight: "1rem" }}
             >
               Add SKU
             </button>
-            <button
-              type="button"
-              className="btn-apply"
-              onClick={() => onSubmit()}
-            >
+            <button type="button" className="btn-apply" onClick={validate}>
               Submit
             </button>
           </div>

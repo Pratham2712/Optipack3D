@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Pickr from "@simonwep/pickr";
 import del from "../../assests/delete.png";
 import "./DimensionInput.css";
-import { autoFillerBox } from "../../Util/data";
 
 const InputComp = ({
   inputs,
@@ -60,7 +59,7 @@ const InputComp = ({
     });
 
     const currColor = document.getElementById(colorInputId);
-    currColor.value = colors[colorIndex];
+    currColor.value = skuData[`color${colorIndex}`];
 
     pickr.on("save", (color, instance) => {
       const rgbaArray = color.toRGBA().map((val, index) => {
@@ -81,13 +80,13 @@ const InputComp = ({
   };
 
   useEffect(() => {
-    inputs.forEach((_, index) => {
-      initializeColorPicker(`colorPicker${index}`, `colorInput${index}`, index);
+    inputs.forEach((input, index) => {
+      initializeColorPicker(`colorPicker${input}`, `colorInput${input}`, input);
     });
   }, [inputs]);
 
   return (
-    <div>
+    <div className="all-inputs">
       {inputs.map((input, index) => (
         <div key={input} className="input-row">
           <div id={`colorPicker${input}`}></div>
@@ -103,7 +102,7 @@ const InputComp = ({
               type="text"
               name={`sku${input}`}
               required
-              defaultValue={`Box${input + 1}`}
+              defaultValue={skuData[`sku${input}`]}
               onChange={(e) => handleInputChange(input, "sku", e.target.value)}
             />
           </div>
@@ -113,7 +112,7 @@ const InputComp = ({
               type="number"
               name={`grossWeight${input}`}
               required
-              defaultValue={autoFillerBox[input]["Gross Weight"]}
+              defaultValue={skuData[`grossWeight${input}`]}
               onChange={(e) =>
                 handleInputChange(input, "grossWeight", e.target.value)
               }
@@ -125,7 +124,7 @@ const InputComp = ({
               type="number"
               name={`length${input}`}
               required
-              defaultValue={autoFillerBox[input]["Length"]}
+              defaultValue={skuData[`length${input}`]}
               onChange={(e) =>
                 handleInputChange(input, "length", e.target.value)
               }
@@ -137,7 +136,7 @@ const InputComp = ({
               type="number"
               name={`width${input}`}
               required
-              defaultValue={autoFillerBox[input]["Width"]}
+              defaultValue={skuData[`width${input}`]}
               onChange={(e) =>
                 handleInputChange(input, "width", e.target.value)
               }
@@ -149,7 +148,7 @@ const InputComp = ({
               type="number"
               name={`height${input}`}
               required
-              defaultValue={autoFillerBox[input]["Height"]}
+              defaultValue={skuData[`height${input}`]}
               onChange={(e) =>
                 handleInputChange(input, "height", e.target.value)
               }
@@ -161,7 +160,7 @@ const InputComp = ({
               type="number"
               name={`numberOfCases${input}`}
               required
-              defaultValue={autoFillerBox[input]["Number of Cases"]}
+              defaultValue={skuData[`numberOfCases${input}`]}
               onChange={(e) =>
                 handleInputChange(input, "numberOfCases", e.target.value)
               }
@@ -170,25 +169,25 @@ const InputComp = ({
           <input
             type="hidden"
             name={`volume${input}`}
-            defaultValue={autoFillerBox[input]["Volume"]}
+            defaultValue={skuData[`volume${input}`]}
           />
           <input
             type="hidden"
             name={`temperature${input}`}
-            defaultValue={autoFillerBox[input]["Temperature"]}
+            defaultValue={skuData[`temperature${input}`]}
           />
           <input
             type="hidden"
             name={`netWeight${input}`}
-            defaultValue={autoFillerBox[input]["Net Weight"]}
+            defaultValue={skuData[`netWeight${input}`]}
           />
           <div className="input checkbox-label">
-            <label for={`tilt${input}`}>Tilt Allowed:</label>
+            <label htmlFor={`tilt${input}`}>Tilt Allowed:</label>
             <input
               type="checkbox"
               name={`rotationAllowed${input}`}
               defaultChecked={
-                autoFillerBox[input]["Rotation Allowed"] === 1 ? true : false
+                skuData[`rotationAllowed${input}`] == "on" ? true : false
               }
               id={`tilt${input}`}
               onClick={(e) => (e.target.value = !e.target.value)}

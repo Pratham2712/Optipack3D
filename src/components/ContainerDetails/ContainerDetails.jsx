@@ -4,7 +4,7 @@ import container_40 from "../../assests/container_40.png";
 import high_container_40 from "../../assests/high_container_40.png";
 import "./ContainerDetails.css";
 
-const ContainerDetails = () => {
+const ContainerDetails = ({ handleInputChange, skuData }) => {
   const truckSpecs = {
     "General Purpose container 20'": {
       length_container: 5900,
@@ -47,12 +47,6 @@ const ContainerDetails = () => {
     setContainerTypes(newTypes);
   };
 
-  //   const addContainer = () => {
-  //     if (totalContainers < 2) {
-  //       setTotalContainers(totalContainers + 1);
-  //     }
-  //   };
-
   return (
     <div>
       <div id="containerDetails" class="container-details-container">
@@ -81,9 +75,9 @@ const ContainerDetails = () => {
                 name={`containerType${index + 1}`}
                 required
                 className="container-type-select"
-                value={containerTypes[index]}
+                defaultValue={skuData[`containerType${index}`]}
                 onChange={(e) =>
-                  handleContainerTypeChange(index, e.target.value)
+                  handleInputChange(index, "containerType", e.target.value)
                 }
               >
                 {Object.keys(truckSpecs).map((type) => (
@@ -95,7 +89,7 @@ const ContainerDetails = () => {
               <div className="container-info" style={{ textAlign: "center" }}>
                 <img
                   id={`containerImage${index + 1}`}
-                  src={truckSpecs[containerTypes[index]]?.image}
+                  src={truckSpecs[skuData[`containerType${index}`]]?.image}
                   alt={`Container Image ${index + 1}`}
                   className="container-image"
                 />
@@ -105,9 +99,13 @@ const ContainerDetails = () => {
                 className="container-dimensions-label"
               >
                 Dimensions (LxWxH):{" "}
-                {`${truckSpecs[containerTypes[index]]?.length_container} x ${
-                  truckSpecs[containerTypes[index]]?.width_container
-                } x ${truckSpecs[containerTypes[index]]?.height_container}`}
+                {`${
+                  truckSpecs[skuData[`containerType${index}`]]?.length_container
+                } x ${
+                  truckSpecs[skuData[`containerType${index}`]]?.width_container
+                } x ${
+                  truckSpecs[skuData[`containerType${index}`]]?.height_container
+                }`}
               </label>
             </div>
           ))}
@@ -122,11 +120,7 @@ const ContainerDetails = () => {
         >
           Add Container
         </button>
-        <button
-          type="button"
-          class="btn-apply"
-          onclick="finishLoadingContainer()"
-        >
+        <button type="button" class="btn-apply">
           Submit
         </button>
       </div>
