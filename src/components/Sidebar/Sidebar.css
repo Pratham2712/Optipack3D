@@ -1,40 +1,38 @@
-
 .navbar {
-    position: absolute;
-    top: 0px;
-    width: 80px;
-    background-color: #ffffff;
-    padding: 5px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border: 2px solid #e3e7f0;
-    height: 270%; /* Ensure the navbar takes the full height */
-    box-shadow: 0 4px 8px 0 rgba(227, 231, 240, 0.8); /* Add drop shadow */
-    height: 400vh;
+  position: fixed;
+  top: 0px;
+  width: 80px;
+  background-color: #ffffff;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 2px solid #e3e7f0;
+  box-shadow: 0 4px 8px 0 rgba(227, 231, 240, 0.8); /* Add drop shadow */
+  height: 100vh;
 }
 .navbar a {
-    display: block;
-    padding-top: 6px;
-    padding-left: 6px;
-    padding-right: 6px;
-    color: #333;
-    text-decoration: none;
-    margin-bottom: 10px;
-    border-radius: 4px;
-    transition: border 0.01s; /* Smooth transition for hover effect */
+  display: block;
+  padding-top: 6px;
+  padding-left: 6px;
+  padding-right: 6px;
+  color: #333;
+  text-decoration: none;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  transition: border 0.01s; /* Smooth transition for hover effect */
 }
 .navbar a:hover {
-    background-color: #d5d5d5;
-    border: 2px solid #ffffff; /* Add black border on hover */
+  background-color: #d5d5d5;
+  border: 2px solid #ffffff; /* Add black border on hover */
 }
 .navbar .user-image {
-    width: 60px;
-    height: 48px;
-    margin: 20px;
+  width: 60px;
+  height: 48px;
+  margin: 20px;
 }
 .navbar .cta {
-    width: 25px;
-    height: 25px;
-    margin: 7px;
+  width: 25px;
+  height: 25px;
+  margin: 7px;
 }

@@ -1,4 +1,6 @@
 .header {
+  position: fixed;
+  width: 95%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -6,6 +8,8 @@
   padding: 20px;
   border-bottom: 2px solid #e6e8edcc; /* Example border */
   margin-left: 5rem;
+  z-index: 1;
+  background-color: #fff;
 }
 .breadcrumb {
   display: flex;
@@ -51,5 +55,6 @@
 @media (max-width: 700px) {
   .header {
     margin-left: 0rem;
+    width: 100%;
   }
 }

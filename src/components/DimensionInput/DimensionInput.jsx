@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import InputComp from "./InputComp";
 import Loader from "../Loader/Loader";
+import { useSelector } from "react-redux";
+import { autoFillerBox } from "../../Util/data";
 
 const DimensionInput = ({
   setInputSuccess,
@@ -10,11 +12,48 @@ const DimensionInput = ({
   setInputs,
   handleInputChange,
 }) => {
+  const loading = useSelector((state) => state.rootReducer.mainSlice.loading);
+
   const [colors, setColors] = useState([
     "rgba(244, 67, 54, 1)", // Color 1
     "rgba(76, 175, 80, 1)", // Color 2
     "rgba(33, 150, 243, 1)", // Color 3
   ]);
+
+  const addSku = () => {
+    if (inputs.length >= 3) {
+      alert("You cannot add more than 3 SKUs!");
+      return;
+    }
+    let newIndex = 0;
+    while (inputs.includes(newIndex)) {
+      newIndex++;
+    }
+    const newSkuData = {
+      [`color${newIndex}`]: colors[newIndex] || "",
+      [`sku${newIndex}`]: `Box${newIndex + 1}`,
+      [`grossWeight${newIndex}`]: autoFillerBox[newIndex]["Gross Weight"] || "",
+      [`length${newIndex}`]: autoFillerBox[newIndex].Length || "",
+      [`width${newIndex}`]: autoFillerBox[newIndex].Width || "",
+      [`height${newIndex}`]: autoFillerBox[newIndex].Height || "",
+      [`numberOfCases${newIndex}`]:
+        autoFillerBox[newIndex]["Number of Cases"] || "",
+      [`volume${newIndex}`]: autoFillerBox[newIndex].Volume || "",
+      [`temperature${newIndex}`]: autoFillerBox[newIndex].Temperature || "",
+      [`netWeight${newIndex}`]: autoFillerBox[newIndex]["Net Weight"] || "",
+      [`rotationAllowed${newIndex}`]:
+        autoFillerBox[newIndex]["Rotation Allowed"] === 1 ? "on" : "off",
+      numTypes: 3,
+    };
+
+    // Update both inputs and skuData states
+    setInputs([...inputs, newIndex]);
+    setSkuData((prevData) => ({
+      ...prevData,
+      ...newSkuData,
+    }));
+    setInputs([...inputs, newIndex]);
+  };
 
   const validate = () => {
     const requiredFields = [

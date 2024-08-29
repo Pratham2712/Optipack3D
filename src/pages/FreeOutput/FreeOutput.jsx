@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import infoIcon from "../../assests/info-icon.png";
@@ -13,6 +13,7 @@ const FreeOutput = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const { filteredSkuData } = location.state || {};
+  const [is700, setIs700] = useState(window.innerWidth < 700);
 
   //useSelector=========================================================================================================================
   const loading = useSelector((state) => state.rootReducer.mainSlice.loading);
@@ -51,6 +52,15 @@ const FreeOutput = () => {
       });
       dispatch(getDataThunk(formData));
     }
+    const handleResize = () => {
+      setIs700(window.innerWidth < 700);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   return (
@@ -60,7 +70,7 @@ const FreeOutput = () => {
       ) : (
         <div>
           <Breadcrumb />
-          <Sidebar />
+          {!is700 ? <Sidebar className="hide-sidebar" /> : <></>}{" "}
           <div className="order-details">
             <div className="head">
               <h1>Loading Pattern</h1>
@@ -83,7 +93,6 @@ const FreeOutput = () => {
                 <button
                   className="btn"
                   style={{
-                    width: "16%",
                     marginTop: "2rem",
                     backgroundColor: "black",
                     color: "white",
@@ -111,14 +120,12 @@ const FreeOutput = () => {
                 <button id="fullscreen-button" className="btn-cancel">
                   Fullscreen View
                 </button>
-                <div className="iframe-div">
-                  <iframe
-                    id="threejs-frame"
-                    className="iframe"
-                    src={iframeSrc}
-                    style={{ alignSelf: "center" }}
-                  ></iframe>
-                </div>
+                <iframe
+                  id="threejs-frame"
+                  className="iframe"
+                  src={iframeSrc}
+                  style={{ alignSelf: "center" }}
+                ></iframe>
               </div>
               <div className="block-elements">
                 <div className="sku-heading"></div>

@@ -1,6 +1,6 @@
 .container-form {
   padding-left: 8rem;
-  padding-top: 2rem;
+  padding-top: 7rem;
   padding-right: 8rem;
 }
 .collapsible {
@@ -145,7 +145,7 @@ button.collapsible {
 }
 @media (max-width: 450px) {
   .container-form {
-    padding-right: 1rem;
-    padding-left: 1rem;
+    padding-right: 0.5rem;
+    padding-left: 0.5rem;
   }
 }
