@@ -6,11 +6,17 @@ import eye_hide from "../../assests/eye hide.png";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useDispatch, useSelector } from "react-redux";
+import { signupThunk } from "../../redux/Slices/authSlice";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
-
-  // Toggle password visibility
+  const dispatch = useDispatch();
+  //useSelector
+  const errorMsg = useSelector(
+    (state) => state.rootReducer.authSlice.errorData.message
+  );
+  // Toggle password visibil
   const handleToggle = () => {
     setShowPassword(!showPassword);
   };
@@ -18,8 +24,11 @@ const Signup = () => {
     await trigger(e.target.name);
   };
   const onSubmit = (data) => {
-    console.log(data);
-    console.log("submit");
+    const formData = new FormData();
+    Object.keys(data).forEach((key) => {
+      formData.append(key, data[key]);
+    });
+    dispatch(signupThunk(formData));
   };
   const schema = yup.object().shape({
     company_name: yup
@@ -61,9 +70,10 @@ const Signup = () => {
             Optipack
           </span>
         </div>
-        <div>
+        <div style={{ position: "relative" }}>
           <h1>Register your Company</h1>
           <p className="subtitle">Design your optimized load plan</p>
+          <div className="all-errors">{errorMsg}</div>
           <div className="input-group">
             <input
               type="email"
@@ -73,6 +83,9 @@ const Signup = () => {
               {...register("email")}
               onBlur={handleBlur}
             />
+            {errors?.email && (
+              <div className="error">{errors?.email?.message}</div>
+            )}
           </div>
           <div className="input-group">
             <input
@@ -84,6 +97,7 @@ const Signup = () => {
               {...register("password")}
               onBlur={handleBlur}
             />
+
             <button
               type="button"
               onClick={handleToggle}
@@ -103,6 +117,9 @@ const Signup = () => {
                 <img src={eye_hide} alt="password" />
               )}
             </button>
+            {errors?.password && (
+              <div className="error">{errors?.password?.message}</div>
+            )}
           </div>
           <div className="input-group">
             <input
@@ -113,6 +130,9 @@ const Signup = () => {
               {...register("company_name")}
               onBlur={handleBlur}
             />
+            {errors?.company_name && (
+              <div className="error">{errors?.company_name?.message}</div>
+            )}
           </div>
           <div className="options">
             <div className="remember-me">

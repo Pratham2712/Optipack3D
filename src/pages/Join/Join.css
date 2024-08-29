@@ -71,6 +71,7 @@ h1 {
 .input-group {
   position: relative;
   margin-bottom: 20px;
+  margin-top: 2rem;
 }
 
 .input-group input {
@@ -256,7 +257,32 @@ footer a:hover {
 .action-button:hover {
   background-color: #333; /* Dark grey on hover */
 }
-
+.error {
+  color: red;
+  font-size: 0.8rem;
+  position: absolute;
+  left: 10%;
+  margin-bottom: 1rem;
+}
+.all-errors {
+  color: red;
+  font-size: 0.8rem;
+  position: absolute;
+  top: 24%;
+  left: 11%;
+}
+.all-errors2 {
+  color: red;
+  font-size: 0.8rem;
+  position: absolute;
+  top: 40%;
+  left: 11%;
+}
+@media (max-width: 1050px) {
+  h1 {
+    font-size: 26px;
+  }
+}
 @media (max-width: 900px) {
   .container {
     flex-direction: column;
@@ -264,6 +290,7 @@ footer a:hover {
   .left-side {
     width: 100%;
     background-color: #fff;
+    padding: 0;
     padding-top: 8%;
   }
   .right-side {
@@ -295,5 +322,9 @@ footer a:hover {
     max-width: 95%;
     height: 194px;
     margin-bottom: 2rem;
+  }
+  h1 {
+    font-size: 24px;
+    line-height: 36px;
   }
 }
