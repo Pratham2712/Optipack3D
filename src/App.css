@@ -4,23 +4,23 @@
   box-sizing: border-box;
 }
 :root {
-  --blue: #3C50E0;
-  --black: #1C2434;
+  --blue: #3c50e0;
+  --black: #1c2434;
 }
 html {
   &::-webkit-scrollbar {
-      width: 0.5rem;
+    width: 0.5rem;
   }
   &::-webkit-scrollbar-thumb {
-      background-color: darkgrey;
+    background-color: darkgrey;
   }
   scroll-behavior: smooth;
-  overflow-x: hidden; 
-
+  overflow-x: hidden;
 }
 body {
-  font-family: 'Manrope', sans-serif;
+  font-family: "Plus Jakarta Sans", sans-serif;
   overflow-x: hidden;
+  /* font-weight: "400"; */
 }
 .App {
   overflow-x: hidden;

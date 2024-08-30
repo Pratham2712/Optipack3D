@@ -225,23 +225,18 @@ document.addEventListener("DOMContentLoaded", () => {
         const startX = box.start.x;
         const startZ = containerDepth - box.start.y;
         const startY = box.start.z;
-
         const endX = box.end.x;
         const endY = box.end.z;
         const endZ = containerDepth - box.end.y;
         const colorName = box.color;
-
         // colorName = hexTo0x(colorName)
         // console.log(startX)
-
         const smallBoxWidth = box.dimensions.width;
         const smallBoxHeight = box.dimensions.height;
         const smallBoxDepth = box.dimensions.length;
-
         const centerX = startX + smallBoxWidth / 2;
         const centerY = startY + smallBoxHeight / 2;
         const centerZ = startZ - smallBoxDepth / 2;
-
         const smallBoxGeometry = new THREE.BoxGeometry(
           smallBoxWidth,
           smallBoxHeight,
@@ -254,19 +249,15 @@ document.addEventListener("DOMContentLoaded", () => {
           side: THREE.DoubleSide,
         });
         const smallBox = new THREE.Mesh(smallBoxGeometry, smallBoxMaterial);
-
         // Apply the same aspect ratio scaling to the small boxes
         smallBox.scale.set(aspectWidth, aspectHeight, aspectDepth);
-
         // Adjust position to account for scaling
         smallBox.position.set(
           centerX * aspectWidth,
           centerY * aspectHeight,
           centerZ * aspectDepth
         );
-
         scene.add(smallBox);
-
         const smallBoxEdges = new THREE.EdgesGeometry(smallBoxGeometry);
         const smallBoxEdgesMaterial = new THREE.LineBasicMaterial({
           color: 0x000000,
@@ -279,16 +270,121 @@ document.addEventListener("DOMContentLoaded", () => {
         );
         // smallBox.scale.set(aspectWidth, aspectHeight, aspectDepth);
         smallBoxWireframe.scale.set(aspectWidth, aspectHeight, aspectDepth);
-
         // Adjust position to account for scaling
         smallBoxWireframe.position.set(
           centerX * aspectWidth,
           centerY * aspectHeight,
           centerZ * aspectDepth
         );
-
         scene.add(smallBoxWireframe);
       });
+    };
+    const animateSmallBoxes = (boxes) => {
+      boxes.forEach((box, index) => {
+        // Delay each animation to occur sequentially
+        setTimeout(() => {
+          // Create and add the small box to the scene
+          createSmallBox(box);
+        }, index * 100); // Adjust the delay (500ms) as needed
+      });
+    };
+
+    const createSmallBox = (box) => {
+      const startX = box.start.x;
+      const startZ = containerDepth - box.start.y;
+      const startY = box.start.z;
+
+      const endX = box.end.x;
+      const endY = box.end.z;
+      const endZ = containerDepth - box.end.y;
+      const colorName = box.color;
+
+      const smallBoxWidth = box.dimensions.width;
+      const smallBoxHeight = box.dimensions.height;
+      const smallBoxDepth = box.dimensions.length;
+
+      const centerX = startX + smallBoxWidth / 2;
+      const centerY = startY + smallBoxHeight / 2;
+      const centerZ = startZ - smallBoxDepth / 2;
+
+      const smallBoxGeometry = new THREE.BoxGeometry(
+        smallBoxWidth,
+        smallBoxHeight,
+        smallBoxDepth
+      );
+      const smallBoxMaterial = new THREE.MeshStandardMaterial({
+        color: parseInt(colorName, 16) || 0xffffff,
+        transparent: true,
+        opacity: 0.9,
+        side: THREE.DoubleSide,
+      });
+      const smallBox = new THREE.Mesh(smallBoxGeometry, smallBoxMaterial);
+
+      smallBox.scale.set(aspectWidth, aspectHeight, aspectDepth);
+
+      smallBox.position.set(
+        centerX * aspectWidth,
+        centerY * aspectHeight,
+        centerZ * aspectDepth
+      );
+
+      scene.add(smallBox);
+
+      const smallBoxEdges = new THREE.EdgesGeometry(smallBoxGeometry);
+      const smallBoxEdgesMaterial = new THREE.LineBasicMaterial({
+        color: 0x000000,
+        transparent: true,
+        opacity: 0.5,
+      });
+      const smallBoxWireframe = new THREE.LineSegments(
+        smallBoxEdges,
+        smallBoxEdgesMaterial
+      );
+      smallBoxWireframe.scale.set(aspectWidth, aspectHeight, aspectDepth);
+
+      smallBoxWireframe.position.set(
+        centerX * aspectWidth,
+        centerY * aspectHeight,
+        centerZ * aspectDepth
+      );
+
+      scene.add(smallBoxWireframe);
+
+      // Animate the small box (e.g., move from a starting position to its final position)
+      new TWEEN.Tween(smallBox.position)
+        .to(
+          {
+            x: centerX * aspectWidth,
+            y: centerY * aspectHeight,
+            z: centerZ * aspectDepth,
+          },
+          1000
+        ) // 1-second animation
+        .easing(TWEEN.Easing.Quadratic.Out)
+        .start();
+
+      new TWEEN.Tween(smallBoxWireframe.position)
+        .to(
+          {
+            x: centerX * aspectWidth,
+            y: centerY * aspectHeight,
+            z: centerZ * aspectDepth,
+          },
+          1000
+        )
+        .easing(TWEEN.Easing.Quadratic.Out)
+        .start();
+    };
+    const clearContainer = () => {
+      // Iterate over all children of the scene
+      for (let i = scene.children.length - 1; i >= 0; i--) {
+        const child = scene.children[i];
+
+        // Assuming you want to remove all objects, or you can filter by specific criteria
+        if (child.isMesh || child.isLine) {
+          scene.remove(child); // Remove the child from the scene
+        }
+      }
     };
 
     // Function to add a horizontal line at a given y position
@@ -358,117 +454,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       );
     };
-
-    // // Function to count boxes by row and color
-    // const countBoxesByRowAndColor = (boxes) => {
-    //     const rowCounts = {};
-
-    //     boxes.forEach(box => {
-    //         const row = box.row;
-    //         const color = box.color;
-    //         const boxHeight = box.dimensions.height;
-
-    //         // Calculate the maximum number of boxes of this height that can fit in the row height
-    //         const normalizedFactor = Math.floor(containerHeight / boxHeight);
-
-    //         if (!rowCounts[row]) {
-    //             rowCounts[row] = {};
-    //         }
-
-    //         if (!rowCounts[row][color]) {
-    //             rowCounts[row][color] = 0;
-    //         }
-
-    //         // Increment the count by the normalized factor
-    //         rowCounts[row][color] += (1 / normalizedFactor);
-    //     });
-
-    //     return rowCounts;
-    // };
-
-    // // Function to add count labels for each row
-    // const addCountLabels = (rowCounts) => {
-    //     const loader = new FontLoader();
-    //     let labelOffsetZ = 0;
-
-    //     // Load the font for the labels
-    //     loader.load('/static/node_modules/three/examples/fonts/optimer_bold.typeface.json', (font) => {
-    //         Object.keys(rowCounts).forEach(row => {
-    //             const rowIndex = parseInt(row);
-    //             const rowHeight = rowIndex * containerHeight / Object.keys(rowCounts).length; // Adjust label position by row index
-    //             const rowData = rowCounts[row];
-    //             // Initial offset for label placement along the z-axis
-
-    //             let labelOffsetX = 0; // Offset for label placement along the x-axis
-
-    //             Object.keys(rowData).forEach((color, index, array) => {
-    //                 const count = Math.round(rowData[color]);
-    //                 const labelText = `${count}`;
-
-    //                 // Create the text geometry and material for the count
-    //                 const countGeometry = new TextGeometry(labelText, {
-    //                     font: font,
-    //                     size: 300,
-    //                     depth: 10,
-    //                     curveSegments: 12,
-    //                     bevelEnabled: false
-    //                 });
-
-    //                 const countMaterial = new THREE.MeshBasicMaterial({ color: parseInt(color, 16) || 0xFFFFFF });
-
-    //                 // Create the text mesh for the count
-    //                 const countMesh = new THREE.Mesh(countGeometry, countMaterial);
-
-    //                 // Compute the bounding box to center the text
-    //                 countGeometry.computeBoundingBox();
-    //                 const countBoundingBox = countGeometry.boundingBox;
-    //                 const countWidth = countBoundingBox.max.x - countBoundingBox.min.x;
-
-    //                 // Set the position of the count text
-    //                 countMesh.position.set((containerWidth + 360 + labelOffsetX) * aspectWidth, 2500 * aspectHeight, (rowHeight + labelOffsetZ) * aspectDepth);
-
-    //                 // Add the count text to the scene
-    //                 scene.add(countMesh);
-
-    //                 // Increment the offset for the next label along the x-axis
-    //                 labelOffsetX += countWidth + 50; // Add distance between each label
-
-    //                 // Check if the current item is not the last one to add a pipe
-    //                 if (index < array.length - 1) {
-    //                     // Create the text geometry and material for the pipe
-    //                     const pipeGeometry = new TextGeometry('|', {
-    //                         font: font,
-    //                         size: 300,
-    //                         depth: 10,
-    //                         curveSegments: 12,
-    //                         bevelEnabled: false
-    //                     });
-
-    //                     const pipeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color for the pipe
-
-    //                     // Create the text mesh for the pipe
-    //                     const pipeMesh = new THREE.Mesh(pipeGeometry, pipeMaterial);
-
-    //                     // Compute the bounding box to center the pipe
-    //                     pipeGeometry.computeBoundingBox();
-    //                     const pipeBoundingBox = pipeGeometry.boundingBox;
-    //                     const pipeWidth = pipeBoundingBox.max.x - pipeBoundingBox.min.x;
-
-    //                     // Set the position of the pipe text
-    //                     pipeMesh.position.set((containerWidth + 360 + labelOffsetX) * aspectWidth, 2500 * aspectHeight, (rowHeight + labelOffsetZ) * aspectDepth);
-
-    //                     // Add the pipe text to the scene
-    //                     scene.add(pipeMesh);
-
-    //                     // Increment the offset for the next label along the x-axis
-    //                     labelOffsetX += pipeWidth + 50; // Add distance after the pipe
-    //                 }
-    //             });
-    //             labelOffsetZ += 250;
-    //         });
-    //         // labelOffsetZ += 250;
-    //     });
-    // };
 
     // Load coordinates from JSON file and create boxes
     getLocalStorageItem("threed_paths")
@@ -629,6 +614,10 @@ document.addEventListener("DOMContentLoaded", () => {
     topViewButton.addEventListener("click", setTopView);
     bottomViewButton.addEventListener("click", setBottomView);
     sideViewButton.addEventListener("click", setSideView);
+    document.getElementById("animate").addEventListener("click", () => {
+      clearContainer();
+      animateSmallBoxes(threedPath);
+    });
 
     const gltfLoader = new GLTFLoader();
     gltfLoader.load("/3dmodels/group1.gltf", (gltf) => {
@@ -820,6 +809,13 @@ document.addEventListener("DOMContentLoaded", () => {
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
+    function animato() {
+      requestAnimationFrame(animato);
+      TWEEN.update(); // Update TWEEN animations
+      renderer.render(scene, camera);
+    }
+
+    animato();
   });
 });
 // const renderer = new THREE.WebGLRenderer({ antialias: true });
