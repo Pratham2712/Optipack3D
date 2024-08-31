@@ -1,3 +1,11 @@
+.feature-container {
+  margin: 0 auto;
+  width: 96%;
+}
+.main_headings {
+  margin: 0 auto;
+  width: 80%;
+}
 .feature-card {
   background: white;
   border: 1px solid #ddd;

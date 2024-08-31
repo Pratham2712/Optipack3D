@@ -1,3 +1,6 @@
+import first from "../assests/first.webp";
+import second from "../assests/second.webp";
+import third from "../assests/third.webp";
 export const autoFillerBox = [
   {
     "Gross Weight": 0.78,
@@ -37,4 +40,26 @@ export const [colors, setColors] = [
   "rgba(244, 67, 54, 1)", // Color 1
   "rgba(76, 175, 80, 1)", // Color 2
   "rgba(33, 150, 243, 1)", // Color 3
+];
+
+export const featuresData = [
+  {
+    mainText: "Better container optimization",
+    subText:
+      "A network of 30 Mn+ users, powerful promotions, deep analytics and customisability",
+    number: "+10%",
+    numText: "Improvement in the container utilization efficiency",
+  },
+  {
+    mainText: "Container Reduction",
+    subText: "Gamified promotions, discount ladders, intuitive promotions UI",
+    number: "-5%",
+    numText: "Reduction in total number of container used",
+  },
+  {
+    mainText: "Cost reduction",
+    subText: "Enticing prepaid offers, COD blocking for users and pin codes",
+    number: "-7%",
+    numText: "Decrease in the logistics cost",
+  },
 ];

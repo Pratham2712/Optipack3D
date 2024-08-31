@@ -8,6 +8,7 @@ import "../../components/KeyFeature/KeyFeature.css";
 import HowItWork from "../../components/HowItWork/HowItWork";
 import AboutnRoles from "../../components/AboutnRoles/AboutnRoles";
 import Footer from "../../components/Footer/Footer";
+import KeyFeat from "../../components/KeyFeatures2/KeyFeat";
 const Home = () => {
   return (
     <div>
@@ -33,6 +34,9 @@ const Home = () => {
             </div>
           </section>
         </div>
+        <section class="features">
+          <KeyFeat />
+        </section>
         <section class="features">
           <KeyFeature />
         </section>

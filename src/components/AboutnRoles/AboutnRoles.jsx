@@ -6,7 +6,7 @@ import leadershipteam from "../../assests/leadershipteam.jpg";
 import loadplanner from "../../assests/loadplanner.jpg";
 const AboutnRoles = () => {
   return (
-    <div>
+    <div className="about_container">
       <div className="emphasized">
         Practical. Simple.
         <div>Optimal.</div>

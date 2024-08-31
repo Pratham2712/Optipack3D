@@ -7,7 +7,8 @@ body {
 }
 
 header {
-  background: #fff;
+  /* background: #fff; */
+  background-color: rgba(255, 255, 255, 0);
   color: #000;
   padding: 10px 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -18,14 +19,18 @@ nav {
   justify-content: space-between;
   align-items: center;
   background: #fff;
+  /* background-color: rgba(255, 255, 255, 0); */
   color: #000;
-  padding: 10px 20px;
+  padding: 0.8rem 15rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  position: relative;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 100;
 }
 
 nav .logo {
-  font-size: 18px;
+  font-size: 24px;
   font-weight: 700;
   line-height: 22.5px;
   color: #333;
@@ -47,8 +52,10 @@ nav ul {
 }
 
 nav ul li a {
-  color: #333;
+  color: #000000;
   text-decoration: none;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .nav-buttons {
@@ -86,10 +93,11 @@ main {
   width: 90%;
   margin: 0 auto;
   margin-bottom: 200px;
+  padding-top: 6rem;
 }
 
 .outer_img_box {
-  width: 90%;
+  width: 74%;
   height: 800px;
   background-color: #bcb4ac;
   display: flex;
@@ -278,6 +286,19 @@ main {
 }
 
 /* Media Queries */
+@media (max-width: 1400px) {
+  nav {
+    padding: 0.8rem 10rem;
+  }
+  .outer_img_box {
+    width: 70%;
+  }
+}
+@media (max-width: 1200px) {
+  nav {
+    padding: 0.8rem 5rem;
+  }
+}
 @media (max-width: 900px) {
   .CTA {
     display: none;
@@ -325,6 +346,7 @@ main {
 
   nav {
     position: relative;
+    padding: 0.8rem 3rem;
   }
 }
 @media (max-width: 600px) {
@@ -360,5 +382,8 @@ main {
   .btn,
   .btn-secondary {
     font-size: 0.9rem;
+  }
+  nav {
+    padding: 0.8rem 1rem;
   }
 }

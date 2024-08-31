@@ -12,7 +12,7 @@ import userdefinedsettings from "../../assests/userdefinedsettings.png";
 
 const KeyFeature = () => {
   return (
-    <div>
+    <div className="feature-container">
       <h2 class="main_headings">Key Features</h2>
       <div
         class="features-grid"

@@ -4,7 +4,7 @@ import "./HowItWork.css";
 
 const HowItWork = () => {
   return (
-    <div>
+    <div className="work_container">
       {" "}
       <h2 class="main_headings">How It Works</h2>
       <div class="steps">

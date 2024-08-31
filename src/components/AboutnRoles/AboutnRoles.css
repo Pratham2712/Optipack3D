@@ -1,95 +1,99 @@
+.about_container {
+  margin: 0 auto;
+  width: 90%;
+}
 .emphasized {
-    margin-top: 3rem;
+  margin-top: 3rem;
 }
 
-.emphasized .emphasized_buttons .btn, .btn-secondary {
-    font-size: 1.1rem;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    display: inline-block;
+.emphasized .emphasized_buttons .btn,
+.btn-secondary {
+  font-size: 1.1rem;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
 }
 
 .emphasized .emphasized_buttons a {
-    color: white;
-    width: 200px;
-    height: 46px;
-    display: inline-block;
+  color: white;
+  width: 200px;
+  height: 46px;
+  display: inline-block;
 }
 
 .team {
-    display: flex;
+  display: flex;
 }
 
-.team-member{
+.team-member {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  background: white;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  width: 240px;
+  height: 350px;
+  text-align: left;
+}
+
+.emphasized {
+  text-align: center;
+  font-weight: 700;
+  font-size: 64px;
+}
+.tag {
+  text-align: center;
+  margin-top: 50px;
+  color: grey;
+  font-size: 25px;
+  word-spacing: 5px;
+}
+.contact {
+  display: flex;
+  justify-content: space-around;
+}
+@media (max-width: 900px) {
+  .emphasized {
+    text-align: center;
+    font-weight: 700;
+    font-size: 50px;
+  }
+  .contact {
+    margin-bottom: 3rem;
+  }
+}
+@media (max-width: 600px) {
+  .emphasized {
+    text-align: center;
+    font-weight: 700;
+    font-size: 40px;
+  }
+  .team-member {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     background: white;
-    padding: 20px;
+    padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    width: 240px;
-    height: 350px;
+    width: 171px;
+    height: 250px;
     text-align: left;
-}
-
-.emphasized {
-    text-align: center;
-    font-weight: 700;
-    font-size: 64px;
-}
-.tag {
-    text-align: center;
-    margin-top: 50px;
-    color: grey;
-    font-size: 25px;
-    word-spacing: 5px;
-}
-.contact {
+  }
+  .team {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: center;
+  }
+  .contact {
     display: flex;
     justify-content: space-around;
-    
-}
-@media (max-width: 900px){
-    .emphasized {
-        text-align: center;
-        font-weight: 700;
-        font-size: 50px;
-    }
-    .contact{
-        margin-bottom: 3rem;
-    }
-}
-@media (max-width: 600px){
-    .emphasized {
-        text-align: center;
-        font-weight: 700;
-        font-size: 40px;
-    }
-    .team-member{
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
-        background: white;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        width: 171px;
-        height: 250px;
-        text-align: left;
-    }
-    .team {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 5px;
-        justify-content: center;
-    }
-    .contact {
-        display: flex;
-        justify-content: space-around;
-        flex-direction: column;   
-    }
+    flex-direction: column;
+  }
 }
