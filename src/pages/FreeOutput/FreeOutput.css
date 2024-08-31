@@ -171,7 +171,7 @@
 .btn-cancel {
   background-color: #ddd;
   color: #555;
-  width: 20%;
+  /* width: 20%; */
 }
 
 .btn-cancel:hover {

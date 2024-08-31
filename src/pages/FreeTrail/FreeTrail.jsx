@@ -12,10 +12,12 @@ import { getDataThunk } from "../../redux/Slices/mainSlice";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { free_output } from "../../constants/links";
+import Popup from "../../components/Popup/Popup";
 
 const FreeTrail = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [premium, setPremium] = useState(false);
   const [is700, setIs700] = useState(window.innerWidth < 700);
   const [showInput, setShowInput] = useState(false);
   const [inputSuccess, setInputSuccess] = useState(false);
@@ -222,6 +224,7 @@ const FreeTrail = () => {
             type="button"
             className="collapsible"
             id="addLoadDetailsButton"
+            onClick={() => setPremium(!premium)}
           >
             Add Optimization constraints
             <img src={lock} alt="Lock Icon" className="icon" />
@@ -241,6 +244,7 @@ const FreeTrail = () => {
           </div>
         </form>
       </div>
+      {premium && <Popup premium={premium} setPremium={setPremium} />}
     </div>
   );
 };

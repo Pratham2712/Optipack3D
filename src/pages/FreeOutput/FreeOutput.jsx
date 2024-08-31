@@ -7,13 +7,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { getDataThunk } from "../../redux/Slices/mainSlice";
 import Loader from "../../components/Loader/Loader";
-import premium from "../../assests/premium.png";
+import premiumIcon from "../../assests/premium.png";
+import Popup from "../../components/Popup/Popup";
 
 const FreeOutput = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const { filteredSkuData } = location.state || {};
   const [is700, setIs700] = useState(window.innerWidth < 700);
+  const [premium, setPremium] = useState(false);
 
   //useSelector=========================================================================================================================
   const loading = useSelector((state) => state.rootReducer.mainSlice.loading);
@@ -47,7 +49,7 @@ const FreeOutput = () => {
   useEffect(() => {
     if (!containerType) {
       const formData = new FormData();
-      Object.keys(filteredSkuData).forEach((key) => {
+      Object.keys(filteredSkuData)?.forEach((key) => {
         formData.append(key, filteredSkuData[key]);
       });
       dispatch(getDataThunk(formData));
@@ -131,18 +133,22 @@ const FreeOutput = () => {
                 <div className="sku-heading"></div>
                 <div className="sku-details"></div>
                 <div className="features">
-                  <h3>
+                  <h3 onClick={() => setPremium(!premium)}>
                     Edit Loading Pattern
-                    <img className="premium-icon" src={premium} />
+                    <img className="premium-icon" src={premiumIcon} />
                   </h3>
-                  <button className="btn-apply" id="edit-pattern">
+                  <button
+                    className="btn-apply"
+                    id="edit-pattern"
+                    onClick={() => setPremium(!premium)}
+                  >
                     Edit Pattern
                   </button>
                 </div>
                 <div className="features">
                   <h3>
                     Share/Export Loading
-                    <img className="premium-icon" src={premium} />
+                    <img className="premium-icon" src={premiumIcon} />
                   </h3>
                   <input
                     type="email"
@@ -150,22 +156,31 @@ const FreeOutput = () => {
                     placeholder="Enter your email"
                   />
                   <br />
-                  <button className="btn-apply" id="share-loading">
+                  <button
+                    className="btn-apply"
+                    id="share-loading"
+                    onClick={() => setPremium(!premium)}
+                  >
                     Share
                   </button>
                 </div>
                 <div className="features">
                   <h3>
                     3d Loading Animation
-                    <img className="premium-icon" src={premium} />
+                    <img className="premium-icon" src={premiumIcon} />
                   </h3>
-                  <button className="btn-apply" id="Loading-Animation">
+                  <button
+                    className="btn-apply"
+                    id="Loading-Animation"
+                    onClick={() => setPremium(!premium)}
+                  >
                     See Loading Animation
                   </button>
                 </div>
               </div>
             </div>
           </div>
+          {premium && <Popup premium={premium} setPremium={setPremium} />}
         </div>
       )}
     </>
