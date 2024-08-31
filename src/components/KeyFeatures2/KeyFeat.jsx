@@ -15,7 +15,7 @@ const KeyFeat = () => {
   return (
     <div>
       {featuresData?.map((ele, index) => (
-        <KeyComp ele={ele} key={index} index={index + 1} image={image[index]} />
+        <KeyComp ele={ele} key={index} index={index + 1} image={image} />
       ))}
     </div>
   );

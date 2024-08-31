@@ -34,7 +34,14 @@ const Home = () => {
             </div>
           </section>
         </div>
-        <section class="features">
+        <section
+          class="features"
+          style={{
+            backgroundColor: "#CC9C87",
+            backgroundColor: "rgb(204 156 135 / 14%)",
+            paddingBottom: "50px",
+          }}
+        >
           <KeyFeat />
         </section>
         <section class="features">

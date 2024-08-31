@@ -1,21 +1,21 @@
 import React from "react";
 import img from "../../assests/second.webp";
 
-const KeyComp = ({ mainText, subText, number, numText, index, image }) => {
-  console.log(mainText);
+const KeyComp = ({ ele, index, image }) => {
+  console.log(ele);
 
   return (
-    <div className="container">
+    <div className="container_feat">
       <div className="text">
         <div className="main_text">
           <p>0{index}</p>
-          <div>{mainText}</div>
-          <div>{subText}</div>
-          <div>Know more</div>
+          <h3>{ele?.mainText}</h3>
+          <div className="sub_text">{ele?.subText}</div>
+          <a>Know more</a>
         </div>
         <div className="num_text">
-          <div>{number}</div>
-          <div>{numText}</div>
+          <div>{ele?.number}</div>
+          <p>{ele?.numText}</p>
         </div>
       </div>
       <div className="image">

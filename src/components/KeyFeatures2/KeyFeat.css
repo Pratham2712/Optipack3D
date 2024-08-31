@@ -1,0 +1,97 @@
+.container_feat {
+    outline-offset: 0px;
+    background-color: #fff;
+    border: 1px #000;
+    border-radius: 1rem;
+    outline: 4px solid #00000005;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0;
+    display: flex;
+    position: static;
+    top: 16rem;
+    box-shadow: 0 8px 64px #eaf3f3;
+    margin: 0 auto;
+    margin-top: 2.5rem;
+    width: 75%;
+}
+
+.text {
+    object-fit: fill;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    min-width: auto;
+    max-width: none;
+    padding: 2rem 1.5rem 2.5rem 2.5rem;
+    display: flex;
+    position: static;
+}
+
+.image {
+    flex-direction: row;
+    align-items: center;
+    display: flex;
+    justify-content: end;
+
+
+}
+.image img {
+    flex: none;
+    width: 90%;
+    max-width: 100%;
+    display: block;
+    object-fit: fill;
+    align-self: flex-start;
+    object-fit: fill;
+    flex: 0 auto;
+    order: 0;
+    align-self: flex-start;
+    display: inline-block;
+}
+.main_text {
+    width: 80%;
+}
+.main_text p {
+    margin-bottom: .5rem;
+    font-size: 16px;
+    color: var(--primary);
+    font-weight: 600;
+
+}
+.main_text h3 {
+    font-size: 32px;
+    color: var(--mainText);
+    letter-spacing: 1px;
+    font-weight: 600;
+    line-height: 1.2;
+}
+.main_text a {
+    display: block;
+    font-weight: 500;
+    text-decoration: none;
+    color: var(--primary);
+    margin-top: 1rem;
+    font-size: 20px;
+}
+
+.sub_text {
+    font-size: 1.25rem;    line-height: 27px;
+    color: #404040;
+}
+.num_text {
+    margin-top: 2rem;
+}
+.num_text div {
+    font-size: 1.75rem;
+    color: var(--blue);
+    font-weight: 600;
+    margin-bottom: 1rem;
+
+}
+
+.num_text p {
+    color: var(--blue);
+    width: 70%;
+}
+

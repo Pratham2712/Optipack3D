@@ -4,8 +4,10 @@
   box-sizing: border-box;
 }
 :root {
-  --blue: #3c50e0;
+  --blue: #37367f;
   --black: #1c2434;
+  --primary : #CC9C87;
+  --mainText: #101010
 }
 html {
   &::-webkit-scrollbar {
