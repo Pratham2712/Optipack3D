@@ -5,7 +5,12 @@ import high_container_40 from "../../assests/high_container_40.png";
 import "./ContainerDetails.css";
 import toast, { Toaster } from "react-hot-toast";
 
-const ContainerDetails = ({ handleInputChange, skuData, setContSuccess }) => {
+const ContainerDetails = ({
+  handleInputChange,
+  skuData,
+  setSkuData,
+  setContSuccess,
+}) => {
   const truckSpecs = {
     "General Purpose container 20'": {
       length_container: 5900,
@@ -56,6 +61,7 @@ const ContainerDetails = ({ handleInputChange, skuData, setContSuccess }) => {
         color: "#713200",
       },
     });
+    console.log(skuData);
   };
   return (
     <div>
@@ -70,8 +76,11 @@ const ContainerDetails = ({ handleInputChange, skuData, setContSuccess }) => {
           name="numContainers"
           min="1"
           max="2"
-          value={totalContainers}
-          class="num-containers-input"
+          defaultValue={skuData.numContainers}
+          onChange={(e) =>
+            setSkuData((prev) => ({ ...prev, numContainers: e.target.value }))
+          }
+          className="num-containers-input"
         />
         <div id="typeInputs" class="container-types">
           {Array.from({ length: totalContainers }).map((_, index) => (

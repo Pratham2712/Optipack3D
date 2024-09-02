@@ -110,6 +110,7 @@
   border-radius: 5px;
   cursor: pointer;
   transition: all 0.3s ease;
+  margin-right: 1rem;
 }
 .container-info {
   margin-bottom: 20px;
@@ -262,7 +263,7 @@
   position: absolute;
   right: 17px;
   bottom: 11px;
-  background: none;
+  background: white;
   font-size: 1.3rem;
 }
 .block-elements {

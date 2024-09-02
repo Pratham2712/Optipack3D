@@ -82,6 +82,7 @@ const authSlice = createSlice({
             state.loading = false;
             state.isError = true;
             state.errorData.message = payload[ERROR];
+            break;
           default:
             break;
         }
@@ -107,6 +108,7 @@ const authSlice = createSlice({
             state.loading = false;
             state.isError = true;
             state.errorData.message = payload[ERROR];
+            break;
           default:
             break;
         }

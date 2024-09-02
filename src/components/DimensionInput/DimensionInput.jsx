@@ -22,6 +22,8 @@ const DimensionInput = ({
     "rgba(33, 150, 243, 1)", // Color 3
   ]);
 
+  const [errField, setErrField] = useState({});
+
   const addSku = () => {
     if (inputs.length >= 3) {
       toast.error("You cannot add more than 3 SKUs!", {
@@ -94,6 +96,7 @@ const DimensionInput = ({
           );
           isValid = false;
           setInputSuccess(false);
+          setErrField((prev) => ({ ...prev, [key]: index }));
         }
       });
 
@@ -140,6 +143,7 @@ const DimensionInput = ({
               skuData={skuData}
               handleInputChange={handleInputChange}
               setSkuData={setSkuData}
+              errField={errField}
             />
           </form>
           <div class="SKU-cta">

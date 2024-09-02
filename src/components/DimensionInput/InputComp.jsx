@@ -10,12 +10,14 @@ const InputComp = ({
   handleInputChange,
   setSkuData,
   skuData,
+  errField,
 }) => {
   const [colors, setColors] = useState([
     "rgba(244, 67, 54, 1)", // Color 1
     "rgba(76, 175, 80, 1)", // Color 2
     "rgba(33, 150, 243, 1)", // Color 3
   ]);
+
   const handleDelete = (index) => {
     if (inputs.length <= 2) {
       toast.error("You need to keep at least 2 SKUs!", {
@@ -53,7 +55,28 @@ const InputComp = ({
     const pickr = Pickr.create({
       el: "#" + pickerId,
       theme: "nano",
-      swatches: ["rgba(244, 67, 54, 1)"],
+      swatches: [
+        "rgba(244, 67, 54, 1)",
+        "rgba(233, 30, 99, 1)",
+        "rgba(156, 39, 176, 1)",
+        "rgba(103, 58, 183, 1)",
+        "rgba(63, 81, 181, 1)",
+        "rgba(33, 150, 243, 1)",
+        "rgba(3, 169, 244, 1)",
+        "rgba(0, 188, 212, 1)",
+        "rgba(0, 150, 136, 1)",
+        "rgba(76, 175, 80, 1)",
+        "rgba(139, 195, 74, 1)",
+        "rgba(205, 220, 57, 1)",
+        "rgba(255, 235, 59, 1)",
+        "rgba(255, 193, 7, 1)",
+        "rgba(255, 152, 0, 1)",
+        "rgba(255, 87, 34, 1)",
+        "rgba(121, 85, 72, 1)",
+        "rgba(158, 158, 158, 1)",
+        "rgba(96, 125, 139, 1)",
+        "rgba(0, 0, 0, 1)",
+      ],
       default: colors[colorIndex],
       components: {
         preview: true,
@@ -112,6 +135,12 @@ const InputComp = ({
               required
               defaultValue={skuData[`sku${input}`]}
               onChange={(e) => handleInputChange(input, "sku", e.target.value)}
+              style={{
+                border:
+                  errField[`sku${input}`] == input
+                    ? "1px solid red"
+                    : "1px solid #ccc",
+              }}
             />
           </div>
           <div className="input">
@@ -124,6 +153,12 @@ const InputComp = ({
               onChange={(e) =>
                 handleInputChange(input, "grossWeight", e.target.value)
               }
+              style={{
+                border:
+                  errField[`grossWeight${input}`] == input
+                    ? "1px solid red"
+                    : "1px solid #ccc",
+              }}
             />
           </div>
           <div className="input">
@@ -136,6 +171,12 @@ const InputComp = ({
               onChange={(e) =>
                 handleInputChange(input, "length", e.target.value)
               }
+              style={{
+                border:
+                  errField[`length${input}`] == input
+                    ? "1px solid red"
+                    : "1px solid #ccc",
+              }}
             />
           </div>
           <div className="input">
@@ -148,6 +189,12 @@ const InputComp = ({
               onChange={(e) =>
                 handleInputChange(input, "width", e.target.value)
               }
+              style={{
+                border:
+                  errField[`width${input}`] == input
+                    ? "1px solid red"
+                    : "1px solid #ccc",
+              }}
             />
           </div>
           <div className="input">
@@ -160,6 +207,12 @@ const InputComp = ({
               onChange={(e) =>
                 handleInputChange(input, "height", e.target.value)
               }
+              style={{
+                border:
+                  errField[`height${input}`] == input
+                    ? "1px solid red"
+                    : "1px solid #ccc",
+              }}
             />
           </div>
           <div className="input">
@@ -172,6 +225,12 @@ const InputComp = ({
               onChange={(e) =>
                 handleInputChange(input, "numberOfCases", e.target.value)
               }
+              style={{
+                border:
+                  errField[`numberOfCases${input}`] == input
+                    ? "1px solid red"
+                    : "1px solid #ccc",
+              }}
             />
           </div>
           <input

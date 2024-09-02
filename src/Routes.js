@@ -15,11 +15,21 @@ import Login from "./pages/Login/Login";
 import Signup from "./pages/Signup/Signup";
 import FreeOutput from "./pages/FreeOutput/FreeOutput";
 
-const Routess = () => {
+const Routess = ({ skuData, setSkuData, inputs, setInputs }) => {
   return (
     <Routes>
       <Route path={User_root} element={<Home />}></Route>
-      <Route path={free_trail} element={<FreeTrail />}></Route>
+      <Route
+        path={free_trail}
+        element={
+          <FreeTrail
+            skuData={skuData}
+            setSkuData={setSkuData}
+            inputs={inputs}
+            setInputs={setInputs}
+          />
+        }
+      ></Route>
       <Route path={free_output} element={<FreeOutput />}></Route>
       <Route path={join} element={<Join />}></Route>
       <Route path={loginurl} element={<Login />}></Route>

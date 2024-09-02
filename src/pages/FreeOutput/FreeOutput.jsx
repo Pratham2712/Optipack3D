@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import infoIcon from "../../assests/info-icon.png";
@@ -9,9 +9,9 @@ import { getDataThunk } from "../../redux/Slices/mainSlice";
 import Loader from "../../components/Loader/Loader";
 import premiumIcon from "../../assests/premium.png";
 import Popup from "../../components/Popup/Popup";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const FreeOutput = () => {
+  const modelRef = useRef(null);
   const location = useLocation();
   const dispatch = useDispatch();
   const { filteredSkuData } = location.state || {};
@@ -66,6 +66,24 @@ const FreeOutput = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modelRef.current && !modelRef.current.contains(event.target)) {
+        setFullscreen(false);
+      }
+    };
+
+    if (fullscreen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [fullscreen, setFullscreen]);
 
   return (
     <>
@@ -134,6 +152,7 @@ const FreeOutput = () => {
                   onClick={() => setFullscreen(!fullscreen)}
                 ></i>
                 <iframe
+                  ref={modelRef}
                   id="threejs-frame"
                   className="iframe"
                   src={iframeSrc}
