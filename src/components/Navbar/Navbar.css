@@ -347,6 +347,9 @@ main {
     position: relative;
     padding: 0.8rem 3rem;
   }
+  main {
+    padding-top: 0rem;
+  }
 }
 @media (max-width: 600px) {
   .CTA.open {

@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { free_output } from "../../constants/links";
 import Popup from "../../components/Popup/Popup";
+import toast, { Toaster } from "react-hot-toast";
 
 const FreeTrail = () => {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ const FreeTrail = () => {
   const [is700, setIs700] = useState(window.innerWidth < 700);
   const [showInput, setShowInput] = useState(false);
   const [inputSuccess, setInputSuccess] = useState(false);
+  const [contSuccess, setContSuccess] = useState(false);
   const [showCont, setShowCont] = useState(false);
   const [inputs, setInputs] = useState([0, 1, 2]);
   const [colors, setColors] = useState([
@@ -88,26 +90,27 @@ const FreeTrail = () => {
 
     const uniqueColors = new Set();
     let isValid = true;
+    if (inputSuccess) {
+      inputs.forEach((index) => {
+        requiredFields.forEach((field) => {
+          const key = `${field}${index}`;
+          if (!skuData[key]) {
+            alert(`Missing value for ${key}`);
+            isValid = false;
+          }
+        });
 
-    inputs.forEach((index) => {
-      requiredFields.forEach((field) => {
-        const key = `${field}${index}`;
-        if (!skuData[key]) {
-          alert(`Missing value for ${key}`);
+        // Check if color is unique
+        const colorKey = `color${index}`;
+        const colorValue = skuData[colorKey];
+        if (uniqueColors.has(colorValue)) {
+          alert(`Color is duplicated!`);
           isValid = false;
+        } else {
+          uniqueColors.add(colorValue);
         }
       });
-
-      // Check if color is unique
-      const colorKey = `color${index}`;
-      const colorValue = skuData[colorKey];
-      if (uniqueColors.has(colorValue)) {
-        alert(`Color is duplicated!`);
-        isValid = false;
-      } else {
-        uniqueColors.add(colorValue);
-      }
-    });
+    }
     const filteredSkuData = {
       totalContainers: 1,
       numContainers: 1,
@@ -127,8 +130,24 @@ const FreeTrail = () => {
     Object.keys(filteredSkuData).forEach((key) => {
       formData.append(key, filteredSkuData[key]);
     });
-
-    if (isValid) {
+    if (!inputSuccess) {
+      toast.error("Confirmed the loading details", {
+        style: {
+          border: "1px solid #713200",
+          padding: "16px",
+          color: "#713200",
+        },
+      });
+    } else if (!contSuccess) {
+      toast.error("Confirmed the container details", {
+        style: {
+          border: "1px solid #713200",
+          padding: "16px",
+          color: "#713200",
+        },
+      });
+    }
+    if (isValid && inputSuccess && contSuccess) {
       console.log("inputsuccess", inputSuccess);
 
       console.log("SKU Data is valid:", skuData);
@@ -157,6 +176,8 @@ const FreeTrail = () => {
 
   return (
     <div>
+      <Toaster />
+
       <Breadcrumb />
       {!is700 ? <Sidebar className="hide-sidebar" /> : <></>}
       <div className="container-form">
@@ -202,10 +223,17 @@ const FreeTrail = () => {
             onClick={() => {
               setShowCont(!showCont);
             }}
+            style={{ background: contSuccess ? "#CFFBBF" : "" }}
           >
             Add Container details
             <img
-              src={inputSuccess ? unlock : lock}
+              src={
+                inputSuccess && contSuccess
+                  ? tick
+                  : inputSuccess
+                  ? unlock
+                  : lock
+              }
               alt="Lock Icon"
               id="addContainerDetails"
               className="icon"
@@ -216,6 +244,7 @@ const FreeTrail = () => {
               <ContainerDetails
                 skuData={skuData}
                 handleInputChange={handleInputChange}
+                setContSuccess={setContSuccess}
               />
             )}
           </div>

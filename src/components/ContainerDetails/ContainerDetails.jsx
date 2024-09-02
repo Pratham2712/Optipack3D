@@ -3,8 +3,9 @@ import container_20 from "../../assests/container_20.png";
 import container_40 from "../../assests/container_40.png";
 import high_container_40 from "../../assests/high_container_40.png";
 import "./ContainerDetails.css";
+import toast, { Toaster } from "react-hot-toast";
 
-const ContainerDetails = ({ handleInputChange, skuData }) => {
+const ContainerDetails = ({ handleInputChange, skuData, setContSuccess }) => {
   const truckSpecs = {
     "General Purpose container 20'": {
       length_container: 5900,
@@ -46,9 +47,19 @@ const ContainerDetails = ({ handleInputChange, skuData }) => {
     newTypes[index] = value;
     setContainerTypes(newTypes);
   };
-
+  const submit = () => {
+    setContSuccess(true);
+    toast.success("Container details confirmed", {
+      style: {
+        border: "1px solid #713200",
+        padding: "16px",
+        color: "#713200",
+      },
+    });
+  };
   return (
     <div>
+      <Toaster />
       <div id="containerDetails" class="container-details-container">
         <label for="numContainers" class="num">
           Number of Containers:
@@ -120,7 +131,7 @@ const ContainerDetails = ({ handleInputChange, skuData }) => {
         >
           Add Container
         </button>
-        <button type="button" class="btn-apply">
+        <button type="button" class="btn-apply" onClick={submit}>
           Submit
         </button>
       </div>

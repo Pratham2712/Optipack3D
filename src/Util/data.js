@@ -63,3 +63,8 @@ export const featuresData = [
     numText: "Decrease in the logistics cost",
   },
 ];
+
+export const errValue = {
+  grossWeight: "gross weight",
+  numberOfCases: "number of cases",
+};

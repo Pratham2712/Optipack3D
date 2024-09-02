@@ -3,6 +3,8 @@ import InputComp from "./InputComp";
 import Loader from "../Loader/Loader";
 import { useSelector } from "react-redux";
 import { autoFillerBox } from "../../Util/data";
+import toast, { Toaster } from "react-hot-toast";
+import { errValue } from "../../Util/data";
 
 const DimensionInput = ({
   setInputSuccess,
@@ -22,7 +24,13 @@ const DimensionInput = ({
 
   const addSku = () => {
     if (inputs.length >= 3) {
-      alert("You cannot add more than 3 SKUs!");
+      toast.error("You cannot add more than 3 SKUs!", {
+        style: {
+          border: "1px solid #713200",
+          padding: "16px",
+          color: "#713200",
+        },
+      });
       return;
     }
     let newIndex = 0;
@@ -72,8 +80,20 @@ const DimensionInput = ({
       requiredFields.forEach((field) => {
         const key = `${field}${index}`;
         if (!skuData[key]) {
-          alert(`Missing value for ${key}`);
+          toast.error(
+            `Missing value for ${
+              field in errValue ? errValue[field] : field
+            } of Box   ${index + 1} `,
+            {
+              style: {
+                border: "1px solid #713200",
+                padding: "16px",
+                color: "#713200",
+              },
+            }
+          );
           isValid = false;
+          setInputSuccess(false);
         }
       });
 
@@ -82,6 +102,13 @@ const DimensionInput = ({
       const colorValue = skuData[colorKey];
       if (uniqueColors.has(colorValue)) {
         alert(`Color is duplicated!`);
+        toast.error("Color is duplicated!", {
+          style: {
+            border: "1px solid #713200",
+            padding: "16px",
+            color: "#713200",
+          },
+        });
         isValid = false;
       } else {
         uniqueColors.add(colorValue);
@@ -89,6 +116,13 @@ const DimensionInput = ({
     });
     if (isValid) {
       setInputSuccess(true);
+      toast.success("Loading details confirmed", {
+        style: {
+          border: "1px solid #713200",
+          padding: "16px",
+          color: "#713200",
+        },
+      });
     }
   };
   return (
@@ -97,6 +131,8 @@ const DimensionInput = ({
         <Loader />
       ) : (
         <div>
+          <Toaster />
+
           <form className="productFrom">
             <InputComp
               inputs={inputs}

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Pickr from "@simonwep/pickr";
 import del from "../../assests/delete.png";
 import "./DimensionInput.css";
+import toast, { Toaster } from "react-hot-toast";
 
 const InputComp = ({
   inputs,
@@ -17,7 +18,13 @@ const InputComp = ({
   ]);
   const handleDelete = (index) => {
     if (inputs.length <= 2) {
-      alert("You need to keep at least 2 SKUs!");
+      toast.error("You need to keep at least 2 SKUs!", {
+        style: {
+          border: "1px solid #713200",
+          padding: "16px",
+          color: "#713200",
+        },
+      });
       return;
     }
     const newInputs = inputs.filter((_, i) => i !== index);
@@ -87,6 +94,7 @@ const InputComp = ({
 
   return (
     <div className="all-inputs">
+      <Toaster />
       {inputs.map((input, index) => (
         <div key={input} className="input-row">
           <div id={`colorPicker${input}`}></div>

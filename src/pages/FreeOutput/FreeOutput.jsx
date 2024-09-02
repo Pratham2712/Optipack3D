@@ -9,6 +9,7 @@ import { getDataThunk } from "../../redux/Slices/mainSlice";
 import Loader from "../../components/Loader/Loader";
 import premiumIcon from "../../assests/premium.png";
 import Popup from "../../components/Popup/Popup";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const FreeOutput = () => {
   const location = useLocation();
@@ -16,6 +17,7 @@ const FreeOutput = () => {
   const { filteredSkuData } = location.state || {};
   const [is700, setIs700] = useState(window.innerWidth < 700);
   const [premium, setPremium] = useState(false);
+  const [fullscreen, setFullscreen] = useState(false);
 
   //useSelector=========================================================================================================================
   const loading = useSelector((state) => state.rootReducer.mainSlice.loading);
@@ -118,15 +120,28 @@ const FreeOutput = () => {
               </p>
             </div>
             <div className="content-wrapper">
-              <div className="contenter-view">
-                <button id="fullscreen-button" className="btn-cancel">
-                  Fullscreen View
-                </button>
+              <div
+                className={`contenter-view ${fullscreen ? "full_view" : ""}`}
+                // style={{
+                //   width: fullscreen ? "100%" : "initial",
+                //   position: fullscreen ? "absolute" : "",
+
+                // }}
+              >
+                <i
+                  class="fas fa-expand btn-cancel"
+                  id="fullscreen-button"
+                  onClick={() => setFullscreen(!fullscreen)}
+                ></i>
                 <iframe
                   id="threejs-frame"
                   className="iframe"
                   src={iframeSrc}
-                  style={{ alignSelf: "center" }}
+                  style={{
+                    alignSelf: "center",
+                    width: fullscreen ? "90%" : "",
+                    height: fullscreen ? "95%" : "",
+                  }}
                 ></iframe>
               </div>
               <div className="block-elements">
