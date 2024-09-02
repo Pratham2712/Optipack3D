@@ -106,12 +106,12 @@ const FreeTrail = ({ skuData, setSkuData, inputs, setInputs }) => {
     if (isValid && inputSuccess && contSuccess) {
       console.log("SKU Data is valid:", skuData);
 
-      // dispatch(getDataThunk(formData)).then((data) => {
-      //   if (data?.payload) {
-      //     setInputSuccess(true);
-      //   }
-      // });
-      navigate(free_output, { state: { filteredSkuData } });
+      dispatch(getDataThunk(formData)).then((data) => {
+        if (data?.payload) {
+          setInputSuccess(true);
+          navigate(free_output, { state: { filteredSkuData } });
+        }
+      });
     } else {
       console.error("Validation failed. Please check the console for details.");
     }
