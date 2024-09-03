@@ -6,16 +6,21 @@ import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/
 // Renderer setup
 
 document.addEventListener("DOMContentLoaded", () => {
-  const threedPath = JSON.parse(localStorage.getItem("threed_paths"));
   const containerInfPath = JSON.parse(localStorage.getItem("container_inf"));
+  const urlParams = new URLSearchParams(window.location.search);
+  const ind = parseInt(urlParams.get("container"), 0);
+  const threedPath = JSON.parse(localStorage.getItem("threed_paths"));
 
   function getLocalStorageItem(key) {
     return new Promise((resolve, reject) => {
       const item = localStorage.getItem(key);
-
       if (item) {
         try {
-          resolve(JSON.parse(item));
+          if (key == "threed_paths") {
+            resolve(JSON.parse(item)[ind]);
+          } else {
+            resolve(JSON.parse(item));
+          }
         } catch (error) {
           reject(
             new Error(`Error parsing JSON from localStorage for key: ${key}`)
@@ -285,7 +290,7 @@ document.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => {
           // Create and add the small box to the scene
           createSmallBox(box);
-        }, index * 100); // Adjust the delay (500ms) as needed
+        }, index * 1000); // Adjust the delay (500ms) as needed
       });
     };
 
@@ -351,35 +356,69 @@ document.addEventListener("DOMContentLoaded", () => {
       scene.add(smallBoxWireframe);
 
       // Animate the small box (e.g., move from a starting position to its final position)
+      // new TWEEN.Tween(smallBox.position)
+      //   .to(
+      //     {
+      //       x: centerX * aspectWidth,
+      //       y: centerY * aspectHeight,
+      //       z: centerZ * aspectDepth,
+      //     },
+      //     1000
+      //   ) // 1-second animation
+      //   .easing(TWEEN.Easing.Quadratic.Out)
+      //   .start();
+
+      // new TWEEN.Tween(smallBoxWireframe.position)
+      //   .to(
+      //     {
+      //       x: centerX * aspectWidth,
+      //       y: centerY * aspectHeight,
+      //       z: centerZ * aspectDepth,
+      //     },
+      //     1000
+      //   )
+      //   .easing(TWEEN.Easing.Quadratic.Out)
+      //   .start();
+      const start_X = containerWidth + 100; // Start position off to the right
+      const end_X = smallBox.position.x; // Target x position (left side)
+      const start_Y = smallBox.position.y + 50; // Start a bit higher than final position
+      const end_Y = smallBox.position.y; // Final y position (settled down)
+
+      // Set the initial position off-screen to the right
+      smallBox.position.set(start_X, start_Y, smallBox.position.z);
+
+      // First, animate the horizontal movement
       new TWEEN.Tween(smallBox.position)
         .to(
           {
-            x: centerX * aspectWidth,
-            y: centerY * aspectHeight,
-            z: centerZ * aspectDepth,
+            x: end_X, // Move to the left
           },
-          1000
-        ) // 1-second animation
-        .easing(TWEEN.Easing.Quadratic.Out)
-        .start();
-
-      new TWEEN.Tween(smallBoxWireframe.position)
-        .to(
-          {
-            x: centerX * aspectWidth,
-            y: centerY * aspectHeight,
-            z: centerZ * aspectDepth,
-          },
-          1000
+          2000 // Duration for horizontal movement
         )
         .easing(TWEEN.Easing.Quadratic.Out)
+        .onComplete(() => {
+          // After horizontal movement is done, start the vertical settling
+          new TWEEN.Tween(smallBox.position)
+            .to(
+              {
+                y: end_Y, // Settle down to the final y position
+              },
+              1000 // Duration for settling down
+            )
+            .easing(TWEEN.Easing.Bounce.Out) // Use a bounce effect for settling down
+            .start();
+        })
         .start();
     };
     const clearContainer = () => {
       // Iterate over all children of the scene
       for (let i = scene.children.length - 1; i >= 0; i--) {
         const child = scene.children[i];
-
+        if (
+          child.isPlate ||
+          (child.material && child.material.map === rustyTexture)
+        )
+          continue;
         // Assuming you want to remove all objects, or you can filter by specific criteria
         if (child.isMesh || child.isLine) {
           scene.remove(child); // Remove the child from the scene
@@ -616,7 +655,7 @@ document.addEventListener("DOMContentLoaded", () => {
     sideViewButton.addEventListener("click", setSideView);
     document.getElementById("animate").addEventListener("click", () => {
       clearContainer();
-      animateSmallBoxes(threedPath);
+      animateSmallBoxes(threedPath[ind]);
     });
 
     const gltfLoader = new GLTFLoader();
@@ -702,7 +741,7 @@ document.addEventListener("DOMContentLoaded", () => {
               containerDepth
             );
           }
-
+          makeBasePlate.isPlate = true;
           // Add the plate to the scene
           scene.add(makeBasePlate);
 

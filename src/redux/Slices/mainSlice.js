@@ -62,6 +62,14 @@ const mainSlice = createSlice({
           state.data.data = payload;
           state.loading = false;
           state.status.getDataThunk = FULFILLED;
+          localStorage.setItem(
+            "threed_paths",
+            JSON.stringify(payload?.threedPaths)
+          );
+          localStorage.setItem(
+            "container_inf",
+            JSON.stringify(payload?.containerInf?.[0])
+          );
         } else {
           state.loading = false;
         }

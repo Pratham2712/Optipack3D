@@ -2,11 +2,15 @@ import "./App.css";
 import { BrowserRouter } from "react-router-dom";
 import Routess from "./Routes";
 import { useState } from "react";
-import { autoFillerBox, colors } from "./Util/data";
+import { autoFillerBox } from "./Util/data";
 
 function App() {
   const [inputs, setInputs] = useState([0, 1, 2]);
-
+  const [colors, setColors] = useState([
+    "rgba(244, 67, 54, 1)", // Color 1
+    "rgba(76, 175, 80, 1)", // Color 2
+    "rgba(33, 150, 243, 1)", // Color 3
+  ]);
   const [skuData, setSkuData] = useState({
     numTypes: inputs.length,
     totalContainers: 1,

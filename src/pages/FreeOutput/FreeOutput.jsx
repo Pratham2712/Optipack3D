@@ -18,11 +18,15 @@ const FreeOutput = () => {
   const [is700, setIs700] = useState(window.innerWidth < 700);
   const [premium, setPremium] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
-
+  const [contIndex, setContIndex] = useState(0);
   //useSelector=========================================================================================================================
   const loading = useSelector((state) => state.rootReducer.mainSlice.loading);
   const tableData = useSelector(
     (state) => state.rootReducer.mainSlice.data.data.df
+  );
+  const [updatedTableData, setUpdatedTableData] = useState("");
+  const boxInfo = useSelector(
+    (state) => state.rootReducer.mainSlice.data.data.box_info
   );
   const container = useSelector(
     (state) => state.rootReducer.mainSlice.data.data.container_indices
@@ -42,9 +46,13 @@ const FreeOutput = () => {
   const containerInf = useSelector(
     (state) => state.rootReducer.mainSlice.data.data.container_inf
   );
-  localStorage.setItem("threed_paths", JSON.stringify(threedPaths?.[0]));
+
+  localStorage.setItem("threed_paths", JSON.stringify(threedPaths));
   localStorage.setItem("container_inf", JSON.stringify(containerInf?.[0]));
-  const iframeSrc = `three_render.html`;
+
+  const iframeSrc = `three_render.html?container=${encodeURIComponent(
+    contIndex
+  )}`;
   // const iframeSrc = `public/three_render.html?threed_paths=${encodeURIComponent(
   //   threedPaths?.[0]
   // )}&container_inf=${encodeURIComponent(containerInf?.[0])}`;
@@ -54,7 +62,18 @@ const FreeOutput = () => {
       Object.keys(filteredSkuData)?.forEach((key) => {
         formData.append(key, filteredSkuData[key]);
       });
-      dispatch(getDataThunk(formData));
+      dispatch(getDataThunk(formData)).then((data) => {
+        if (data.payload) {
+          localStorage.setItem(
+            "threed_paths",
+            JSON.stringify(data?.payload?.threed_paths)
+          );
+          localStorage.setItem(
+            "container_inf",
+            JSON.stringify(data?.payload?.container_inf?.[0])
+          );
+        }
+      });
     }
     const handleResize = () => {
       setIs700(window.innerWidth < 700);
@@ -85,6 +104,37 @@ const FreeOutput = () => {
     };
   }, [fullscreen, setFullscreen]);
 
+  useEffect(() => {
+    // const sums = boxInfo[0].map((_, index) =>
+    //   boxInfo.reduce((sum, arr) => sum + arr[index], 0)
+    // );
+    // Add the new header cell for "Filled cases"
+    // let updatedData = tableData?.replace(
+    //   /<\/tr>/,
+    //   "<th>Filled cases</th></tr>"
+    // );
+    // // Modify each row in the tbody
+    // const modify = updatedData.replace(
+    //   /(<tr>[\s\S]*?<\/td><\/tr>)/g, // Match each row
+    //   (match, content, offset, string) => {
+    //     // Calculate the current row index
+    //     const rowIndex =
+    //       (string.slice(0, offset).match(/<tr>/g) || []).length - 1;
+    //     // Append the sum if within bounds
+    //     if (rowIndex < sums.length) {
+    //       return match.replace(
+    //         /<\/tr>$/, // Target the end of the row
+    //         `<td>${sums[rowIndex]}</td></tr>` // Append the sum data
+    //       );
+    //     } else {
+    //       return match; // Return row unchanged if out of bounds
+    //     }
+    //   }
+    // );
+    // console.log(boxInfo);
+    // console.log(modify, sums);
+    // setUpdatedTableData(modify);
+  }, [tableData, boxInfo]);
   return (
     <>
       {loading ? (
@@ -116,8 +166,11 @@ const FreeOutput = () => {
                   className="btn"
                   style={{
                     marginTop: "2rem",
-                    backgroundColor: "black",
-                    color: "white",
+                    backgroundColor: index == contIndex ? "black" : "#F0F0F0",
+                    color: index == contIndex ? "white" : "black",
+                  }}
+                  onClick={() => {
+                    setContIndex(index);
                   }}
                 >
                   container{index + 1}
@@ -130,21 +183,18 @@ const FreeOutput = () => {
               </p>
               <p>
                 Container fill rate:{" "}
-                <span id="vol-occ-curr">{volume?.[0]}%</span>
+                <span id="vol-occ-curr">{volume?.[contIndex]}%</span>
               </p>
               <p>
                 Packaging Density:
-                <span id="packaging-density">{packaging_density?.[0]}%</span>
+                <span id="packaging-density">
+                  {packaging_density?.[contIndex]}%
+                </span>
               </p>
             </div>
             <div className="content-wrapper">
               <div
                 className={`contenter-view ${fullscreen ? "full_view" : ""}`}
-                // style={{
-                //   width: fullscreen ? "100%" : "initial",
-                //   position: fullscreen ? "absolute" : "",
-
-                // }}
               >
                 <i
                   class="fas fa-expand btn-cancel"
