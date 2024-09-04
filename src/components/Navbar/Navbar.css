@@ -83,6 +83,7 @@ nav ul li a {
 .nav-buttons .btn-secondary {
   background: #8c949b;
   color: #fff;
+  margin-right: 0;
 }
 
 .nav-buttons .btn-secondary:hover {

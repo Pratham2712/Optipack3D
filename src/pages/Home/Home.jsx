@@ -9,6 +9,7 @@ import HowItWork from "../../components/HowItWork/HowItWork";
 import AboutnRoles from "../../components/AboutnRoles/AboutnRoles";
 import Footer from "../../components/Footer/Footer";
 import KeyFeat from "../../components/KeyFeatures2/KeyFeat";
+import Tabs from "../../components/Tabs/Tabs";
 const Home = () => {
   return (
     <div>
@@ -35,7 +36,7 @@ const Home = () => {
           </section>
         </div>
         <section
-          class="features"
+          className="features"
           style={{
             backgroundColor: "#CC9C87",
             backgroundColor: "rgb(204 156 135 / 14%)",
@@ -44,10 +45,14 @@ const Home = () => {
         >
           <KeyFeat />
         </section>
-        <section class="features">
+
+        <section className="features">
+          <Tabs />
+        </section>
+        <section className="features">
           <KeyFeature />
         </section>
-        <section class="how-it-works">
+        <section className="how-it-works">
           <HowItWork />
         </section>
         <div>
