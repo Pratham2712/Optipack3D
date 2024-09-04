@@ -290,7 +290,7 @@ document.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => {
           // Create and add the small box to the scene
           createSmallBox(box);
-        }, index * 1000); // Adjust the delay (500ms) as needed
+        }, index * 300); // Adjust the delay (500ms) as needed
       });
     };
 

@@ -25,6 +25,7 @@ const FreeOutput = () => {
     (state) => state.rootReducer.mainSlice.data.data.df
   );
   const [updatedTableData, setUpdatedTableData] = useState("");
+  const [filled, setFilled] = useState([]);
   const boxInfo = useSelector(
     (state) => state.rootReducer.mainSlice.data.data.box_info
   );
@@ -53,9 +54,7 @@ const FreeOutput = () => {
   const iframeSrc = `three_render.html?container=${encodeURIComponent(
     contIndex
   )}`;
-  // const iframeSrc = `public/three_render.html?threed_paths=${encodeURIComponent(
-  //   threedPaths?.[0]
-  // )}&container_inf=${encodeURIComponent(containerInf?.[0])}`;
+
   useEffect(() => {
     if (!containerType) {
       const formData = new FormData();
@@ -105,36 +104,12 @@ const FreeOutput = () => {
   }, [fullscreen, setFullscreen]);
 
   useEffect(() => {
-    // const sums = boxInfo[0].map((_, index) =>
-    //   boxInfo.reduce((sum, arr) => sum + arr[index], 0)
-    // );
-    // Add the new header cell for "Filled cases"
-    // let updatedData = tableData?.replace(
-    //   /<\/tr>/,
-    //   "<th>Filled cases</th></tr>"
-    // );
-    // // Modify each row in the tbody
-    // const modify = updatedData.replace(
-    //   /(<tr>[\s\S]*?<\/td><\/tr>)/g, // Match each row
-    //   (match, content, offset, string) => {
-    //     // Calculate the current row index
-    //     const rowIndex =
-    //       (string.slice(0, offset).match(/<tr>/g) || []).length - 1;
-    //     // Append the sum if within bounds
-    //     if (rowIndex < sums.length) {
-    //       return match.replace(
-    //         /<\/tr>$/, // Target the end of the row
-    //         `<td>${sums[rowIndex]}</td></tr>` // Append the sum data
-    //       );
-    //     } else {
-    //       return match; // Return row unchanged if out of bounds
-    //     }
-    //   }
-    // );
-    // console.log(boxInfo);
-    // console.log(modify, sums);
-    // setUpdatedTableData(modify);
-  }, [tableData, boxInfo]);
+    const sums = boxInfo[0].map((_, index) =>
+      boxInfo.reduce((sum, arr) => sum + arr[index], 0)
+    );
+    setFilled(sums);
+  }, [boxInfo]);
+
   return (
     <>
       {loading ? (
@@ -156,10 +131,23 @@ const FreeOutput = () => {
                 </span>
               </span>
             </div>
-            <div
-              className="table-info"
-              dangerouslySetInnerHTML={{ __html: tableData }}
-            ></div>
+            <div className="table" style={{ display: "flex" }}>
+              <div
+                className="table-info"
+                dangerouslySetInnerHTML={{ __html: tableData }}
+              ></div>
+              <div>
+                <table className="table-info filled_table">
+                  <tr>
+                    <th>Filled cases</th>
+                  </tr>
+                  {filled.map((ele) => (
+                    <tr style={{ padding: "11.7px" }}>{ele}</tr>
+                  ))}
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
             <div className="container-tabs">
               {container?.map((ele, index) => (
                 <button
@@ -272,3 +260,29 @@ const FreeOutput = () => {
 };
 
 export default FreeOutput;
+
+// useEffect(() => {
+//   const sums = boxInfo[0].map((_, index) =>
+//     boxInfo.reduce((sum, arr) => sum + arr[index], 0)
+//   );
+//   // Add the new header cell for "Filled cases"
+//   let updatedData = tableData?.replace(
+//     /<\/tr>/,
+//     "<th>Filled cases</th></tr>"
+//   );
+//   // Modify each row in the tbody
+//   const modify = updatedData.replace(
+//     /(<tr>\s*<th[^>]*>.*?<\/th>\s*(<td[^>]*>[\s\S]*?<\/td>)+<\/tr>)/g,
+//     (match, content, offset) => {
+//       const rowIndex =
+//         (updatedData.slice(0, offset).match(/<tr>/g) || []).length - 1;
+//       if (rowIndex < sums.length) {
+//         return match.replace(/<\/tr>$/, `<td>${sums[rowIndex]}</td></tr>`);
+//       }
+//       return match;
+//     }
+//   );
+//   console.log(boxInfo);
+//   console.log(modify, sums);
+//   setUpdatedTableData(modify);
+// }, [tableData, boxInfo]);
