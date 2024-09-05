@@ -134,9 +134,17 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: all 0.3s ease;
   margin-right: 1rem;
+  transition: all 0.2s ease;
 }
+.btn:hover {
+  background-color: #1e183a;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+    rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  border-radius: 5px;
+  scale: 0.9;
+}
+
 .container-info {
   margin-bottom: 20px;
   font-size: 18px;

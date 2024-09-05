@@ -161,7 +161,7 @@ const FreeOutput = () => {
                     setContIndex(index);
                   }}
                 >
-                  container{index + 1}
+                  Container {index + 1}
                 </button>
               ))}
             </div>

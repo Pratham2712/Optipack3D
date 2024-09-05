@@ -13,6 +13,7 @@ const DimensionInput = ({
   inputs,
   setInputs,
   handleInputChange,
+  setShowInput,
 }) => {
   const loading = useSelector((state) => state.rootReducer.mainSlice.loading);
 
@@ -78,25 +79,34 @@ const DimensionInput = ({
     const uniqueColors = new Set();
     let isValid = true;
 
+    let error = false;
     inputs.forEach((index) => {
       requiredFields.forEach((field) => {
         const key = `${field}${index}`;
         if (!skuData[key]) {
-          toast.error(
-            `Missing value for ${
-              field in errValue ? errValue[field] : field
-            } of Box   ${index + 1} `,
-            {
-              style: {
-                border: "1px solid #713200",
-                padding: "16px",
-                color: "#713200",
-              },
-            }
-          );
+          error = true;
+          // toast.error(
+          //   `Missing value for ${
+          //     field in errValue ? errValue[field] : field
+          //   } of Box   ${index + 1} `,
+          //   {
+          //     style: {
+          //       border: "1px solid #713200",
+          //       padding: "16px",
+          //       color: "#713200",
+          //     },
+          //   }
+          // );
+
           isValid = false;
           setInputSuccess(false);
           setErrField((prev) => ({ ...prev, [key]: index }));
+        } else {
+          setErrField((prev) => {
+            const newErrField = { ...prev };
+            delete newErrField[key];
+            return newErrField;
+          });
         }
       });
 
@@ -117,8 +127,19 @@ const DimensionInput = ({
         uniqueColors.add(colorValue);
       }
     });
+    if (error) {
+      toast.error(`Missing value  `, {
+        style: {
+          border: "1px solid #713200",
+          padding: "16px",
+          color: "#713200",
+        },
+      });
+    }
     if (isValid) {
       setInputSuccess(true);
+      setErrField({});
+      setShowInput(false);
       toast.success("Loading details confirmed", {
         style: {
           border: "1px solid #713200",

@@ -167,6 +167,7 @@ const FreeTrail = ({ skuData, setSkuData, inputs, setInputs }) => {
                 inputs={inputs}
                 setInputs={setInputs}
                 handleInputChange={handleInputChange}
+                setShowInput={setShowInput}
               />
             )}
           </div>
@@ -200,6 +201,7 @@ const FreeTrail = ({ skuData, setSkuData, inputs, setInputs }) => {
                 setSkuData={setSkuData}
                 handleInputChange={handleInputChange}
                 setContSuccess={setContSuccess}
+                setShowCont={setShowCont}
               />
             )}
           </div>

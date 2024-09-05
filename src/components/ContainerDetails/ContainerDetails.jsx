@@ -10,6 +10,7 @@ const ContainerDetails = ({
   skuData,
   setSkuData,
   setContSuccess,
+  setShowCont,
 }) => {
   const truckSpecs = {
     "General Purpose container 20'": {
@@ -54,6 +55,7 @@ const ContainerDetails = ({
   };
   const submit = () => {
     setContSuccess(true);
+    setShowCont(false);
     toast.success("Container details confirmed", {
       style: {
         border: "1px solid #713200",
@@ -61,7 +63,6 @@ const ContainerDetails = ({
         color: "#713200",
       },
     });
-    console.log(skuData);
   };
   return (
     <div>

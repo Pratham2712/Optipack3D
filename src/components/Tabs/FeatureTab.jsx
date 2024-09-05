@@ -66,56 +66,54 @@ const FeatureTab = () => {
               Share the load plan with your team or customers
             </div>
           </div>
-        </div>
-        <div className="all_feat">
           <div className="indi_feat">
             <div className="head">
-              <img src={Volumeweightload} alt="" />
-              <p>Volume/Weight Load</p>
+              <img src={exportreport} alt="" />
+              <p>Export Report</p>
             </div>
 
             <div className="feature-card-inner">
-              Maximize container utilization with 3D load planning
+              Export the load plan as a PDF, Excel, or 3D image
             </div>
           </div>
           <div className="indi_feat">
             <div className="head">
-              <img src={intellostack} alt="" />
-              <p>Intello Stack</p>
+              <img src={customcontainer} alt="" />
+              <p>Custom Container</p>
             </div>
 
             <div className="feature-card-inner">
-              Auto-stack boxes with intelligent algorithms
+              Add custom boxes to optimize the load plan
             </div>
           </div>
           <div className="indi_feat">
             <div className="head">
-              <img src={weight_check} alt="" />
-              <p>Weight Check</p>
+              <img src={multicontainer} alt="" />
+              <p>Multi-Container</p>
             </div>
 
             <div className="feature-card-inner">
-              Ensure the container's weight limit is not exceeded
+              Load boxes into multiple containers at once
             </div>
           </div>
           <div className="indi_feat">
             <div className="head">
-              <img src={praticalloadplan} alt="" />
-              <p> Practical Load Plan</p>
+              <img src={chooseload} alt="" />
+              <p> Choose Load</p>
             </div>
 
             <div className="feature-card-inner">
-              Load plan considers practical labour constraints
+              Choose the optimum load from multiple selections
             </div>
           </div>
           <div className="indi_feat">
             <div className="head">
-              <img src={shareplan} alt="" />
-              <p>Share Plan</p>
+              <img src={userdefinedsettings} alt="" />
+              <p>User Defined Settings</p>
             </div>
 
             <div className="feature-card-inner">
-              Share the load plan with your team or customers
+              Multiple options for the user to define settings
             </div>
           </div>
         </div>
