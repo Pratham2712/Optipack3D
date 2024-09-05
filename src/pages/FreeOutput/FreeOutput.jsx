@@ -104,7 +104,7 @@ const FreeOutput = () => {
   }, [fullscreen, setFullscreen]);
 
   useEffect(() => {
-    const sums = boxInfo[0].map((_, index) =>
+    const sums = boxInfo?.[0]?.map((_, index) =>
       boxInfo.reduce((sum, arr) => sum + arr[index], 0)
     );
     setFilled(sums);
@@ -141,7 +141,7 @@ const FreeOutput = () => {
                   <tr>
                     <th>Filled cases</th>
                   </tr>
-                  {filled.map((ele) => (
+                  {filled?.map((ele) => (
                     <tr style={{ padding: "11.7px" }}>{ele}</tr>
                   ))}
                   <tbody></tbody>

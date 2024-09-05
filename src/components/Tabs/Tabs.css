@@ -1,6 +1,6 @@
 .tabbar {
   grid-column-gap: 0.5rem;
-  background-color: #00000005;
+  background-color: #00000014;
   border-radius: 1000px;
   padding: 0.75rem;
   display: flex;
@@ -15,7 +15,7 @@
   border-radius: 1000px;
   justify-content: center;
   align-items: center;
-  min-width: 180px;
+  /* min-width: 180px; */
   font-weight: 600;
   display: flex;
   overflow: hidden;
@@ -43,6 +43,7 @@
   width: 66%;
   margin: 0 auto;
   height: 380px;
+  /* height: auto; */
   outline: 4px solid #00000005;
   border-radius: 1rem;
   margin-top: 2rem;
@@ -50,6 +51,7 @@
   display: flex;
   justify-content: center;
   box-shadow: 0 8px 64px #cc9c8780;
+  background-color: #fff;
 }
 .head {
   display: flex;
@@ -108,9 +110,10 @@
   font-size: 1.2rem;
   margin-bottom: 0.2rem;
 }
+
 @media (max-width: 1200px) {
   .tab_container {
-    padding: 1rem 1rem;
+    height: 450px;
   }
 }
 @media (max-width: 1000px) {
@@ -119,5 +122,22 @@
   }
   .tabbar {
     width: 95%;
+  }
+}
+
+@media (max-width: 850px) {
+  .all_feat {
+    grid-template-columns: 1fr;
+  }
+  .tab_container {
+    height: auto;
+  }
+  .indi_feat {
+    margin-bottom: 1rem;
+  }
+}
+@media (max-width: 600px) {
+  .tab {
+    padding: 9px 13px;
   }
 }

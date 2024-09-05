@@ -7,6 +7,9 @@ import reload from "../../assests/reload.png";
 const Breadcrumb = () => {
   const location = useLocation();
   const pathnames = location.pathname.split("/").filter((x) => x);
+  const handleRefresh = () => {
+    window.location.reload();
+  };
   return (
     <div aria-label="breadcrumb" className="header">
       <ol className="breadcrumb">
@@ -31,7 +34,12 @@ const Breadcrumb = () => {
         })}
       </ol>
       <div className="user-info">
-        <button type="button" id="reloadButton" className="reload-button">
+        <button
+          type="button"
+          id="reloadButton"
+          className="reload-button"
+          onClick={handleRefresh}
+        >
           <img src={reload} alt="Reload" className="user-others" />
         </button>
         <img src={notification} alt="Notifications" />

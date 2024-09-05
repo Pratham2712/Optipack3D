@@ -3,7 +3,7 @@
   width: 90%;
 }
 .emphasized {
-  margin-top: 3rem;
+  margin-top: 4rem;
 }
 
 .emphasized .emphasized_buttons .btn,
@@ -16,11 +16,16 @@
   text-decoration: none;
   display: inline-block;
 }
+.emphasized_buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2rem;
+}
 
 .emphasized .emphasized_buttons a {
   color: white;
-  width: 200px;
-  height: 46px;
+  /* width: 200px; */
   display: inline-block;
 }
 
@@ -56,6 +61,19 @@
 .contact {
   display: flex;
   justify-content: space-around;
+}
+.start_btn {
+  color: #fff;
+  text-align: center;
+  background-color: var(--primary);
+  border: 1px solid var(--primary);
+  border-radius: 100px;
+  padding: 1rem 2rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+.start_btn:hover {
+  background-color: #a47f6f;
 }
 @media (max-width: 900px) {
   .emphasized {

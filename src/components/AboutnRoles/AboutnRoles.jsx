@@ -15,24 +15,11 @@ const AboutnRoles = () => {
         Execution ready, pragmatic and easy way of building 3d loads
       </p>
 
-      <div className="emphasized">
-        Get Started with OptiPack3D
-        <div className="emphasized_buttons">
-          <div>
-            <a href="#" className="btn" style={{ backgroundColor: "#1469C2" }}>
-              Start Free Trial
-            </a>
-          </div>
-          <div>
-            <a
-              href="#"
-              className="btn-secondary"
-              style={{ backgroundColor: "rgb(187, 187, 187)" }}
-            >
-              Request a Demo
-            </a>
-          </div>
-        </div>
+      <div className="emphasized">Get Started with OptiPack3D</div>
+      <div className="emphasized_buttons">
+        <a href="#" className="start_btn">
+          Get started
+        </a>
       </div>
 
       <section className="about">

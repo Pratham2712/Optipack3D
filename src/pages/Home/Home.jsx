@@ -46,7 +46,15 @@ const Home = () => {
           <KeyFeat />
         </section>
 
-        <section className="features">
+        <section
+          className="features"
+          style={{
+            backgroundColor: "#CC9C87",
+            backgroundColor: "rgb(204 156 135 / 14%)",
+            paddingBottom: "50px",
+            paddingTop: "50px",
+          }}
+        >
           <Tabs />
         </section>
         <section className="features">

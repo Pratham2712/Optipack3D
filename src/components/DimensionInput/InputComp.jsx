@@ -92,6 +92,8 @@ const InputComp = ({
     currColor.value = skuData[`color${colorIndex}`];
 
     pickr.on("save", (color, instance) => {
+      console.log(color.toHexa());
+
       const rgbaArray = color.toRGBA().map((val, index) => {
         return index < 3 ? Math.round(val) : val;
       });
@@ -144,7 +146,7 @@ const InputComp = ({
             />
           </div>
           <div className="input">
-            <label>Gross Weight (KGs):</label>
+            <label>Gross Weight (kg):</label>
             <input
               type="number"
               name={`grossWeight${input}`}

@@ -1,5 +1,10 @@
 import React from "react";
 import userdefinedsettings from "../../assests/userdefinedsettings.png";
+import box from "../../assests/color-icon/box.png";
+import container from "../../assests/color-icon/contianer.png";
+import stack from "../../assests/color-icon/stack.png";
+import optimize from "../../assests/color-icon/optimize.png";
+import expor from "../../assests/color-icon/export.png";
 
 const Work = () => {
   return (
@@ -8,7 +13,7 @@ const Work = () => {
         <div className="all_feat">
           <div className="indi_feat">
             <div className="head">
-              <img src={userdefinedsettings} alt="" />
+              <img src={box} alt="" />
               <p>1. Upload Boxes</p>
             </div>
 
@@ -18,7 +23,7 @@ const Work = () => {
           </div>
           <div className="indi_feat">
             <div className="head">
-              <img src={userdefinedsettings} alt="" />
+              <img src={container} alt="" />
               <p>2. Set Container</p>
             </div>
 
@@ -28,7 +33,7 @@ const Work = () => {
           </div>
           <div className="indi_feat">
             <div className="head">
-              <img src={userdefinedsettings} alt="" />
+              <img src={stack} alt="" />
               <p>3. Auto-Stack</p>
             </div>
 
@@ -38,7 +43,7 @@ const Work = () => {
           </div>
           <div className="indi_feat">
             <div className="head">
-              <img src={userdefinedsettings} alt="" />
+              <img src={optimize} alt="" />
               <p>4. Optimize</p>
             </div>
 
@@ -48,7 +53,7 @@ const Work = () => {
           </div>
           <div className="indi_feat">
             <div className="head">
-              <img src={userdefinedsettings} alt="" />
+              <img src={expor} alt="" />
               <p>5. Visualize and export</p>
             </div>
 

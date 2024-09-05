@@ -1,5 +1,5 @@
 import React from "react";
-import truck from "../../assests/features_svg/truck.svg";
+// import truck from "../../assests/features_svg/truck.svg";
 import Volumeweightload from "../../assests/Volume-weightload.png";
 import intellostack from "../../assests/intellostack.png";
 import weight_check from "../../assests/weight_check.png";
@@ -10,6 +10,16 @@ import customcontainer from "../../assests/customcontainer.png";
 import multicontainer from "../../assests/multicontainer.png";
 import chooseload from "../../assests/chooseload.png";
 import userdefinedsettings from "../../assests/userdefinedsettings.png";
+import truck from "../../assests/color-icon/truck.png";
+import check from "../../assests/color-icon/check.png";
+import share from "../../assests/color-icon/share.png";
+import cube from "../../assests/color-icon/cube.png";
+import arrow from "../../assests/color-icon/arrow.png";
+import add from "../../assests/color-icon/add.png";
+import page_tick from "../../assests/color-icon/page_tick.png";
+import download from "../../assests/color-icon/download.png";
+import list from "../../assests/color-icon/list.png";
+import setting from "../../assests/color-icon/setting.png";
 
 const FeatureTab = () => {
   return (
@@ -18,7 +28,7 @@ const FeatureTab = () => {
         <div className="all_feat">
           <div className="indi_feat">
             <div className="head">
-              <img src={Volumeweightload} alt="" />
+              <img src={truck} alt="" />
               <p>Volume/Weight Load</p>
             </div>
 
@@ -28,7 +38,7 @@ const FeatureTab = () => {
           </div>
           <div className="indi_feat">
             <div className="head">
-              <img src={intellostack} alt="" />
+              <img src={cube} alt="" />
               <p>Intello Stack</p>
             </div>
 
@@ -38,7 +48,7 @@ const FeatureTab = () => {
           </div>
           <div className="indi_feat">
             <div className="head">
-              <img src={weight_check} alt="" />
+              <img src={check} alt="" />
               <p>Weight Check</p>
             </div>
 
@@ -48,7 +58,7 @@ const FeatureTab = () => {
           </div>
           <div className="indi_feat">
             <div className="head">
-              <img src={praticalloadplan} alt="" />
+              <img src={arrow} alt="" />
               <p> Practical Load Plan</p>
             </div>
 
@@ -58,7 +68,7 @@ const FeatureTab = () => {
           </div>
           <div className="indi_feat">
             <div className="head">
-              <img src={shareplan} alt="" />
+              <img src={share} alt="" />
               <p>Share Plan</p>
             </div>
 
@@ -68,7 +78,7 @@ const FeatureTab = () => {
           </div>
           <div className="indi_feat">
             <div className="head">
-              <img src={exportreport} alt="" />
+              <img src={download} alt="" />
               <p>Export Report</p>
             </div>
 
@@ -78,7 +88,7 @@ const FeatureTab = () => {
           </div>
           <div className="indi_feat">
             <div className="head">
-              <img src={customcontainer} alt="" />
+              <img src={add} alt="" />
               <p>Custom Container</p>
             </div>
 
@@ -88,7 +98,7 @@ const FeatureTab = () => {
           </div>
           <div className="indi_feat">
             <div className="head">
-              <img src={multicontainer} alt="" />
+              <img src={list} alt="" />
               <p>Multi-Container</p>
             </div>
 
@@ -98,7 +108,7 @@ const FeatureTab = () => {
           </div>
           <div className="indi_feat">
             <div className="head">
-              <img src={chooseload} alt="" />
+              <img src={page_tick} alt="" />
               <p> Choose Load</p>
             </div>
 
@@ -108,7 +118,7 @@ const FeatureTab = () => {
           </div>
           <div className="indi_feat">
             <div className="head">
-              <img src={userdefinedsettings} alt="" />
+              <img src={setting} alt="" />
               <p>User Defined Settings</p>
             </div>
 

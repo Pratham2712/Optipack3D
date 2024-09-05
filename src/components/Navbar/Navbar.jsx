@@ -51,7 +51,7 @@ const Navbar = () => {
             }}
             className="btn"
           >
-            Free Trail
+            Free Trial
           </NavLink>
           <NavLink
             to={join}

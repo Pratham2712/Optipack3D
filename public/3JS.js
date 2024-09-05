@@ -234,6 +234,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const endY = box.end.z;
         const endZ = containerDepth - box.end.y;
         const colorName = box.color;
+        console.log(colorName);
+
         // colorName = hexTo0x(colorName)
         // console.log(startX)
         const smallBoxWidth = box.dimensions.width;
@@ -249,7 +251,7 @@ document.addEventListener("DOMContentLoaded", () => {
         );
         const smallBoxMaterial = new THREE.MeshStandardMaterial({
           color: parseInt(colorName, 16) || 0xffffff,
-          transparent: true,
+          transparent: false,
           opacity: 0.9,
           side: THREE.DoubleSide,
         });
