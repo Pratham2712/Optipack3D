@@ -151,7 +151,7 @@ const FreeOutput = () => {
             <div className="container-tabs">
               {container?.map((ele, index) => (
                 <button
-                  className="btn"
+                  className="cont_btn"
                   style={{
                     marginTop: "2rem",
                     backgroundColor: index == contIndex ? "black" : "#F0F0F0",

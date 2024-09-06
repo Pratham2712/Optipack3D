@@ -174,6 +174,7 @@ document.addEventListener("DOMContentLoaded", () => {
       metalness: 0.9,
       opacity: 1,
       color: 0xb87333,
+      emissive: 0x222222,
     });
 
     const basePlate = new THREE.Mesh(plateGeometry, plateMaterial);
@@ -234,7 +235,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const endY = box.end.z;
         const endZ = containerDepth - box.end.y;
         const colorName = box.color;
-        console.log(colorName);
 
         // colorName = hexTo0x(colorName)
         // console.log(startX)
@@ -250,11 +250,13 @@ document.addEventListener("DOMContentLoaded", () => {
           smallBoxDepth
         );
         const smallBoxMaterial = new THREE.MeshStandardMaterial({
+          // color: parseInt(colorName, 16) || 0xffffff,
           color: parseInt(colorName, 16) || 0xffffff,
-          transparent: false,
-          opacity: 0.9,
+          transparent: true,
+          opacity: 1,
           side: THREE.DoubleSide,
         });
+
         const smallBox = new THREE.Mesh(smallBoxGeometry, smallBoxMaterial);
         // Apply the same aspect ratio scaling to the small boxes
         smallBox.scale.set(aspectWidth, aspectHeight, aspectDepth);
@@ -292,7 +294,7 @@ document.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => {
           // Create and add the small box to the scene
           createSmallBox(box);
-        }, index * 300); // Adjust the delay (500ms) as needed
+        }, index * 10); // Adjust the delay (500ms) as needed
       });
     };
 
@@ -524,11 +526,22 @@ document.addEventListener("DOMContentLoaded", () => {
       .catch((error) => console.error("Error loading coordinates:", error));
 
     // Add some light to the scene
-    const ambientLight = new THREE.AmbientLight(0xffffff, 10);
+    // const ambientLight = new THREE.AmbientLight(0xffffff, 10);
+    // scene.add(ambientLight);
+
+    // const directionalLight = new THREE.DirectionalLight(0xffffff, 2, 6000);
+    // directionalLight.position.set(5000, 8000, 5000);
+    // const ambientLight = new THREE.AmbientLight(0xffffff, 1); // Ambient light
+    // scene.add(ambientLight);
+
+    // const directionalLight = new THREE.DirectionalLight(0xffffff, 1); // Directional light
+    // directionalLight.position.set(0, 1, 1); // Adju
+    const ambientLight = new THREE.AmbientLight(0xffffff, 3); // Adjust the intensity (0.6) as needed
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 2, 6000);
-    directionalLight.position.set(5000, 8000, 5000);
+    // Add directional light for dynamic lighting effects
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8); // Brighter light for highlights and shadows
+    directionalLight.position.set(1, 1, 1).normalize();
     scene.add(directionalLight);
 
     const resetButton = document.getElementById("resetButton");

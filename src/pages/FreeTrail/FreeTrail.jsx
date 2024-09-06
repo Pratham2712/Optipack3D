@@ -7,13 +7,13 @@ import lock from "../../assests/lock.png";
 import tick from "../../assests/tick.png";
 import DimensionInput from "../../components/DimensionInput/DimensionInput";
 import ContainerDetails from "../../components/ContainerDetails/ContainerDetails";
-import { autoFillerBox } from "../../Util/data";
 import { getDataThunk } from "../../redux/Slices/mainSlice";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { free_output } from "../../constants/links";
 import Popup from "../../components/Popup/Popup";
 import toast, { Toaster } from "react-hot-toast";
+import Loader from "../../components/Loader/Loader";
 
 const FreeTrail = ({ skuData, setSkuData, inputs, setInputs }) => {
   const navigate = useNavigate();
@@ -24,6 +24,8 @@ const FreeTrail = ({ skuData, setSkuData, inputs, setInputs }) => {
   const [inputSuccess, setInputSuccess] = useState(false);
   const [contSuccess, setContSuccess] = useState(false);
   const [showCont, setShowCont] = useState(false);
+
+  const loading = useSelector((state) => state.rootReducer.mainSlice.loading);
 
   const handleInputChange = (index, field, value) => {
     setSkuData((prevData) => ({
@@ -129,109 +131,115 @@ const FreeTrail = ({ skuData, setSkuData, inputs, setInputs }) => {
   }, []);
 
   return (
-    <div>
-      <Toaster />
+    <>
+      {loading ? (
+        <Loader />
+      ) : (
+        <div>
+          <Toaster />
 
-      <Breadcrumb />
-      {!is700 ? <Sidebar className="hide-sidebar" /> : <></>}
-      <div className="container-form">
-        <h1>Container Builder (Trial Version)</h1>
-        <form>
-          <button
-            type="button"
-            className="collapsible"
-            id="addLoadDetailsButton"
-            onClick={() => {
-              setShowInput(!showInput);
-            }}
-            style={{ background: inputSuccess ? "#CFFBBF" : "" }}
-          >
-            Add load details
-            <img
-              src={inputSuccess ? tick : unlock}
-              alt="Lock Icon"
-              id="addLoadDetailsIcon"
-              className="icon"
-            />
-          </button>
-          <div class="content">
-            <input type="hidden" id="numTypes" name="numTypes" value="3" />
+          <Breadcrumb />
+          {!is700 ? <Sidebar className="hide-sidebar" /> : <></>}
+          <div className="container-form">
+            <h1>Container Builder (Trial Version)</h1>
+            <form>
+              <button
+                type="button"
+                className="collapsible"
+                id="addLoadDetailsButton"
+                onClick={() => {
+                  setShowInput(!showInput);
+                }}
+                style={{ background: inputSuccess ? "#CFFBBF" : "" }}
+              >
+                Add load details
+                <img
+                  src={inputSuccess ? tick : unlock}
+                  alt="Lock Icon"
+                  id="addLoadDetailsIcon"
+                  className="icon"
+                />
+              </button>
+              <div class="content">
+                <input type="hidden" id="numTypes" name="numTypes" value="3" />
 
-            {/* <!-- Prefilled SKUs will be generated here --> */}
-            {showInput && (
-              <DimensionInput
-                inputSuccess={inputSuccess}
-                setInputSuccess={setInputSuccess}
-                skuData={skuData}
-                setSkuData={setSkuData}
-                inputs={inputs}
-                setInputs={setInputs}
-                handleInputChange={handleInputChange}
-                setShowInput={setShowInput}
-              />
-            )}
-          </div>
-          <button
-            type="button"
-            className="collapsible"
-            id="addLoadDetailsButton"
-            onClick={() => {
-              setShowCont(!showCont);
-            }}
-            style={{ background: contSuccess ? "#CFFBBF" : "" }}
-          >
-            Add Container details
-            <img
-              src={
-                inputSuccess && contSuccess
-                  ? tick
-                  : inputSuccess
-                  ? unlock
-                  : lock
-              }
-              alt="Lock Icon"
-              id="addContainerDetails"
-              className="icon"
-            />
-          </button>
-          <div class="content">
-            {inputSuccess && showCont && (
-              <ContainerDetails
-                skuData={skuData}
-                setSkuData={setSkuData}
-                handleInputChange={handleInputChange}
-                setContSuccess={setContSuccess}
-                setShowCont={setShowCont}
-              />
-            )}
-          </div>
+                {/* <!-- Prefilled SKUs will be generated here --> */}
+                {showInput && (
+                  <DimensionInput
+                    inputSuccess={inputSuccess}
+                    setInputSuccess={setInputSuccess}
+                    skuData={skuData}
+                    setSkuData={setSkuData}
+                    inputs={inputs}
+                    setInputs={setInputs}
+                    handleInputChange={handleInputChange}
+                    setShowInput={setShowInput}
+                  />
+                )}
+              </div>
+              <button
+                type="button"
+                className="collapsible"
+                id="addLoadDetailsButton"
+                onClick={() => {
+                  setShowCont(!showCont);
+                }}
+                style={{ background: contSuccess ? "#CFFBBF" : "" }}
+              >
+                Add Container details
+                <img
+                  src={
+                    inputSuccess && contSuccess
+                      ? tick
+                      : inputSuccess
+                      ? unlock
+                      : lock
+                  }
+                  alt="Lock Icon"
+                  id="addContainerDetails"
+                  className="icon"
+                />
+              </button>
+              <div class="content">
+                {inputSuccess && showCont && (
+                  <ContainerDetails
+                    skuData={skuData}
+                    setSkuData={setSkuData}
+                    handleInputChange={handleInputChange}
+                    setContSuccess={setContSuccess}
+                    setShowCont={setShowCont}
+                  />
+                )}
+              </div>
 
-          <button
-            type="button"
-            className="collapsible"
-            id="addLoadDetailsButton"
-            onClick={() => setPremium(!premium)}
-          >
-            Add Optimization constraints
-            <img src={lock} alt="Lock Icon" className="icon" />
-          </button>
-          <div class="content">
-            {/* <!-- Add optimization constraints content here if needed --> */}
+              <button
+                type="button"
+                className="collapsible"
+                id="addLoadDetailsButton"
+                onClick={() => setPremium(!premium)}
+              >
+                Add Optimization constraints
+                <img src={lock} alt="Lock Icon" className="icon" />
+              </button>
+              <div class="content">
+                {/* <!-- Add optimization constraints content here if needed --> */}
+              </div>
+              <div className="optimize">
+                <button
+                  type="submit"
+                  id="final"
+                  className="btn-apply"
+                  onClick={onSubmit}
+                >
+                  Optimize
+                </button>
+              </div>
+            </form>
           </div>
-          <div className="optimize">
-            <button
-              type="submit"
-              id="final"
-              className="btn-apply"
-              onClick={onSubmit}
-            >
-              Optimize
-            </button>
-          </div>
-        </form>
-      </div>
-      {premium && <Popup premium={premium} setPremium={setPremium} />}
-    </div>
+          {premium && <Popup premium={premium} setPremium={setPremium} />}
+        </div>
+      )}
+    </>
   );
 };
 

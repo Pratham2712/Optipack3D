@@ -11,9 +11,6 @@ const AboutnRoles = () => {
         Practical. Simple.
         <div>Optimal.</div>
       </div>
-      <p className="tag">
-        Execution ready, pragmatic and easy way of building 3d loads
-      </p>
 
       <div className="emphasized">Get Started with OptiPack3D</div>
       <div className="emphasized_buttons">
@@ -22,7 +19,7 @@ const AboutnRoles = () => {
         </a>
       </div>
 
-      <section className="about">
+      {/* <section className="about">
         <h2>Roles</h2>
         <div className="team">
           <div className="team-member">
@@ -46,7 +43,7 @@ const AboutnRoles = () => {
             <p>Track key performance metrics and drive productivity agenda</p>
           </div>
         </div>
-      </section>
+      </section> */}
       <section className="about" style={{ maxWidth: "100%" }}>
         <h2>About us</h2>
         <p className="inner_about">

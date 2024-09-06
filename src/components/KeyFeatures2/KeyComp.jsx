@@ -1,5 +1,6 @@
 import React from "react";
 import img from "../../assests/second.webp";
+import final from "../../assests/feat-final.png";
 
 const KeyComp = ({ ele, index, image }) => {
   console.log(ele);

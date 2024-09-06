@@ -57,12 +57,12 @@ const Home = () => {
         >
           <Tabs />
         </section>
-        <section className="features">
+        {/* <section className="features">
           <KeyFeature />
-        </section>
-        <section className="how-it-works">
+        </section> */}
+        {/* <section className="how-it-works">
           <HowItWork />
-        </section>
+        </section> */}
         <div>
           <AboutnRoles />
         </div>

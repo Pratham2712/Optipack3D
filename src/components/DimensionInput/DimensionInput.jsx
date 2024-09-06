@@ -78,29 +78,33 @@ const DimensionInput = ({
     ];
     const uniqueColors = new Set();
     let isValid = true;
-
+    let decimal = false;
     let error = false;
     inputs.forEach((index) => {
       requiredFields.forEach((field) => {
         const key = `${field}${index}`;
         if (!skuData[key]) {
           error = true;
-          // toast.error(
-          //   `Missing value for ${
-          //     field in errValue ? errValue[field] : field
-          //   } of Box   ${index + 1} `,
-          //   {
-          //     style: {
-          //       border: "1px solid #713200",
-          //       padding: "16px",
-          //       color: "#713200",
-          //     },
-          //   }
-          // );
 
           isValid = false;
           setInputSuccess(false);
           setErrField((prev) => ({ ...prev, [key]: index }));
+        } else if (
+          ["length", "width", "height", "numberOfCases"].includes(field)
+        ) {
+          const key = `${field}${index}`;
+          if (skuData[key] && skuData[key] % 1 !== 0) {
+            isValid = false;
+            decimal = true;
+            setInputSuccess(false);
+            setErrField((prev) => ({ ...prev, [key]: index }));
+          } else {
+            setErrField((prev) => {
+              const newErrField = { ...prev };
+              delete newErrField[key];
+              return newErrField;
+            });
+          }
         } else {
           setErrField((prev) => {
             const newErrField = { ...prev };
@@ -127,8 +131,18 @@ const DimensionInput = ({
         uniqueColors.add(colorValue);
       }
     });
+
     if (error) {
       toast.error(`Missing value  `, {
+        style: {
+          border: "1px solid #713200",
+          padding: "16px",
+          color: "#713200",
+        },
+      });
+    }
+    if (decimal) {
+      toast.error(`The input value cannot be a decimal`, {
         style: {
           border: "1px solid #713200",
           padding: "16px",
@@ -245,3 +259,16 @@ export default DimensionInput;
 //   .typeError("Gross Weight must be a number"),
 // rotationAllowed2: yup.boolean().required(),
 // color2: yup.string().required("Color is required"),
+
+// toast.error(
+//   `Missing value for ${
+//     field in errValue ? errValue[field] : field
+//   } of Box   ${index + 1} `,
+//   {
+//     style: {
+//       border: "1px solid #713200",
+//       padding: "16px",
+//       color: "#713200",
+//     },
+//   }
+// );

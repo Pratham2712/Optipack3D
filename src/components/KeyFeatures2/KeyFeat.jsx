@@ -14,6 +14,9 @@ const KeyFeat = () => {
   };
   return (
     <div>
+      <h1 className="head_feat">
+        We provide execution ready, pragmatic and easy way of building 3d loads
+      </h1>
       {featuresData?.map((ele, index) => (
         <KeyComp ele={ele} key={index} index={index + 1} image={image} />
       ))}

@@ -92,8 +92,6 @@ const InputComp = ({
     currColor.value = skuData[`color${colorIndex}`];
 
     pickr.on("save", (color, instance) => {
-      console.log(color.toHexa());
-
       const rgbaArray = color.toRGBA().map((val, index) => {
         return index < 3 ? Math.round(val) : val;
       });
