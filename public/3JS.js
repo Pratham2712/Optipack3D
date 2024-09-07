@@ -294,7 +294,7 @@ document.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => {
           // Create and add the small box to the scene
           createSmallBox(box);
-        }, index * 10); // Adjust the delay (500ms) as needed
+        }, index * 100); // Adjust the delay (500ms) as needed
       });
     };
 
@@ -385,12 +385,12 @@ document.addEventListener("DOMContentLoaded", () => {
       //   .start();
       const start_X = containerWidth + 100; // Start position off to the right
       const end_X = smallBox.position.x; // Target x position (left side)
-      const start_Y = smallBox.position.y + 50; // Start a bit higher than final position
+      const start_Y = smallBox.position.y + 150; // Start a bit higher than final position
       const end_Y = smallBox.position.y; // Final y position (settled down)
 
       // Set the initial position off-screen to the right
       smallBox.position.set(start_X, start_Y, smallBox.position.z);
-
+      smallBoxWireframe.position.set(start_X, start_Y, centerZ * aspectDepth);
       // First, animate the horizontal movement
       new TWEEN.Tween(smallBox.position)
         .to(
@@ -413,9 +413,29 @@ document.addEventListener("DOMContentLoaded", () => {
             .start();
         })
         .start();
+      new TWEEN.Tween(smallBoxWireframe.position)
+        .to(
+          {
+            x: end_X, // Move to the left (same as small box)
+          },
+          2000 // Duration for horizontal movement
+        )
+        .easing(TWEEN.Easing.Quadratic.Out)
+        .onComplete(() => {
+          // After horizontal movement is done, start the vertical settling for the wireframe
+          new TWEEN.Tween(smallBoxWireframe.position)
+            .to(
+              {
+                y: end_Y, // Settle down to the final y position
+              },
+              1000 // Duration for settling down
+            )
+            .easing(TWEEN.Easing.Bounce.Out) // Use a bounce effect for settling down
+            .start();
+        })
+        .start();
     };
     const clearContainer = () => {
-      // Iterate over all children of the scene
       for (let i = scene.children.length - 1; i >= 0; i--) {
         const child = scene.children[i];
         if (
@@ -423,9 +443,15 @@ document.addEventListener("DOMContentLoaded", () => {
           (child.material && child.material.map === rustyTexture)
         )
           continue;
-        // Assuming you want to remove all objects, or you can filter by specific criteria
-        if (child.isMesh || child.isLine) {
-          scene.remove(child); // Remove the child from the scene
+        if (child.isLinePreserved) continue;
+        if (child === containerWireframe) continue;
+        // Remove only smallBox and smallBoxWireframe based on specific conditions
+        if (
+          (child.isMesh && child.geometry instanceof THREE.BoxGeometry) ||
+          (child.isLineSegments &&
+            child.geometry instanceof THREE.EdgesGeometry)
+        ) {
+          scene.remove(child); // Remove the smallBox or smallBoxWireframe
         }
       }
     };
@@ -446,6 +472,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ),
       ]);
       const line = new THREE.Line(lineGeometry, lineMaterial);
+      line.isLinePreserved = true;
       scene.add(line);
     };
 
@@ -458,16 +485,8 @@ document.addEventListener("DOMContentLoaded", () => {
         new THREE.Vector3(-250 * aspectWidth, 0, yPosition * aspectDepth),
       ]);
       const line = new THREE.Line(lineGeometry, lineMaterial);
+      line.isLinePreserved = true;
       scene.add(line);
-      const arrowHelper = new THREE.ArrowHelper(
-        new THREE.Vector3(0, 0, 1 * aspectDepth), // Direction of the arrow
-        new THREE.Vector3(-250 * aspectWidth, 0, yPosition * aspectDepth), // Start point
-        10 * aspectDepth, // Length of the arrow
-        colorMap["black"], // Color of the arrow
-        200 * aspectDepth, // Head length
-        100 * aspectDepth // Head width
-      );
-      scene.add(arrowHelper);
     };
 
     // Function to add a text label at a given y position

@@ -22,9 +22,9 @@ const Navbar = () => {
         </div>
         <div className={`CTA ${menuOpen ? "open" : ""}`}>
           <ul>
-            <li>
+            {/* <li>
               <a href="#">Home</a>
-            </li>
+            </li> */}
             <li>
               <a href="#">About</a>
             </li>
@@ -34,9 +34,9 @@ const Navbar = () => {
             <li>
               <a href="#">Features</a>
             </li>
-            <li>
+            {/* <li>
               <a href="#">Settings</a>
-            </li>
+            </li> */}
             <li>
               <a href="#">Contact</a>
             </li>
