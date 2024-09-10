@@ -11,6 +11,13 @@ import { signupThunk } from "../../redux/Slices/authSlice";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const publicEmailDomains = [
+    "gmail.com",
+    "yahoo.com",
+    "outlook.com",
+    "hotmail.com",
+    "aol.com",
+  ];
   const dispatch = useDispatch();
   //useSelector
   const errorMsg = useSelector(
@@ -41,8 +48,13 @@ const Signup = () => {
       .min(3, "Password must be at least 3 characters"),
     email: yup
       .string()
-      .required("Email is required")
-      .email("Email must be a valid email address"),
+      .required("Company email is required")
+      .email("Enter valid company email address")
+      .test("is-company-email", "Please use a company email", (value) => {
+        if (!value) return false;
+        const domain = value.split("@")[1];
+        return !publicEmailDomains.includes(domain); // Ensure the email is not from public domains
+      }),
   });
 
   const {

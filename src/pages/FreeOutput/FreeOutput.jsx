@@ -9,6 +9,7 @@ import { getDataThunk } from "../../redux/Slices/mainSlice";
 import Loader from "../../components/Loader/Loader";
 import premiumIcon from "../../assests/premium.png";
 import Popup from "../../components/Popup/Popup";
+import ShareContent from "../../components/ShareContent/ShareContent";
 
 const FreeOutput = () => {
   const modelRef = useRef(null);
@@ -19,6 +20,8 @@ const FreeOutput = () => {
   const [premium, setPremium] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
   const [contIndex, setContIndex] = useState(0);
+  const [animate, setAnimate] = useState(false);
+  const [shareit, setShareit] = useState(false);
   //useSelector=========================================================================================================================
   const loading = useSelector((state) => state.rootReducer.mainSlice.loading);
   const tableData = useSelector(
@@ -55,6 +58,20 @@ const FreeOutput = () => {
     contIndex
   )}`;
 
+  const setAnimation = () => {
+    console.log("check");
+
+    setAnimate(!animate);
+    localStorage.setItem("animation", animate);
+    if (!animate) {
+      modelRef.current.contentWindow.postMessage("startAnimation", "*");
+    } else {
+      modelRef.current.contentWindow.postMessage("stopAnimation", "*");
+    }
+  };
+  const share = () => {
+    setShareit(!shareit);
+  };
   useEffect(() => {
     if (!containerType) {
       const formData = new FormData();
@@ -109,6 +126,9 @@ const FreeOutput = () => {
     );
     setFilled(sums);
   }, [boxInfo]);
+
+  const url = "https://yourwebsite.com";
+  const title = "Check out this amazing website!";
 
   return (
     <>
@@ -205,6 +225,19 @@ const FreeOutput = () => {
                 <div className="sku-heading"></div>
                 <div className="sku-details"></div>
                 <div className="features">
+                  <h3>
+                    3d Loading Animation
+                    <img className="premium-icon" src={premiumIcon} />
+                  </h3>
+                  <button
+                    className="btn-apply"
+                    id="Loading-Animation"
+                    onClick={setAnimation}
+                  >
+                    See Loading Animation
+                  </button>
+                </div>
+                <div className="features">
                   <h3 onClick={() => setPremium(!premium)}>
                     Edit Loading Pattern
                     <img className="premium-icon" src={premiumIcon} />
@@ -231,28 +264,23 @@ const FreeOutput = () => {
                   <button
                     className="btn-apply"
                     id="share-loading"
-                    onClick={() => setPremium(!premium)}
+                    onClick={share}
                   >
                     Share
-                  </button>
-                </div>
-                <div className="features">
-                  <h3>
-                    3d Loading Animation
-                    <img className="premium-icon" src={premiumIcon} />
-                  </h3>
-                  <button
-                    className="btn-apply"
-                    id="Loading-Animation"
-                    onClick={() => setPremium(!premium)}
-                  >
-                    See Loading Animation
                   </button>
                 </div>
               </div>
             </div>
           </div>
           {premium && <Popup premium={premium} setPremium={setPremium} />}
+          {shareit && (
+            <ShareContent
+              url={url}
+              title={title}
+              setShareit={setShareit}
+              shareit={shareit}
+            />
+          )}
         </div>
       )}
     </>
