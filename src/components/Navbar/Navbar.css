@@ -224,12 +224,6 @@ main {
   border-radius: 5px;
 }
 
-.footer {
-  background-color: rgb(210, 206, 206);
-  color: #333;
-  text-align: center;
-  padding: 20px;
-}
 .footer-cta {
   display: grid;
   grid-template-columns: repeat(

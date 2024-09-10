@@ -288,13 +288,17 @@ document.addEventListener("DOMContentLoaded", () => {
         scene.add(smallBoxWireframe);
       });
     };
+    let isAnimating = false;
+
     const animateSmallBoxes = (boxes) => {
       boxes.forEach((box, index) => {
         // Delay each animation to occur sequentially
         setTimeout(() => {
+          console.log(isAnimating);
+          console.log("inside animateboxes");
           // Create and add the small box to the scene
           createSmallBox(box);
-        }, index * 100); // Adjust the delay (500ms) as needed
+        }, index * 10); // Adjust the delay (500ms) as needed
       });
     };
 
@@ -691,6 +695,7 @@ document.addEventListener("DOMContentLoaded", () => {
       clearContainer();
       animateSmallBoxes(threedPath[ind]);
     });
+    let animationFrameId;
 
     const gltfLoader = new GLTFLoader();
     gltfLoader.load("/3dmodels/group1.gltf", (gltf) => {
@@ -883,14 +888,35 @@ document.addEventListener("DOMContentLoaded", () => {
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
     function animato() {
-      requestAnimationFrame(animato);
+      // if (!isAnimating) return;
+      animationFrameId = requestAnimationFrame(animato);
       TWEEN.update(); // Update TWEEN animations
       renderer.render(scene, camera);
     }
 
     animato();
+    window.addEventListener("message", (event) => {
+      if (event.data === "startAnimation") {
+        // if (animationFrameId) {
+        //   cancelAnimationFrame(animationFrameId);
+        // }
+        clearContainer();
+        isAnimating = true; // Start animating
+        animateSmallBoxes(threedPath[ind]);
+        animato();
+      }
+      // else if (event.data === "stopAnimation") {
+      //   isAnimating = false;
+      //   //clearContainer();
+      //   cancelAnimationFrame(animationFrameId);
+      //   createSmallBoxesFromCoordinates(threedPath[ind]);
+      // }
+    });
   });
 });
+
+//=================================================================================================================================
+
 // const renderer = new THREE.WebGLRenderer({ antialias: true });
 // renderer.setPixelRatio(window.devicePixelRatio);
 // renderer.setSize(window.innerWidth, window.innerHeight);

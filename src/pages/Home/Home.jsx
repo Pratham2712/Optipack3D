@@ -51,7 +51,7 @@ const Home = () => {
           style={{
             backgroundColor: "#CC9C87",
             backgroundColor: "rgb(204 156 135 / 14%)",
-            paddingBottom: "50px",
+            paddingBottom: "70px",
             paddingTop: "50px",
           }}
         >
@@ -63,9 +63,9 @@ const Home = () => {
         {/* <section className="how-it-works">
           <HowItWork />
         </section> */}
-        <div>
+        {/* <div>
           <AboutnRoles />
-        </div>
+        </div> */}
       </main>
       <Footer />
     </div>

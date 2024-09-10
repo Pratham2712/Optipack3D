@@ -1,10 +1,10 @@
 import React from "react";
-import linkedIn from "../../assests/linkedin.png";
+import logo from "../../assests/logo-removebg-preview.png";
 import "./Footer.css";
 
 const Footer = () => {
   return (
-    <footer>
+    <div>
       <div className="footer">
         <div className="footer-cta">
           <a href="#">Home</a>
@@ -16,9 +16,19 @@ const Footer = () => {
           <a href="#">Privacy Policy</a>
           <a href="#">Terms of Service</a>
         </div>
+        <div className="logo">
+          <img src={logo} alt="" />
+          <div>OptiPack3D</div>
+        </div>
         <div className="social-media">
           <a href="#">
-            <img src={linkedIn} />
+            <i class="fa-brands fa-linkedin"></i>
+          </a>
+          <a href="#">
+            <i class="fa-brands fa-square-x-twitter"></i>
+          </a>
+          <a href="#">
+            <i class="fa-solid fa-envelope"></i>{" "}
           </a>
         </div>
         <p style={{ textAlign: "center" }}>
@@ -26,7 +36,7 @@ const Footer = () => {
           &copy; 2024 OptiPack3D. All rights reserved.
         </p>
       </div>
-    </footer>
+    </div>
   );
 };
 
