@@ -285,7 +285,7 @@ main {
     padding: 0.8rem 10rem;
   }
   .outer_img_box {
-    width: 65%;
+    width: 90%;
   }
 }
 @media (max-width: 1200px) {
