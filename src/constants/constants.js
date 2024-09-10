@@ -1,5 +1,5 @@
-export const BASE_URL = `http://127.0.0.1:8000`;
-// export const BASE_URL = `http://52.66.247.66:8000`;
+// export const BASE_URL = `http://127.0.0.1:8000`;
+export const BASE_URL = `http://52.66.247.66:8000`;
 export const FAILURE = "FAILURE";
 export const SUCCESS = "SUCCESS";
 export const REGISTERED = "REGISTERED";
