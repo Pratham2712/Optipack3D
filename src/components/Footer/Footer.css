@@ -8,12 +8,21 @@
     hsl(18deg 39% 73%) 101%,
     hsl(18deg 40% 66%) 100%
   );
+  background-image: linear-gradient(
+    180deg,
+    hsl(0deg 0% 100%) 20%,
+    hsl(16deg 34% 94%) 73%,
+    hsl(16deg 35% 88%) 85%,
+    hsl(17deg 36% 82%) 91%,
+    hsl(17deg 38% 75%) 94%,
+    hsl(18deg 40% 66%) 100%
+  );
 
   color: #333;
   text-align: center;
   padding: 20px;
   padding-top: 6rem;
-  margin-top: -13rem;
+  /* margin-top: -13rem; */
 }
 
 .social-media {
