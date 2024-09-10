@@ -106,6 +106,9 @@
   .container_feat {
     width: 95%;
   }
+  .head_feat {
+    font-size: 2rem;
+  }
 }
 @media (max-width: 850px) {
   .container_feat {
@@ -131,9 +134,15 @@
   .num_text div {
     font-size: 24px;
   }
+  .head_feat {
+    font-size: 1.7rem;
+  }
 }
 @media (max-width: 500px) {
   .text {
     padding: 1rem 0rem 1rem 1rem;
+  }
+  .head_feat {
+    font-size: 1.3rem;
   }
 }
