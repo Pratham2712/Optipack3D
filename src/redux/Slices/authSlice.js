@@ -36,10 +36,39 @@ export const loginThunk = createAsyncThunk("/loginJson", async (data) => {
   }
 });
 
+export const sendOtpThunk = createAsyncThunk(
+  "/send_otp_to_email",
+  async (data) => {
+    try {
+      const res = await axios.post(`${BASE_URL}/send_otp_to_email`, data, {
+        headers: {
+          "Content-Type": "application/form-data",
+        },
+      });
+      return res.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  }
+);
+export const verifyOtpThunk = createAsyncThunk("/verify_otp", async (data) => {
+  try {
+    const res = await axios.post(`${BASE_URL}/verify_otp`, data, {
+      headers: {
+        "Content-Type": "application/form-data",
+      },
+    });
+    return res.data;
+  } catch (error) {
+    return error.response.data;
+  }
+});
+
 const initialState = {
   loading: false,
   updateDone: false,
   isLogin: false,
+  otpSend: false,
   errorData: {
     message: "",
     type: "",
@@ -53,6 +82,8 @@ const initialState = {
   status: {
     signupThunk: IDLE,
     loginThunk: IDLE,
+    sendOtpThunk: IDLE,
+    verifyOtpThunk: IDLE,
   },
 };
 
@@ -115,6 +146,59 @@ const authSlice = createSlice({
       })
       .addCase(loginThunk.rejected, (state, action) => {
         state.status.loginThunk = ERROR;
+        state.loading = false;
+        state.errorData.message = action.error.message;
+      })
+      //sendOtpThunk==============================================================================================================
+      .addCase(sendOtpThunk.pending, (state, { payload }) => {
+        state.loading = true;
+      })
+      .addCase(sendOtpThunk.fulfilled, (state, { payload }) => {
+        switch (Object.keys(payload)[0]) {
+          case SUCCESS:
+            state.otpSend = true;
+            state.loading = false;
+            state.successMsg = payload[SUCCESS];
+            state.errorData.message = "";
+            break;
+          case ERROR:
+            state.loading = false;
+            state.isError = true;
+            state.errorData.message = payload[ERROR];
+            state.successMsg = "";
+            break;
+          default:
+            break;
+        }
+      })
+      .addCase(sendOtpThunk.rejected, (state, action) => {
+        state.status.sendOtpThunk = ERROR;
+        state.loading = false;
+        state.errorData.message = action.error.message;
+      })
+      //verifyOtpThunk==============================================================================================================
+      .addCase(verifyOtpThunk.pending, (state, { payload }) => {
+        state.loading = true;
+      })
+      .addCase(verifyOtpThunk.fulfilled, (state, { payload }) => {
+        switch (Object.keys(payload)[0]) {
+          case SUCCESS:
+            state.loading = false;
+            state.successMsg = payload[SUCCESS];
+            state.errorData.message = "";
+            break;
+          case ERROR:
+            state.loading = false;
+            state.isError = true;
+            state.errorData.message = payload[ERROR];
+            state.successMsg = "";
+            break;
+          default:
+            break;
+        }
+      })
+      .addCase(verifyOtpThunk.rejected, (state, action) => {
+        state.status.verifyOtpThunk = ERROR;
         state.loading = false;
         state.errorData.message = action.error.message;
       });
