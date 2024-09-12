@@ -8,6 +8,7 @@ import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  checkEmailThunk,
   sendOtpThunk,
   signupThunk,
   verifyOtpThunk,
@@ -20,6 +21,7 @@ const Signup = () => {
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const [email, setEmail] = useState("");
   const inputsRef = useRef([]);
+  const [company, setCompany] = useState("");
   const publicEmailDomains = [
     //"gmail.com",
     "yahoo.com",
@@ -29,13 +31,8 @@ const Signup = () => {
   ];
   const dispatch = useDispatch();
   //useSelector
-  const errorMsg = useSelector(
-    (state) => state.rootReducer.authSlice.errorData.message
-  );
   const otpSend = useSelector((state) => state.rootReducer.authSlice.otpSend);
-  const successMsg = useSelector(
-    (state) => state.rootReducer.authSlice.successMsg
-  );
+
   const loading = useSelector((state) => state.rootReducer.authSlice.loading);
   // Toggle password visibil
   const handleToggle = () => {
@@ -46,7 +43,6 @@ const Signup = () => {
   };
   const handleChange = (e, index) => {
     const value = e.target.value.replace(/\D/g, "");
-    console.log(control);
 
     if (value) {
       const currentValues = getValues("otp");
@@ -79,12 +75,53 @@ const Signup = () => {
     });
     setEmail(data?.email);
 
-    dispatch(sendOtpThunk(formData));
+    // dispatch(checkEmailThunk(formData)).then((data) => {
+    //   if (data.payload["SUCCESS"]) {
+    dispatch(sendOtpThunk(formData)).then((data) => {
+      if (data.payload["ERROR"]) {
+        toast.error(data.payload["ERROR"], {
+          style: {
+            border: "1px solid #713200",
+            padding: "16px",
+            color: "#713200",
+          },
+        });
+      }
+      if (data.payload["SUCCESS"]) {
+        toast.success(data.payload["SUCCESS"], {
+          style: {
+            border: "1px solid #713200",
+            padding: "16px",
+            color: "#713200",
+          },
+        });
+      }
+    });
+    //   } else {
+    //     toast.error(data.payload["ERROR"], {
+    //       style: {
+    //         border: "1px solid #713200",
+    //         padding: "16px",
+    //         color: "#713200",
+    //       },
+    //     });
+    //   }
+    // });
   };
-  console.log(email);
+  const extractDomain = (email) => {
+    const parts = email.split("@");
+    if (parts.length === 2) {
+      const domainPart = parts[1];
+      const domainParts = domainPart.split(".");
+      return domainParts[0];
+    }
+    return "";
+  };
+
   const verify = (data) => {
-    console.log(data);
     setValue3("email", email);
+    const extractedDomain = extractDomain(email);
+    setValue3("company_name", extractedDomain);
     const otpString = data.otp.join("");
 
     const formData = new FormData();
@@ -94,7 +131,26 @@ const Signup = () => {
         formData.append(key, data[key]);
       }
     });
-    dispatch(verifyOtpThunk(formData));
+    dispatch(verifyOtpThunk(formData)).then((data) => {
+      if (data.payload["ERROR"]) {
+        toast.error(data.payload["ERROR"], {
+          style: {
+            border: "1px solid #713200",
+            padding: "16px",
+            color: "#713200",
+          },
+        });
+      }
+      if (data.payload["SUCCESS"]) {
+        toast.success(data.payload["SUCCESS"], {
+          style: {
+            border: "1px solid #713200",
+            padding: "16px",
+            color: "#713200",
+          },
+        });
+      }
+    });
   };
   const schema = yup.object().shape({
     company_name: yup
@@ -171,31 +227,9 @@ const Signup = () => {
     defaultValues: {
       email: "",
       otp: ["", "", "", "", "", ""],
+      company_name: company,
     },
   });
-
-  console.log(errors3);
-
-  useEffect(() => {
-    if (errorMsg) {
-      toast.error(errorMsg, {
-        style: {
-          border: "1px solid #713200",
-          padding: "16px",
-          color: "#713200",
-        },
-      });
-    }
-    if (successMsg) {
-      toast.success(successMsg, {
-        style: {
-          border: "1px solid #713200",
-          padding: "16px",
-          color: "#713200",
-        },
-      });
-    }
-  }, [successMsg, errorMsg]);
 
   return (
     <div className="container">
