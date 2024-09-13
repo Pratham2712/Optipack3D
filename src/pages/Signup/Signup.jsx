@@ -15,6 +15,8 @@ import {
 } from "../../redux/Slices/authSlice";
 import Loader from "../../components/Loader/Loader";
 import toast, { Toaster } from "react-hot-toast";
+import { BASE_URL } from "../../constants/constants";
+import axios from "axios";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -68,7 +70,7 @@ const Signup = () => {
     }
     setOtp(newOtp);
   };
-  const sendOtp = (data) => {
+  const sendOtp = async (data) => {
     const formData = new FormData();
     Object.keys(data).forEach((key) => {
       formData.append(key, data[key]);
@@ -149,6 +151,16 @@ const Signup = () => {
             color: "#713200",
           },
         });
+        try {
+          const res = axios.post(`${BASE_URL}/dashboard_admin`, data, {
+            headers: {
+              "Content-Type": "application/form-data",
+            },
+          });
+          return res.data;
+        } catch (error) {
+          return error.response.data;
+        }
       }
     });
   };
