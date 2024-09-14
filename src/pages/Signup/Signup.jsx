@@ -151,16 +151,6 @@ const Signup = () => {
             color: "#713200",
           },
         });
-        try {
-          const res = axios.post(`${BASE_URL}/dashboard_admin`, data, {
-            headers: {
-              "Content-Type": "application/form-data",
-            },
-          });
-          return res.data;
-        } catch (error) {
-          return error.response.data;
-        }
       }
     });
   };
@@ -262,7 +252,7 @@ const Signup = () => {
           <>
             {loading ? (
               <Loader />
-            ) : otpSend ? (
+            ) : otpSend && email ? (
               <div className="input-group">
                 <div
                   style={{

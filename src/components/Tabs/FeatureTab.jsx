@@ -1,15 +1,4 @@
 import React from "react";
-// import truck from "../../assests/features_svg/truck.svg";
-import Volumeweightload from "../../assests/Volume-weightload.png";
-import intellostack from "../../assests/intellostack.png";
-import weight_check from "../../assests/weight_check.png";
-import praticalloadplan from "../../assests/praticalloadplan.png";
-import shareplan from "../../assests/shareplan.png";
-import exportreport from "../../assests/exportreport.png";
-import customcontainer from "../../assests/customcontainer.png";
-import multicontainer from "../../assests/multicontainer.png";
-import chooseload from "../../assests/chooseload.png";
-import userdefinedsettings from "../../assests/userdefinedsettings.png";
 import truck from "../../assests/color-icon/truck.png";
 import check from "../../assests/color-icon/check.png";
 import share from "../../assests/color-icon/share.png";

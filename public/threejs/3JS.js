@@ -340,7 +340,6 @@ document.addEventListener("DOMContentLoaded", () => {
         centerY * aspectHeight,
         centerZ * aspectDepth
       );
-
       scene.add(smallBox);
 
       const smallBoxEdges = new THREE.EdgesGeometry(smallBoxGeometry);

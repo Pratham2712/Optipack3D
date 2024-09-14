@@ -200,6 +200,7 @@ const authSlice = createSlice({
             state.isError = true;
             state.errorData.message = payload[ERROR];
             state.successMsg = "";
+            state.otpSend = false;
             break;
           default:
             break;
