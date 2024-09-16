@@ -17,9 +17,15 @@ import Loader from "../../components/Loader/Loader";
 import toast, { Toaster } from "react-hot-toast";
 import { BASE_URL } from "../../constants/constants";
 import axios from "axios";
+import { loginurl } from "../../constants/links";
+import { Link } from "react-router-dom";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [isResendDisabled, setIsResendDisabled] = useState(true);
+  const [minuteLeft, setMinuteLeft] = useState("00");
+  const [secondLeft, setSecondLeft] = useState("00");
+  const [otpTime, setOtpTime] = useState("");
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const [email, setEmail] = useState("");
   const inputsRef = useRef([]);
@@ -70,17 +76,53 @@ const Signup = () => {
     }
     setOtp(newOtp);
   };
-  const sendOtp = async (data) => {
+  const resendTimer = (inputTime) => {
+    const givenTime = new Date(inputTime);
+    const currentTime = new Date();
+    const expirationTime = new Date(givenTime.getTime() + 2 * 60 * 1000);
+    const timeDifference = expirationTime - currentTime;
+    if (timeDifference <= 0) {
+      return true;
+    }
+    const minutesLeft = Math.floor(timeDifference / (1000 * 60));
+    setMinuteLeft(minutesLeft);
+    const secondsLeft = Math.floor((timeDifference % (1000 * 60)) / 1000);
+    setSecondLeft(secondsLeft);
+    // return `${minutesLeft}:${secondsLeft < 10 ? "0" : ""}${secondsLeft}`;
+    return false;
+  };
+  const sendOtp = (data) => {
     const formData = new FormData();
     Object.keys(data).forEach((key) => {
       formData.append(key, data[key]);
     });
     setEmail(data?.email);
 
-    // dispatch(checkEmailThunk(formData)).then((data) => {
-    //   if (data.payload["SUCCESS"]) {
-    dispatch(sendOtpThunk(formData)).then((data) => {
-      if (data.payload["ERROR"]) {
+    dispatch(checkEmailThunk(formData)).then((data) => {
+      if (data.payload["SUCCESS"]) {
+        dispatch(sendOtpThunk(formData)).then((data) => {
+          if (data.payload["ERROR"]) {
+            toast.error(data.payload["ERROR"], {
+              style: {
+                border: "1px solid #713200",
+                padding: "16px",
+                color: "#713200",
+              },
+            });
+          }
+          if (data.payload["SUCCESS"]) {
+            toast.success(data.payload["SUCCESS"], {
+              style: {
+                border: "1px solid #713200",
+                padding: "16px",
+                color: "#713200",
+              },
+            });
+            setOtpTime(data.payload.sendTime);
+            setIsResendDisabled(true);
+          }
+        });
+      } else {
         toast.error(data.payload["ERROR"], {
           style: {
             border: "1px solid #713200",
@@ -89,26 +131,7 @@ const Signup = () => {
           },
         });
       }
-      if (data.payload["SUCCESS"]) {
-        toast.success(data.payload["SUCCESS"], {
-          style: {
-            border: "1px solid #713200",
-            padding: "16px",
-            color: "#713200",
-          },
-        });
-      }
     });
-    //   } else {
-    //     toast.error(data.payload["ERROR"], {
-    //       style: {
-    //         border: "1px solid #713200",
-    //         padding: "16px",
-    //         color: "#713200",
-    //       },
-    //     });
-    //   }
-    // });
   };
   const extractDomain = (email) => {
     const parts = email.split("@");
@@ -232,6 +255,17 @@ const Signup = () => {
       company_name: company,
     },
   });
+  //useEffect=====================================================================================================================
+  useEffect(() => {
+    const checkTimer = () => {
+      const isTimerOver = resendTimer(otpTime);
+      setIsResendDisabled(!isTimerOver);
+    };
+
+    const intervalId = setInterval(checkTimer, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [otpTime]);
 
   return (
     <div className="container">
@@ -296,6 +330,25 @@ const Signup = () => {
                 >
                   Verify OTP
                 </button>
+                <button
+                  className="resend-button"
+                  style={{ color: isResendDisabled ? "grey" : "skyblue" }}
+                  disabled={isResendDisabled}
+                  onClick={handleSubmit2(sendOtp)}
+                >
+                  Resend OTP {"   "}
+                </button>
+                <span
+                  style={{
+                    fontSize: "1rem",
+                    color: "skyblue",
+                    display: isResendDisabled ? "inline-block" : "none",
+                  }}
+                >
+                  {minuteLeft < 1 ? "0" : ""}
+                  {minuteLeft}:{secondLeft < 10 ? "0" : ""}
+                  {secondLeft}
+                </span>
               </div>
             ) : (
               <>
@@ -319,6 +372,11 @@ const Signup = () => {
                 >
                   Send OTP
                 </button>
+                <div className="blue-text">
+                  <Link to={loginurl} className="blue-text">
+                    Already have account? Login
+                  </Link>
+                </div>
               </>
             )}
           </>

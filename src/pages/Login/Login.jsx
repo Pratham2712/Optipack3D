@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import logo from "../../assests/logo.png";
 import dashboard from "../../assests/dashboard.png";
 import eye from "../../assests/eye.png";
@@ -14,8 +14,14 @@ import {
 } from "../../redux/Slices/authSlice";
 import Loader from "../../components/Loader/Loader";
 import toast, { Toaster } from "react-hot-toast";
+import { Link } from "react-router-dom";
+import { signupurl } from "../../constants/links";
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [isResendDisabled, setIsResendDisabled] = useState(true);
+  const [minuteLeft, setMinuteLeft] = useState("00");
+  const [secondLeft, setSecondLeft] = useState("00");
+  const [otpTime, setOtpTime] = useState("");
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const [email, setEmail] = useState("");
   const inputsRef = useRef([]);
@@ -67,6 +73,21 @@ const Login = () => {
     }
     setOtp(newOtp);
   };
+  const resendTimer = (inputTime) => {
+    const givenTime = new Date(inputTime);
+    const currentTime = new Date();
+    const expirationTime = new Date(givenTime.getTime() + 2 * 60 * 1000);
+    const timeDifference = expirationTime - currentTime;
+    if (timeDifference <= 0) {
+      return true;
+    }
+    const minutesLeft = Math.floor(timeDifference / (1000 * 60));
+    setMinuteLeft(minutesLeft);
+    const secondsLeft = Math.floor((timeDifference % (1000 * 60)) / 1000);
+    setSecondLeft(secondsLeft);
+    // return `${minutesLeft}:${secondsLeft < 10 ? "0" : ""}${secondsLeft}`;
+    return false;
+  };
   const sendOtp = (data) => {
     const formData = new FormData();
     Object.keys(data).forEach((key) => {
@@ -92,6 +113,8 @@ const Login = () => {
             color: "#713200",
           },
         });
+        setOtpTime(data.payload.sendTime);
+        setIsResendDisabled(true);
       }
     });
   };
@@ -202,6 +225,17 @@ const Login = () => {
       email: "",
     },
   });
+  //useEffect=====================================================================================================================
+  useEffect(() => {
+    const checkTimer = () => {
+      const isTimerOver = resendTimer(otpTime);
+      setIsResendDisabled(!isTimerOver);
+    };
+
+    const intervalId = setInterval(checkTimer, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [otpTime]);
   return (
     <div className="container">
       <Toaster />
@@ -224,7 +258,7 @@ const Login = () => {
           <>
             {loading ? (
               <Loader />
-            ) : otpSend ? (
+            ) : otpSend && email ? (
               <div className="input-group">
                 <div
                   style={{
@@ -268,6 +302,25 @@ const Login = () => {
                 >
                   Verify OTP
                 </button>
+                <button
+                  className="resend-button"
+                  style={{ color: isResendDisabled ? "grey" : "skyblue" }}
+                  disabled={isResendDisabled}
+                  onClick={handleSubmit2(sendOtp)}
+                >
+                  Resend OTP {"   "}
+                </button>
+                <span
+                  style={{
+                    fontSize: "1rem",
+                    color: "skyblue",
+                    display: isResendDisabled ? "inline-block" : "none",
+                  }}
+                >
+                  {minuteLeft < 1 ? "0" : ""}
+                  {minuteLeft}:{secondLeft < 10 ? "0" : ""}
+                  {secondLeft}
+                </span>
               </div>
             ) : (
               <>
@@ -291,6 +344,11 @@ const Login = () => {
                 >
                   Send OTP
                 </button>
+                <div className="blue-text">
+                  <Link to={signupurl} className="blue-text">
+                    Don't have account? Register
+                  </Link>
+                </div>
               </>
             )}
           </>

@@ -140,7 +140,7 @@ h1 {
 }
 
 .login-button {
-  width: 25%;
+  /* width: 25%; */
   padding: 12px;
   background-color: #000;
   border: none;
@@ -277,6 +277,25 @@ footer a:hover {
   position: absolute;
   top: 40%;
   left: 11%;
+}
+.blue-text {
+  color: skyblue;
+  text-decoration: none;
+  margin-top: 0.7rem;
+}
+.blue-text:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+.resend-button {
+  display: block;
+  background: none;
+  border: none;
+  color: skyblue;
+  margin: 0 auto;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  cursor: pointer;
 }
 @media (max-width: 1050px) {
   h1 {

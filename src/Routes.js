@@ -1,6 +1,7 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import {
+  admin_setting,
   free_output,
   free_trail,
   join,
@@ -14,6 +15,7 @@ import Join from "./pages/Join/Join";
 import Login from "./pages/Login/Login";
 import Signup from "./pages/Signup/Signup";
 import FreeOutput from "./pages/FreeOutput/FreeOutput";
+import Setting from "./pages/admin/AdminSetting/Setting";
 
 const Routess = ({ skuData, setSkuData, inputs, setInputs }) => {
   return (
@@ -34,6 +36,8 @@ const Routess = ({ skuData, setSkuData, inputs, setInputs }) => {
       <Route path={join} element={<Join />}></Route>
       <Route path={loginurl} element={<Login />}></Route>
       <Route path={signupurl} element={<Signup />}></Route>
+      {/* admin ====================================================================================================== */}
+      <Route path={admin_setting} element={<Setting />}></Route>
     </Routes>
   );
 };
