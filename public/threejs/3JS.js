@@ -453,8 +453,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Remove only smallBox and smallBoxWireframe based on specific conditions
         if (
           (child.isMesh && child.geometry instanceof THREE.BoxGeometry) ||
-          (child.isLineSegments &&
-            child.geometry instanceof THREE.EdgesGeometry)
+          child.isLineSegments
         ) {
           scene.remove(child); // Remove the smallBox or smallBoxWireframe
         }
@@ -893,6 +892,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // if (!isAnimating) return;
       animationFrameId = requestAnimationFrame(animato);
       TWEEN.update(); // Update TWEEN animations
+      orbit.update();
       renderer.render(scene, camera);
     }
 
@@ -904,7 +904,21 @@ document.addEventListener("DOMContentLoaded", () => {
         // }
         clearContainer();
         isAnimating = true; // Start animating
-        animateSmallBoxes(threedPath[ind]);
+        const loader = new GLTFLoader();
+        loader.load(
+          "/3dmodels/group1.gltf",
+          (gltf) => {
+            scene.add(gltf.scene); // Add the loaded model to the scene
+
+            animateSmallBoxes(threedPath[ind]);
+            // Once the model is loaded, start animating the small boxes
+          },
+          undefined,
+          (error) => {
+            console.error("An error occurred while loading the model:", error);
+          }
+        );
+        //animateSmallBoxes(threedPath[ind]);
         animato();
       }
       // else if (event.data === "stopAnimation") {
