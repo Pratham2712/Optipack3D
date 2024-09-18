@@ -1,0 +1,108 @@
+.container-form {
+  padding-left: 8rem;
+  padding-top: 7rem;
+  padding-right: 8rem;
+}
+
+.actions-head {
+  display: flex;
+  margin: 1rem 0rem;
+  gap: 20px;
+}
+
+.settings-header {
+  display: flex;
+  margin-bottom: 20px;
+  margin-top: 2.5rem;
+}
+.settings-section {
+  display: grid;
+  margin-bottom: 20px;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-row-gap: 1.5rem;
+}
+.settings-group {
+  margin: 1%;
+  box-sizing: border-box;
+}
+.settings-group label {
+  font-weight: bold;
+  color: #555;
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+.settings-group select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  margin-top: 0.5rem;
+}
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 2rem 0rem;
+}
+.permissions-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.permissions-header {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+.permissions-row {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+}
+.permissions-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+.permissions-row select {
+  flex: 1;
+  margin: 0 5px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+.permissions-column select {
+  flex: 1;
+  margin: 0 5px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin: 0.5rem 0rem;
+  width: 100%;
+}
+.permissions-column h4 {
+  margin-bottom: 0.5rem;
+}
+.permissions-row span {
+  flex: 1;
+  font-weight: bold;
+}
+.permissions-header span,
+.permissions-row span {
+  flex: 1;
+  font-weight: bold;
+}
+.dashboards {
+  width: 20%;
+  padding-top: 62px;
+}
+.dashboards h4 {
+  margin-bottom: 34px;
+}
+.dashboard-permission {
+  display: flex;
+  width: 80%;
+  column-gap: 9px;
+  overflow-x: auto;
+}

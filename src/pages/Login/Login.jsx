@@ -14,8 +14,10 @@ import {
 } from "../../redux/Slices/authSlice";
 import Loader from "../../components/Loader/Loader";
 import toast, { Toaster } from "react-hot-toast";
-import { Link } from "react-router-dom";
-import { signupurl } from "../../constants/links";
+import { Link, useNavigate } from "react-router-dom";
+import { admin_setting, signupurl } from "../../constants/links";
+import axios from "axios";
+import { BASE_URL } from "../../constants/constants";
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isResendDisabled, setIsResendDisabled] = useState(true);
@@ -25,6 +27,8 @@ const Login = () => {
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const [email, setEmail] = useState("");
   const inputsRef = useRef([]);
+  const navigate = useNavigate(); // Get the navigate function
+
   const publicEmailDomains = [
     //"gmail.com",
     "yahoo.com",
@@ -39,6 +43,9 @@ const Login = () => {
   const loading = useSelector((state) => state.rootReducer.authSlice.loading);
   const errorMsg = useSelector(
     (state) => state.rootReducer.authSlice.errorData.message
+  );
+  const userType = useSelector(
+    (state) => state.rootReducer.authSlice.data.user.userType
   );
   // Toggle password visibility
   const handleToggle = () => {
@@ -139,13 +146,17 @@ const Login = () => {
         });
       }
       if (data.payload["SUCCESS"]) {
-        toast.success(data.payload["SUCCESS"], {
+        toast.success(data.payload["SUCCESS"]?.message, {
           style: {
             border: "1px solid #713200",
             padding: "16px",
             color: "#713200",
           },
         });
+        // const res = axios.get(`${BASE_URL}/dashboard_admin`);
+        if (data.payload["SUCCESS"]?.userType == "Company_Admin") {
+          navigate(admin_setting);
+        }
       }
     });
   };
@@ -253,7 +264,7 @@ const Login = () => {
           <h1>Welcome to our platform</h1>
           <h1>Login to your account</h1>
           <p className="subtitle">Design your optimized load plan</p>
-          <div className="all-errors2">{errorMsg}</div>
+          {/* <div className="all-errors2">{errorMsg}</div> */}
 
           <>
             {loading ? (

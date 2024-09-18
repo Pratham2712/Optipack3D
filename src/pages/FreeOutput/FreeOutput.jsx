@@ -58,16 +58,16 @@ const FreeOutput = () => {
 
   const iframeSrc = `three_render.html?container=${encodeURIComponent(
     contIndex
-  )}`;
+  )}&animation=${encodeURIComponent(animate)}`;
   //function===============================================================================================================
   const setAnimation = () => {
     setAnimate(!animate);
     localStorage.setItem("animation", animate);
-    if (!animate) {
-      modelRef.current.contentWindow.postMessage("startAnimation", "*");
-    } else {
-      modelRef.current.contentWindow.postMessage("stopAnimation", "*");
-    }
+    // if (!animate) {
+    //   modelRef.current.contentWindow.postMessage("startAnimation", "*");
+    // } else {
+    //   modelRef.current.contentWindow.postMessage("stopAnimation", "*");
+    // }
   };
   const share = () => {
     setShareit(!shareit);

@@ -166,7 +166,7 @@ const Signup = () => {
           },
         });
       }
-      if (data.payload["SUCCESS"]) {
+      if (data.payload["SUCCESS"]?.message) {
         toast.success(data.payload["SUCCESS"], {
           style: {
             border: "1px solid #713200",

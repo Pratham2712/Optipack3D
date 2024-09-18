@@ -66,8 +66,9 @@
 
       // Get the file paths from the query parameters
       const threedPath = getQueryParam("threed_paths");
-      console.log(threedPath);
       const containerInfPath = getQueryParam("container_inf");
+      const animation = getQueryParam("animation");
+      console.log("html",animation);
 
       // Ensure paths are passed to the external 3JS.js script
       window.threedPath = threedPath;
