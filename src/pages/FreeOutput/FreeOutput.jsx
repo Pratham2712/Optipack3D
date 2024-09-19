@@ -247,7 +247,8 @@ const FreeOutput = () => {
                 <div className="features">
                   <h3>
                     3d Loading Animation
-                    <img className="premium-icon" src={premiumIcon} />
+                    {/* <img className="premium-icon" src={premiumIcon} /> */}
+                    <i class="fa-solid fa-lock premium-icon"></i>
                   </h3>
                   <button
                     className="btn-apply"
@@ -260,7 +261,8 @@ const FreeOutput = () => {
                 <div className="features">
                   <h3 onClick={() => setPremium(!premium)}>
                     Edit Loading Pattern
-                    <img className="premium-icon" src={premiumIcon} />
+                    {/* <img className="premium-icon" src={premiumIcon} /> */}
+                    <i class="fa-solid fa-lock premium-icon"></i>
                   </h3>
                   <button
                     className="btn-apply"
@@ -273,7 +275,8 @@ const FreeOutput = () => {
                 <div className="features">
                   <h3>
                     Share/Export Loading
-                    <img className="premium-icon" src={premiumIcon} />
+                    {/* <img className="premium-icon" src={premiumIcon} /> */}
+                    <i class="fa-solid fa-lock premium-icon"></i>
                   </h3>
                   <input
                     type="email"

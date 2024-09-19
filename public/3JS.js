@@ -6,10 +6,19 @@ import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/
 // Renderer setup
 
 document.addEventListener("DOMContentLoaded", () => {
+  let isAnimating = false;
   const containerInfPath = JSON.parse(localStorage.getItem("container_inf"));
   const urlParams = new URLSearchParams(window.location.search);
   const ind = parseInt(urlParams.get("container"), 0);
   const threedPath = JSON.parse(localStorage.getItem("threed_paths"));
+  // const currentSpeed = window.currentSpeed;
+
+  const speedButton = document.getElementById("speeds");
+  const speedButtons = speedButton.querySelectorAll("button");
+  console.log(speedButton);
+  console.log(speedButtons);
+
+  let currentSpeed = 20;
 
   function getLocalStorageItem(key) {
     return new Promise((resolve, reject) => {
@@ -288,18 +297,33 @@ document.addEventListener("DOMContentLoaded", () => {
         scene.add(smallBoxWireframe);
       });
     };
-    let isAnimating = false;
 
+    speedButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const newSpeed = parseFloat(button.dataset.speed);
+        console.log("newspeed", newSpeed);
+
+        currentSpeed = newSpeed;
+        // clearContainer();
+        // animateSmallBoxes(threedPath[ind]);
+      });
+    });
     const animateSmallBoxes = (boxes) => {
-      boxes.forEach((box, index) => {
+      const timeoutId = boxes.forEach((box, index) => {
         // Delay each animation to occur sequentially
         setTimeout(() => {
-          console.log(isAnimating);
-          console.log("inside animateboxes");
-          // Create and add the small box to the scene
+          isAnimating = true;
           createSmallBox(box);
-        }, index * 10); // Adjust the delay (500ms) as needed
+          console.log(index, boxes.length);
+
+          if (index == boxes.length - 2) {
+            console.log("hii");
+            isAnimating = false; // Animation completed
+          }
+        }, index * currentSpeed);
+        isAnimating = false;
       });
+      isAnimating = false;
     };
 
     const createSmallBox = (box) => {
@@ -548,17 +572,6 @@ document.addEventListener("DOMContentLoaded", () => {
       })
       .catch((error) => console.error("Error loading coordinates:", error));
 
-    // Add some light to the scene
-    // const ambientLight = new THREE.AmbientLight(0xffffff, 10);
-    // scene.add(ambientLight);
-
-    // const directionalLight = new THREE.DirectionalLight(0xffffff, 2, 6000);
-    // directionalLight.position.set(5000, 8000, 5000);
-    // const ambientLight = new THREE.AmbientLight(0xffffff, 1); // Ambient light
-    // scene.add(ambientLight);
-
-    // const directionalLight = new THREE.DirectionalLight(0xffffff, 1); // Directional light
-    // directionalLight.position.set(0, 1, 1); // Adju
     const ambientLight = new THREE.AmbientLight(0xffffff, 3); // Adjust the intensity (0.6) as needed
     scene.add(ambientLight);
 
@@ -692,8 +705,13 @@ document.addEventListener("DOMContentLoaded", () => {
     bottomViewButton.addEventListener("click", setBottomView);
     sideViewButton.addEventListener("click", setSideView);
     document.getElementById("animate").addEventListener("click", () => {
-      clearContainer();
-      animateSmallBoxes(threedPath[ind]);
+      console.log(isAnimating);
+
+      if (!isAnimating) {
+        clearContainer();
+        animateSmallBoxes(threedPath[ind]);
+      }
+      //animateSmallBoxes(threedPath[ind]);
     });
     let animationFrameId;
 
@@ -901,7 +919,7 @@ document.addEventListener("DOMContentLoaded", () => {
         //   cancelAnimationFrame(animationFrameId);
         // }
         clearContainer();
-        isAnimating = true; // Start animating
+        // isAnimating = true; // Start animating
         animateSmallBoxes(threedPath[ind]);
         animato();
       }

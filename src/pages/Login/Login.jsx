@@ -125,8 +125,19 @@ const Login = () => {
       }
     });
   };
+  const extractDomain = (email) => {
+    const parts = email.split("@");
+    if (parts.length === 2) {
+      const domainPart = parts[1];
+      const domainParts = domainPart.split(".");
+      return domainParts[0];
+    }
+    return "";
+  };
   const verify = (data) => {
     setValue3("email", email);
+    const extractedDomain = extractDomain(email);
+    setValue3("company_name", extractedDomain);
     const otpString = data.otp.join("");
     const formData = new FormData();
     formData.append("otp", otpString);
@@ -202,6 +213,7 @@ const Login = () => {
     defaultValues: {
       email: "",
       otp: ["", "", "", "", "", ""],
+      company_name: "",
     },
   });
 

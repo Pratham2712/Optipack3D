@@ -2,8 +2,11 @@ import React, { useEffect, useState } from "react";
 import Breadcrumb from "../../../components/Breadcrumb/Breadcrumb";
 import Sidebar from "../../../components/Sidebar/Sidebar";
 import "./Setting.css";
-import { permissionThunk } from "../../../redux/Slices/companyAdminSlice";
-import { useDispatch } from "react-redux";
+import {
+  getPermissionThunk,
+  permissionThunk,
+} from "../../../redux/Slices/companyAdminSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const Setting = () => {
   const [is700, setIs700] = useState(window.innerWidth < 700);
@@ -18,6 +21,11 @@ const Setting = () => {
   ];
 
   const [permData, setPermData] = useState([]);
+
+  const permissionData = useSelector(
+    (state) => state.rootReducer.companyAdminSlice.data.permission
+  );
+  console.log(permissionData);
 
   const handleChange = (dash, userType, value) => {
     const info = {
@@ -48,14 +56,13 @@ const Setting = () => {
     dispatch(permissionThunk(permData));
   };
 
-  console.log(permData);
-
   useEffect(() => {
     const handleResize = () => {
       setIs700(window.innerWidth < 700);
     };
 
     window.addEventListener("resize", handleResize);
+    dispatch(getPermissionThunk());
 
     return () => {
       window.removeEventListener("resize", handleResize);
@@ -305,7 +312,7 @@ const Setting = () => {
                 <h4>Loading team</h4>
                 {permission.map((ele) => (
                   <select
-                    name="Loading team"
+                    name="Company_loader"
                     onChange={(e) =>
                       handleChange(ele, e.target.name, e.target.value)
                     }
@@ -320,7 +327,7 @@ const Setting = () => {
                 <h4>Load planner</h4>
                 {permission.map((ele) => (
                   <select
-                    name="Load planner"
+                    name="Company_planner"
                     onChange={(e) =>
                       handleChange(ele, e.target.name, e.target.value)
                     }

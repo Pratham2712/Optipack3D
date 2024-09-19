@@ -8,11 +8,18 @@ export const permissionThunk = createAsyncThunk(
   "/add_permission",
   async (data) => {
     try {
-      const res = await axios.post(`${BASE_URL}/add_permission`, data, {
-        headers: {
-          "Content-Type": "application/form-data",
-        },
-      });
+      const res = await axios.post(`${BASE_URL}/add_permission`, data);
+      return res.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  }
+);
+export const getPermissionThunk = createAsyncThunk(
+  "/get_permissions",
+  async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/get_permissions`);
       return res.data;
     } catch (error) {
       return error.response.data;
@@ -35,6 +42,7 @@ const initialState = {
   },
   status: {
     permissionThunk: IDLE,
+    getPermissionThunk: IDLE,
   },
 };
 
@@ -57,11 +65,10 @@ const companyAdminSlice = createSlice({
           case SUCCESS:
             state.loading = false;
             state.successMsg = payload[SUCCESS]?.message;
-            state.permission = payload[SUCCESS];
+            state.data.permission = payload[SUCCESS];
             state.updateDone = !state.updateDone;
             break;
           case ERROR:
-            state.isLogin = false;
             state.loading = false;
             state.isError = true;
             state.errorData.message = payload[ERROR];
@@ -72,6 +79,32 @@ const companyAdminSlice = createSlice({
       })
       .addCase(permissionThunk.rejected, (state, action) => {
         state.status.permissionThunk = ERROR;
+        state.loading = false;
+        state.errorData.message = action.error.message;
+      })
+      //getPermissionThunk==========================================================================================================
+      .addCase(getPermissionThunk.pending, (state, { payload }) => {
+        state.loading = false;
+      })
+      .addCase(getPermissionThunk.fulfilled, (state, { payload }) => {
+        switch (Object.keys(payload)[0]) {
+          case SUCCESS:
+            state.loading = false;
+            state.successMsg = payload[SUCCESS]?.message;
+            state.data.permission = payload[SUCCESS];
+            state.updateDone = !state.updateDone;
+            break;
+          case ERROR:
+            state.loading = false;
+            state.isError = true;
+            state.errorData.message = payload[ERROR];
+            break;
+          default:
+            break;
+        }
+      })
+      .addCase(getPermissionThunk.rejected, (state, action) => {
+        state.status.getPermissionThunk = ERROR;
         state.loading = false;
         state.errorData.message = action.error.message;
       });
