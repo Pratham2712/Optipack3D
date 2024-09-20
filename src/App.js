@@ -5,10 +5,14 @@ import { useLayoutEffect, useState } from "react";
 import { autoFillerBox } from "./Util/data";
 import { checkLoginThunk } from "./redux/Slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
+import Loader from "./components/Loader/Loader";
 
 function App() {
   const isAuthenticated = useSelector(
     (state) => state.rootReducer.authSlice.isLogin
+  );
+  const loading = useSelector(
+    (state) => state.rootReducer.authSlice.initialLoad
   );
   const dispatch = useDispatch();
   const [inputs, setInputs] = useState([0, 1, 2]);
@@ -56,9 +60,16 @@ function App() {
     rotationAllowed1: autoFillerBox[1]["Rotation Allowed"] === 1 ? "on" : "off",
     rotationAllowed2: autoFillerBox[2]["Rotation Allowed"] === 1 ? "on" : "off",
   });
+
   useLayoutEffect(() => {
     dispatch(checkLoginThunk());
   }, []);
+
+  console.log(loading);
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
     <BrowserRouter>
       <div className="App">

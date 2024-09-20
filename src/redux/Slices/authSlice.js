@@ -104,6 +104,7 @@ export const checkLoginThunk = createAsyncThunk("/check_login", async () => {
 
 const initialState = {
   loading: false,
+  initialLoad: true,
   updateDone: false,
   isLogin: false,
   otpSend: false,
@@ -311,6 +312,7 @@ const authSlice = createSlice({
       //checkLoginThunk==============================================================================================================
       .addCase(checkLoginThunk.pending, (state, { payload }) => {
         state.loading = true;
+        state.initialLoad = true;
       })
       .addCase(checkLoginThunk.fulfilled, (state, { payload }) => {
         switch (Object.keys(payload)[0]) {
@@ -321,6 +323,7 @@ const authSlice = createSlice({
             state.data.user = payload[SUCCESS];
             state.errorData.message = "";
             state.isLogin = true;
+            state.initialLoad = false;
             break;
           case ERROR:
             state.errorData.message = "";
@@ -329,6 +332,7 @@ const authSlice = createSlice({
             state.errorData.message = payload[ERROR];
             state.successMsg = "";
             state.isLogin = false;
+            state.initialLoad = false;
             break;
           default:
             break;
@@ -337,6 +341,7 @@ const authSlice = createSlice({
       .addCase(checkLoginThunk.rejected, (state, action) => {
         state.status.checkLoginThunk = ERROR;
         state.loading = false;
+        state.initialLoad = false;
         state.errorData.message = action.error.message;
       });
   },

@@ -3,8 +3,6 @@ import img from "../../assests/second.webp";
 import final from "../../assests/feat-final.png";
 
 const KeyComp = ({ ele, index, image }) => {
-  console.log(ele);
-
   return (
     <div className="container_feat">
       <div className="text">

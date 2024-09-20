@@ -1,0 +1,31 @@
+.popup-input-content {
+  background-color: white;
+  padding: 40px;
+  border-radius: 10px;
+  position: relative;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  max-width: 95%;
+  max-height: 95%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  width: 40%;
+}
+.popup-input {
+  margin: 0 auto;
+  margin-bottom: 1.5rem;
+}
+.popup-input input {
+  width: 100%;
+}
+.popup-input-text h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.popup-input-text {
+  width: 100%;
+}
+.popup-buttons {
+  display: flex;
+  justify-content: center;
+}

@@ -36,7 +36,7 @@ export const UnAuthRoutes = ({ skuData, setSkuData, inputs, setInputs }) => {
       <Route path={join} element={<Join />}></Route>
       <Route path={loginurl} element={<Login />}></Route>
       <Route path={signupurl} element={<Signup />}></Route>
-      {/* <Route path={"*"} element={<Navigate to="/" />}></Route> */}
+      <Route path={"*"} element={<Navigate to="/" />}></Route>
     </Routes>
   );
 };

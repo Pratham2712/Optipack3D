@@ -3,10 +3,13 @@ import Breadcrumb from "../../../components/Breadcrumb/Breadcrumb";
 import Sidebar from "../../../components/Sidebar/Sidebar";
 import "./Setting.css";
 import {
+  getLoadPlanThunk,
   getPermissionThunk,
   permissionThunk,
 } from "../../../redux/Slices/companyAdminSlice";
 import { useDispatch, useSelector } from "react-redux";
+import Loader from "../../../components/Loader/Loader";
+import InputPopup from "../../../AdminComponents/InputPopup/InputPopup";
 
 const Setting = () => {
   const [is700, setIs700] = useState(window.innerWidth < 700);
@@ -21,11 +24,26 @@ const Setting = () => {
   ];
 
   const [permData, setPermData] = useState([]);
-
+  const [inputPop, setInputPop] = useState({
+    action: false,
+    name: "",
+    head: "",
+  });
+  const [loadData, setLoadData] = useState({
+    shipping_location: "",
+    destination_location: "",
+    container_type: "",
+  });
+  //useSelector====================================================================================================================
   const permissionData = useSelector(
     (state) => state.rootReducer.companyAdminSlice.data.permission
   );
-  console.log(permissionData);
+  const loading = useSelector(
+    (state) => state.rootReducer.companyAdminSlice.loading
+  );
+  const loadplanData = useSelector(
+    (state) => state.rootReducer.companyAdminSlice.data.loadplan
+  );
 
   const handleChange = (dash, userType, value) => {
     const info = {
@@ -56,110 +74,183 @@ const Setting = () => {
     dispatch(permissionThunk(permData));
   };
 
+  const checkVal = (dashboard, user_type) => {
+    const found = permissionData.find(
+      (item) => item.dashboard === dashboard && item.user_type === user_type
+    );
+
+    return found ? found.allowed : null;
+  };
+
   useEffect(() => {
     const handleResize = () => {
       setIs700(window.innerWidth < 700);
     };
-
-    window.addEventListener("resize", handleResize);
     dispatch(getPermissionThunk());
+    dispatch(getLoadPlanThunk());
+    window.addEventListener("resize", handleResize);
 
     return () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
   return (
     <>
-      <Breadcrumb />
-      {!is700 ? <Sidebar className="hide-sidebar" /> : <></>}
+      {loading ? (
+        <Loader />
+      ) : (
+        <div>
+          <Breadcrumb />
+          {!is700 ? <Sidebar className="hide-sidebar" /> : <></>}
 
-      <div>
-        <main className="container-form">
-          <section className="settings-header-head">
-            <h2>User Based Settings</h2>
-            <div className="actions-head">
-              <a className="btn-cancel" style={{ padding: "0.6rem 6rem" }}>
-                Add Users
-              </a>
-              <a
-                href=""
-                className="btn-apply"
-                style={{ padding: "0.6rem 6rem" }}
-              >
-                Manage Users
-              </a>
-            </div>
-          </section>
-          <section className="settings-header">
-            <h2>Order and load plan based settings</h2>
-          </section>
+          <div>
+            {inputPop.action ? (
+              <InputPopup
+                loadData={loadData}
+                setLoadData={setLoadData}
+                inputPop={inputPop}
+                setInputPop={setInputPop}
+              />
+            ) : (
+              ""
+            )}
+            <main className="container-form">
+              <section className="settings-header-head">
+                <h2>User Based Settings</h2>
+                <div className="actions-head">
+                  <a className="btn-cancel" style={{ padding: "0.6rem 6rem" }}>
+                    Add Users
+                  </a>
+                  <a
+                    href=""
+                    className="btn-apply"
+                    style={{ padding: "0.6rem 6rem" }}
+                  >
+                    Manage Users
+                  </a>
+                </div>
+              </section>
+              <section className="settings-header">
+                <h2>Order and load plan based settings</h2>
+              </section>
 
-          <section className="settings-section">
-            <div className="settings-group">
-              <label for="standard-container-types">
-                Standard container types
-              </label>
-              <select id="standard-container-types" className="styled-select">
-                <option>Select From Dropdown</option>
-                <option>20' dry container</option>
-                <option>40' dry container</option>
-                <option>40' high cube container</option>
-                <option value="add-new-container">Add New Container</option>
-              </select>
-            </div>
-            <div className="settings-group">
-              <label for="standard-shipping-location">
-                Standard Shipping location
-              </label>
-              <select id="standard-shipping-location" className="styled-select">
-                <option>Select From Dropdown</option>
-                <option value="add-new-location">
-                  Add New Shipping Location
-                </option>
-              </select>
-            </div>
-            <div className="settings-group">
-              <label for="standard-destination-location">
-                Standard destination location
-              </label>
-              <select
-                id="standard-destination-location"
-                className="styled-select"
-              >
-                <option>Select From Dropdown</option>
-                <option value="add-new-destination">
-                  Add New Destination Location
-                </option>
-              </select>
-            </div>
-            <div className="settings-group">
-              <label for="minimum-utilization-details">
-                Minimum Utilization Details
-              </label>
-              <select
-                id="minimum-utilization-details"
-                className="styled-select"
-              >
-                <option>Select From Dropdown</option>
-              </select>
-            </div>
-            <div className="settings-group">
-              <label for="maximum-delivery-horizon">
-                Maximum possible delivery horizon
-              </label>
-              <select id="maximum-delivery-horizon" className="styled-select">
-                <option>Select From Dropdown</option>
-              </select>
-            </div>
-          </section>
-          <div className="actions">
-            <button className="btn-cancel">Cancel</button>
-            <button className="btn-apply">Apply</button>
-          </div>
-          <div style={{ margin: "2rem 0rem" }}>
-            <h2>Dashboard permission settings</h2>
-          </div>
-          {/* <section className="settings-section2" id="dashboard">
+              <section className="settings-section">
+                <div className="settings-group">
+                  <label for="standard-container-types">
+                    Standard container types
+                  </label>
+                  <select
+                    id="standard-container-types"
+                    className="styled-select"
+                    onChange={(e) => {
+                      if (e.target.value === "add-new-container") {
+                        setInputPop((prev) => ({
+                          ...prev,
+                          action: true,
+                          name: "container_type",
+                          head: "Add Container Type",
+                        }));
+                      }
+                    }}
+                  >
+                    <option value="" selected>
+                      Select From Dropdown
+                    </option>
+                    <option value="">20' dry container</option>
+                    <option value="">40' dry container</option>
+                    <option value="">40' high cube container</option>
+                    {loadplanData?.["container_type"]?.map((ele) => (
+                      <option value={ele}>{ele}</option>
+                    ))}
+                    <option value="add-new-container">Add New Container</option>
+                  </select>
+                </div>
+                <div className="settings-group">
+                  <label for="standard-shipping-location">
+                    Standard Shipping location
+                  </label>
+                  <select
+                    id="standard-shipping-location"
+                    className="styled-select"
+                    onChange={(e) => {
+                      if (e.target.value === "add-new-location") {
+                        setInputPop((prev) => ({
+                          ...prev,
+                          action: true,
+                          name: "shipping_location",
+                          head: "Add shipping location",
+                        }));
+                      }
+                    }}
+                  >
+                    <option selected>Select From Dropdown</option>
+                    {loadplanData?.["shipping_location"]?.map((ele) => (
+                      <option value={ele}>{ele}</option>
+                    ))}
+                    <option value="add-new-location">
+                      Add New Shipping Location
+                    </option>
+                  </select>
+                </div>
+                <div className="settings-group">
+                  <label for="standard-destination-location">
+                    Standard destination location
+                  </label>
+                  <select
+                    id="standard-destination-location"
+                    className="styled-select"
+                    onChange={(e) => {
+                      if (e.target.value === "add-new-destination") {
+                        setInputPop((prev) => ({
+                          ...prev,
+                          action: true,
+                          name: "destination_location",
+                          head: "Add destination location",
+                        }));
+                      }
+                    }}
+                  >
+                    <option selected>Select From Dropdown</option>
+                    {loadplanData?.["destination_location"]?.map((ele) => (
+                      <option value={ele}>{ele}</option>
+                    ))}
+                    <option value="add-new-destination">
+                      Add New Destination Location
+                    </option>
+                  </select>
+                </div>
+                <div className="settings-group">
+                  <label for="minimum-utilization-details">
+                    Minimum Utilization Details
+                  </label>
+                  <select
+                    id="minimum-utilization-details"
+                    className="styled-select"
+                  >
+                    <option>Select From Dropdown</option>
+                  </select>
+                </div>
+                <div className="settings-group">
+                  <label for="maximum-delivery-horizon">
+                    Maximum possible delivery horizon
+                  </label>
+                  <select
+                    id="maximum-delivery-horizon"
+                    className="styled-select"
+                  >
+                    <option>Select From Dropdown</option>
+                  </select>
+                </div>
+              </section>
+              <div className="actions">
+                <button className="btn-cancel">Cancel</button>
+                <button className="btn-apply">Apply</button>
+              </div>
+              <div style={{ margin: "2rem 0rem" }}>
+                <h2>Dashboard permission settings</h2>
+              </div>
+              {/* <section className="settings-section2" id="dashboard">
             <div className="permissions-table">
               <div className="permissions-header">
                 <span className="permission-type"></span>
@@ -294,91 +385,177 @@ const Setting = () => {
               </div>
             </div>
           </section> */}
-          <section
-            style={{
-              display: "flex",
-              width: "100%",
-            }}
-          >
-            <div className="dashboards">
-              <h4>CFR</h4>
-              <h4>One time rate</h4>
-              <h4>Location Wise Performance</h4>
-              <h4>Source Destination Combinations Loss</h4>
-              <h4>Planning volume loss</h4>
-            </div>
-            <div className="dashboard-permission">
-              <div className="permissions-column">
-                <h4>Loading team</h4>
-                {permission.map((ele) => (
-                  <select
-                    name="Company_loader"
-                    onChange={(e) =>
-                      handleChange(ele, e.target.name, e.target.value)
-                    }
-                  >
-                    <option disabled>Select from Dropdown</option>
-                    <option value="not_allowed">Not Allowed</option>
-                    <option value="allowed">Allowed</option>
-                  </select>
-                ))}
+              <section
+                style={{
+                  display: "flex",
+                  width: "100%",
+                }}
+              >
+                <div className="dashboards">
+                  <h4>CFR</h4>
+                  <h4>One time rate</h4>
+                  <h4>Location Wise Performance</h4>
+                  <h4>Source Destination Combinations Loss</h4>
+                  <h4>Planning volume loss</h4>
+                </div>
+                <div className="dashboard-permission">
+                  <div className="permissions-column">
+                    <h4>Loading team</h4>
+                    {permission?.map((ele) => (
+                      <select
+                        name="Company_loader"
+                        onChange={(e) =>
+                          handleChange(ele, e.target.name, e.target.value)
+                        }
+                        style={{
+                          border:
+                            checkVal(ele, "Company_loader") === false
+                              ? "3px solid red"
+                              : checkVal(ele, "Company_loader") === true
+                              ? "3px solid green"
+                              : "",
+                        }}
+                      >
+                        <option disabled selected>
+                          Select from Dropdown
+                        </option>
+                        <option
+                          value="not_allowed"
+                          selected={checkVal(ele, "Company_loader") === false}
+                        >
+                          Not Allowed
+                        </option>
+                        <option
+                          value="allowed"
+                          selected={checkVal(ele, "Company_loader") === true}
+                        >
+                          Allowed
+                        </option>
+                      </select>
+                    ))}
+                  </div>
+                  <div className="permissions-column">
+                    <h4>Load planner</h4>
+                    {permission?.map((ele) => (
+                      <select
+                        name="Company_planner"
+                        onChange={(e) =>
+                          handleChange(ele, e.target.name, e.target.value)
+                        }
+                        style={{
+                          border:
+                            checkVal(ele, "Company_planner") === false
+                              ? "3px solid red"
+                              : checkVal(ele, "Company_planner") === true
+                              ? "3px solid green"
+                              : "",
+                        }}
+                      >
+                        <option disabled selected>
+                          Select from Dropdown
+                        </option>
+                        <option
+                          value="not_allowed"
+                          selected={checkVal(ele, "Company_planner") === false}
+                        >
+                          Not Allowed
+                        </option>
+                        <option
+                          value="allowed"
+                          selected={checkVal(ele, "Company_planner") === true}
+                        >
+                          Allowed
+                        </option>
+                      </select>
+                    ))}
+                  </div>
+                  <div className="permissions-column">
+                    <h4>Shipping coordinator</h4>
+                    {permission?.map((ele) => (
+                      <select
+                        name="Shipping coordinator"
+                        onChange={(e) =>
+                          handleChange(ele, e.target.name, e.target.value)
+                        }
+                        style={{
+                          border:
+                            checkVal(ele, "Shipping coordinator") === false
+                              ? "3px solid red"
+                              : checkVal(ele, "Shipping coordinator") === true
+                              ? "3px solid green"
+                              : "",
+                        }}
+                      >
+                        <option selected disabled>
+                          Select from Dropdown
+                        </option>
+                        <option
+                          value="not_allowed"
+                          selected={
+                            checkVal(ele, "Shipping coordinator") === false
+                          }
+                        >
+                          Not Allowed
+                        </option>
+                        <option
+                          value="allowed"
+                          selected={
+                            checkVal(ele, "Shipping coordinator") === true
+                          }
+                        >
+                          Allowed
+                        </option>
+                      </select>
+                    ))}
+                  </div>
+                  <div className="permissions-column">
+                    <h4>Leadership team</h4>
+                    {permission?.map((ele) => (
+                      <select
+                        name="Leadership team"
+                        onChange={(e) =>
+                          handleChange(ele, e.target.name, e.target.value)
+                        }
+                        style={{
+                          border:
+                            checkVal(ele, "Leadership team") === false
+                              ? "3px solid red"
+                              : checkVal(ele, "Leadership team") === true
+                              ? "3px solid green"
+                              : "",
+                        }}
+                      >
+                        <option disabled selected>
+                          Select from Dropdown
+                        </option>
+                        <option
+                          value="not_allowed"
+                          selected={checkVal(ele, "Leadership team") === false}
+                        >
+                          Not Allowed
+                        </option>
+                        <option
+                          value="allowed"
+                          selected={checkVal(ele, "Leadership team") === true}
+                        >
+                          Allowed
+                        </option>
+                      </select>
+                    ))}
+                  </div>
+                </div>
+              </section>
+              <div className="actions">
+                <button className="btn-cancel">Cancel</button>
+                <button className="btn-apply" onClick={submitPermission}>
+                  Apply
+                </button>
               </div>
-              <div className="permissions-column">
-                <h4>Load planner</h4>
-                {permission.map((ele) => (
-                  <select
-                    name="Company_planner"
-                    onChange={(e) =>
-                      handleChange(ele, e.target.name, e.target.value)
-                    }
-                  >
-                    <option disabled>Select from Dropdown</option>
-                    <option value="not_allowed">Not Allowed</option>
-                    <option value="allowed">Allowed</option>
-                  </select>
-                ))}
-              </div>
-              <div className="permissions-column">
-                <h4>Shipping coordinator</h4>
-                {permission.map((ele) => (
-                  <select
-                    name="Shipping coordinator"
-                    onChange={(e) =>
-                      handleChange(ele, e.target.name, e.target.value)
-                    }
-                  >
-                    <option disabled>Select from Dropdown</option>
-                    <option value="not_allowed">Not Allowed</option>
-                    <option value="allowed">Allowed</option>
-                  </select>
-                ))}
-              </div>
-              <div className="permissions-column">
-                <h4>Leadership team</h4>
-                {permission.map((ele) => (
-                  <select
-                    name="Leadership team"
-                    onChange={(e) =>
-                      handleChange(ele, e.target.name, e.target.value)
-                    }
-                  >
-                    <option disabled>Select from Dropdown</option>
-                    <option value="not_allowed">Not Allowed</option>
-                    <option value="allowed">Allowed</option>
-                  </select>
-                ))}
-              </div>
-            </div>
-          </section>
-          <div className="actions">
-            <button className="btn-cancel">Cancel</button>
-            <button className="btn-apply" onClick={submitPermission}>
-              Apply
-            </button>
+            </main>
+            <div>dfh</div>
           </div>
-        </main>
-        <div>dfh</div>
-      </div>
+        </div>
+      )}
     </>
   );
 };
