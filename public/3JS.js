@@ -11,15 +11,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const urlParams = new URLSearchParams(window.location.search);
   const ind = parseInt(urlParams.get("container"), 0);
   const threedPath = JSON.parse(localStorage.getItem("threed_paths"));
-  // const currentSpeed = window.currentSpeed;
-
   const speedButton = document.getElementById("speeds");
   const speedButtons = speedButton.querySelectorAll("button");
-  console.log(speedButton);
-  console.log(speedButtons);
 
   let currentSpeed = 20;
-
+  let timeouts = [];
   function getLocalStorageItem(key) {
     return new Promise((resolve, reject) => {
       const item = localStorage.getItem(key);
@@ -300,32 +296,46 @@ document.addEventListener("DOMContentLoaded", () => {
 
     speedButtons.forEach((button) => {
       button.addEventListener("click", () => {
+        if (isAnimating) {
+          return;
+        }
         const newSpeed = parseFloat(button.dataset.speed);
-        console.log("newspeed", newSpeed);
-
         currentSpeed = newSpeed;
-        // clearContainer();
-        // animateSmallBoxes(threedPath[ind]);
+        speedButtons.forEach((btn) => {
+          btn.style.backgroundColor = "white";
+          btn.style.color = "black";
+        });
+        button.style.backgroundColor = "#9d4edd";
+        button.style.color = "white";
       });
     });
     const animateSmallBoxes = (boxes) => {
-      const timeoutId = boxes.forEach((box, index) => {
+      boxes.forEach((box, index) => {
         // Delay each animation to occur sequentially
-        setTimeout(() => {
-          isAnimating = true;
+        const timeoutId = setTimeout(() => {
+          // isAnimating = true;
           createSmallBox(box);
-          console.log(index, boxes.length);
 
           if (index == boxes.length - 2) {
-            console.log("hii");
-            isAnimating = false; // Animation completed
+            // console.log("false", index, boxes.length);
+            isAnimating = false;
+            speedButtons.forEach((button) => {
+              button.style.opacity = "1";
+            });
+          } else {
+            // console.log("true", index, boxes.length);
+            isAnimating = true; // Animation completed
           }
         }, index * currentSpeed);
-        isAnimating = false;
+        timeouts.push(timeoutId);
       });
-      isAnimating = false;
     };
-
+    const clearTimeouts = () => {
+      timeouts.forEach((id) => {
+        clearTimeout(id); // Clear each timeout
+      });
+      timeouts = []; // Reset the array after clearing
+    };
     const createSmallBox = (box) => {
       const startX = box.start.x;
       const startZ = containerDepth - box.start.y;
@@ -704,15 +714,29 @@ document.addEventListener("DOMContentLoaded", () => {
     topViewButton.addEventListener("click", setTopView);
     bottomViewButton.addEventListener("click", setBottomView);
     sideViewButton.addEventListener("click", setSideView);
-    document.getElementById("animate").addEventListener("click", () => {
-      console.log(isAnimating);
+    document.getElementById("animate").addEventListener(
+      "click",
+      () => {
+        console.log(isAnimating);
 
-      if (!isAnimating) {
-        clearContainer();
-        animateSmallBoxes(threedPath[ind]);
+        if (!isAnimating) {
+          speedButtons.forEach((button) => {
+            button.style.opacity = "0.5";
+          });
+          clearContainer();
+          animateSmallBoxes(threedPath[ind]);
+        } else {
+          isAnimating = false;
+          speedButtons.forEach((button) => {
+            button.style.opacity = "1";
+          });
+          clearTimeouts();
+          clearContainer();
+          createSmallBoxesFromCoordinates(threedPath[ind]);
+        }
       }
       //animateSmallBoxes(threedPath[ind]);
-    });
+    );
     let animationFrameId;
 
     const gltfLoader = new GLTFLoader();
