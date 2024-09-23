@@ -103,43 +103,42 @@ const Login = () => {
     });
     setEmail(data?.email);
 
-    dispatch(
-      checkEmailThunk(formData).then((data) => {
-        if (data.payload["ERROR"]) {
-          dispatch(sendOtpThunk(formData)).then((data) => {
-            if (data.payload["ERROR"]) {
-              toast.error(data.payload["ERROR"], {
-                style: {
-                  border: "1px solid #713200",
-                  padding: "16px",
-                  color: "#713200",
-                },
-              });
-            }
-            if (data.payload["SUCCESS"]) {
-              toast.success(data.payload["SUCCESS"], {
-                style: {
-                  border: "1px solid #713200",
-                  padding: "16px",
-                  color: "#713200",
-                },
-              });
-              setOtpTime(data.payload.sendTime);
-              setIsResendDisabled(true);
-            }
-          });
-        } else {
-          toast.error(data.payload["SUCCESS"], {
-            style: {
-              border: "1px solid #713200",
-              padding: "16px",
-              color: "#713200",
-            },
-          });
-        }
-      })
-    );
+    dispatch(checkEmailThunk(formData)).then((data) => {
+      if (data.payload["ERROR"]) {
+        dispatch(sendOtpThunk(formData)).then((data) => {
+          if (data.payload["ERROR"]) {
+            toast.error(data.payload["ERROR"], {
+              style: {
+                border: "1px solid #713200",
+                padding: "16px",
+                color: "#713200",
+              },
+            });
+          }
+          if (data.payload["SUCCESS"]) {
+            toast.success(data.payload["SUCCESS"], {
+              style: {
+                border: "1px solid #713200",
+                padding: "16px",
+                color: "#713200",
+              },
+            });
+            setOtpTime(data.payload.sendTime);
+            setIsResendDisabled(true);
+          }
+        });
+      } else {
+        toast.error(data.payload["SUCCESS"], {
+          style: {
+            border: "1px solid #713200",
+            padding: "16px",
+            color: "#713200",
+          },
+        });
+      }
+    });
   };
+
   const extractDomain = (email) => {
     const parts = email.split("@");
     if (parts.length === 2) {

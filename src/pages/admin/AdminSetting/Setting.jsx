@@ -410,9 +410,9 @@ const Setting = () => {
                         style={{
                           border:
                             checkVal(ele, "Company_loader") === false
-                              ? "3px solid red"
+                              ? "2px solid red"
                               : checkVal(ele, "Company_loader") === true
-                              ? "3px solid green"
+                              ? "2px solid green"
                               : "",
                         }}
                       >
@@ -445,9 +445,9 @@ const Setting = () => {
                         style={{
                           border:
                             checkVal(ele, "Company_planner") === false
-                              ? "3px solid red"
+                              ? "2px solid red"
                               : checkVal(ele, "Company_planner") === true
-                              ? "3px solid green"
+                              ? "2px solid green"
                               : "",
                         }}
                       >
@@ -480,9 +480,9 @@ const Setting = () => {
                         style={{
                           border:
                             checkVal(ele, "Shipping coordinator") === false
-                              ? "3px solid red"
+                              ? "2px solid red"
                               : checkVal(ele, "Shipping coordinator") === true
-                              ? "3px solid green"
+                              ? "2px solid green"
                               : "",
                         }}
                       >
@@ -519,9 +519,9 @@ const Setting = () => {
                         style={{
                           border:
                             checkVal(ele, "Leadership team") === false
-                              ? "3px solid red"
+                              ? "2px solid red"
                               : checkVal(ele, "Leadership team") === true
-                              ? "3px solid green"
+                              ? "2px solid green"
                               : "",
                         }}
                       >

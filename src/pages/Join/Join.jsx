@@ -30,7 +30,7 @@ const Join = () => {
               Login
             </button>
             <button class="action-button" onClick={() => navigate(signupurl)}>
-              Sign Up
+              Register
             </button>
           </div>
         </div>

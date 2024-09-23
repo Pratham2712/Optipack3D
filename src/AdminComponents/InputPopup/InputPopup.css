@@ -1,6 +1,6 @@
 .popup-input-content {
   background-color: white;
-  padding: 40px;
+  padding: 1.5rem 2rem;
   border-radius: 10px;
   position: relative;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
@@ -28,4 +28,28 @@
 .popup-buttons {
   display: flex;
   justify-content: center;
+  margin-top: 1rem;
+}
+.unit-button {
+  background: none;
+  border: 3px solid grey;
+  border-radius: 5px;
+  padding: 0.3rem 0.6rem;
+  font-size: 1rem;
+  margin-right: 0.5rem;
+  cursor: pointer;
+}
+.unit-head {
+  margin-bottom: 0.5rem;
+}
+
+.contianer-inputs div {
+  margin-top: 0.7rem;
+}
+.contianer-inputs input {
+  margin-top: 0.2rem;
+}
+.contianer-inputs p {
+  color: red;
+  font-size: 0.7rem;
 }
