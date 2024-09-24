@@ -1,6 +1,7 @@
 import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import {
+  admin_manageuser,
   admin_setting,
   free_output,
   free_trail,
@@ -16,6 +17,7 @@ import Login from "./pages/Login/Login";
 import Signup from "./pages/Signup/Signup";
 import FreeOutput from "./pages/FreeOutput/FreeOutput";
 import Setting from "./pages/admin/AdminSetting/Setting";
+import ManageUser from "./pages/admin/ManageUser/ManageUser";
 
 export const UnAuthRoutes = ({ skuData, setSkuData, inputs, setInputs }) => {
   return (
@@ -62,6 +64,7 @@ export const AuthRoutes = ({ skuData, setSkuData, inputs, setInputs }) => {
       <Route path={signupurl} element={<Signup />}></Route>
       {/* admin ====================================================================================================== */}
       <Route path={admin_setting} element={<Setting />}></Route>
+      <Route path={admin_manageuser} element={<ManageUser />}></Route>
     </Routes>
   );
 };

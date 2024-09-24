@@ -3,6 +3,7 @@ import Breadcrumb from "../../../components/Breadcrumb/Breadcrumb";
 import Sidebar from "../../../components/Sidebar/Sidebar";
 import "./Setting.css";
 import {
+  getContainerThunk,
   getLoadPlanThunk,
   getPermissionThunk,
   permissionThunk,
@@ -10,10 +11,15 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../../components/Loader/Loader";
 import InputPopup from "../../../AdminComponents/InputPopup/InputPopup";
+import AddUser from "../../../AdminComponents/AddUser/AddUser";
+import { admin_manageuser } from "../../../constants/links";
+import { useNavigate } from "react-router-dom";
 
 const Setting = () => {
   const [is700, setIs700] = useState(window.innerWidth < 700);
   const dispatch = useDispatch();
+  const [user, setUser] = useState(false);
+  const navigate = useNavigate();
 
   const permission = [
     "CFR",
@@ -43,6 +49,9 @@ const Setting = () => {
   );
   const loadplanData = useSelector(
     (state) => state.rootReducer.companyAdminSlice.data.loadplan
+  );
+  const containerList = useSelector(
+    (state) => state.rootReducer.companyAdminSlice.data.containerList
   );
 
   const handleChange = (dash, userType, value) => {
@@ -88,6 +97,7 @@ const Setting = () => {
     };
     dispatch(getPermissionThunk());
     dispatch(getLoadPlanThunk());
+    dispatch(getContainerThunk());
     window.addEventListener("resize", handleResize);
 
     return () => {
@@ -115,17 +125,23 @@ const Setting = () => {
             ) : (
               ""
             )}
+            {user ? <AddUser setUser={setUser} user={user} /> : ""}
             <main className="container-form">
               <section className="settings-header-head">
                 <h2>User Based Settings</h2>
                 <div className="actions-head">
-                  <a className="btn-cancel" style={{ padding: "0.6rem 6rem" }}>
+                  <a
+                    className="btn-cancel"
+                    style={{ padding: "0.6rem 6rem" }}
+                    onClick={() => setUser(true)}
+                  >
                     Add Users
                   </a>
                   <a
                     href=""
                     className="btn-apply"
                     style={{ padding: "0.6rem 6rem" }}
+                    onClick={() => navigate(admin_manageuser)}
                   >
                     Manage Users
                   </a>
@@ -157,10 +173,12 @@ const Setting = () => {
                     <option value="" selected>
                       Select From Dropdown
                     </option>
-                    <option value="">20' dry container</option>
-                    <option value="">40' dry container</option>
-                    <option value="">40' high cube container</option>
-                    {loadplanData?.["container_type"]?.map((ele) => (
+                    <option value="">General Purpose container 20'</option>
+                    <option value="">General Purpose container 40'</option>
+                    <option value="">
+                      High - Cube General Purpose container 40'
+                    </option>
+                    {containerList?.map((ele) => (
                       <option value={ele}>{ele}</option>
                     ))}
                     <option value="add-new-container">Add New Container</option>

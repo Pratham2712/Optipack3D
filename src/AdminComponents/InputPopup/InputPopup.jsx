@@ -1,10 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./InputPopup.css";
-import { loadPlanThunk } from "../../redux/Slices/companyAdminSlice";
+import {
+  addContainerThunk,
+  loadPlanThunk,
+} from "../../redux/Slices/companyAdminSlice";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import toast, { Toaster } from "react-hot-toast";
 
 const InputPopup = ({ loadData, setLoadData, inputPop, setInputPop }) => {
   const popupRef = useRef(null);
@@ -14,15 +18,15 @@ const InputPopup = ({ loadData, setLoadData, inputPop, setInputPop }) => {
   //schema=================================================================================================
   const schema = yup.object().shape({
     container_name: yup.string().required("Container name is required"),
-    length_container: yup
+    container_length: yup
       .number()
       .typeError("Length must be a number")
       .required("Length is required"),
-    width_container: yup
+    container_width: yup
       .number()
       .typeError("Width must be a number")
       .required("Width is required"),
-    height_container: yup
+    container_height: yup
       .number()
       .typeError("Height must be a number")
       .required("Height is required"),
@@ -47,12 +51,38 @@ const InputPopup = ({ loadData, setLoadData, inputPop, setInputPop }) => {
     });
   };
   const onSubmit = (data) => {
-    console.log("sumbit");
-    console.log(errors);
+    let updatedData = { ...data };
 
-    console.log(data);
+    if (unit === "cm") {
+      updatedData.container_height = data.container_height * 10;
+      updatedData.container_width = data.container_width * 10;
+      updatedData.container_length = data.container_length * 10;
+    } else if (unit === "m") {
+      updatedData.container_height = data.container_height * 1000;
+      updatedData.container_width = data.container_width * 1000;
+      updatedData.container_length = data.container_length * 1000;
+    }
+    dispatch(addContainerThunk(updatedData)).then((data) => {
+      if (data.payload["ERROR"]) {
+        toast.error(data.payload["ERROR"], {
+          style: {
+            border: "1px solid #713200",
+            padding: "16px",
+            color: "#713200",
+          },
+        });
+      }
+      if (data.payload["SUCCESS"]?.message) {
+        toast.success(data.payload["SUCCESS"]?.message, {
+          style: {
+            border: "1px solid #713200",
+            padding: "16px",
+            color: "#713200",
+          },
+        });
+      }
+    });
   };
-  console.log(errors);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -136,10 +166,10 @@ const InputPopup = ({ loadData, setLoadData, inputPop, setInputPop }) => {
                     <input
                       type="text"
                       id="length"
-                      {...register("length_container")}
+                      {...register("container_length")}
                     />
-                    {errors.length_container && (
-                      <p>{errors.length_container.message}</p>
+                    {errors.container_length && (
+                      <p>{errors.container_length.message}</p>
                     )}
                   </div>
                   <div>
@@ -147,10 +177,10 @@ const InputPopup = ({ loadData, setLoadData, inputPop, setInputPop }) => {
                     <input
                       type="text"
                       id="width"
-                      {...register("width_container")}
+                      {...register("container_width")}
                     />
-                    {errors.width_container && (
-                      <p>{errors.width_container.message}</p>
+                    {errors.container_width && (
+                      <p>{errors.container_width.message}</p>
                     )}
                   </div>
                   <div>
@@ -158,10 +188,10 @@ const InputPopup = ({ loadData, setLoadData, inputPop, setInputPop }) => {
                     <input
                       type="text"
                       id="height"
-                      {...register("height_container")}
+                      {...register("container_height")}
                     />
-                    {errors.height_container && (
-                      <p>{errors.height_container.message}</p>
+                    {errors.container_height && (
+                      <p>{errors.container_height.message}</p>
                     )}
                   </div>
                 </div>

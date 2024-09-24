@@ -17,8 +17,8 @@ import Loader from "../../components/Loader/Loader";
 import toast, { Toaster } from "react-hot-toast";
 import { BASE_URL } from "../../constants/constants";
 import axios from "axios";
-import { loginurl } from "../../constants/links";
-import { Link } from "react-router-dom";
+import { admin_setting, loginurl } from "../../constants/links";
+import { Link, useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -38,6 +38,7 @@ const Signup = () => {
     "aol.com",
   ];
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   //useSelector
   const otpSend = useSelector((state) => state.rootReducer.authSlice.otpSend);
 
@@ -97,7 +98,6 @@ const Signup = () => {
       formData.append(key, data[key]);
     });
     setEmail(data?.email);
-
     dispatch(checkEmailThunk(formData)).then((data) => {
       if (data.payload["SUCCESS"]) {
         dispatch(sendOtpThunk(formData)).then((data) => {
@@ -174,6 +174,9 @@ const Signup = () => {
             color: "#713200",
           },
         });
+        if (data.payload["SUCCESS"]?.userType == "Company_Admin") {
+          navigate(admin_setting);
+        }
       }
     });
   };

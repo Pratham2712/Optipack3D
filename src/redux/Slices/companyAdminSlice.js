@@ -45,6 +45,57 @@ export const getLoadPlanThunk = createAsyncThunk("/get_loadplan", async () => {
   }
 });
 
+export const addContainerThunk = createAsyncThunk(
+  "/add_container",
+  async (data) => {
+    try {
+      const res = await axios.post(`${BASE_URL}/add_container`, data);
+      return res.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  }
+);
+
+export const getContainerThunk = createAsyncThunk(
+  "/get_container",
+  async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/get_container`);
+      return res.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  }
+);
+
+export const sendEmailThunk = createAsyncThunk("/send_email", async (data) => {
+  try {
+    const res = await axios.post(`${BASE_URL}/send_email`, data);
+    return res.data;
+  } catch (error) {
+    return error.response.data;
+  }
+});
+
+export const getAllUsersThunk = createAsyncThunk("/get_allusers", async () => {
+  try {
+    const res = await axios.get(`${BASE_URL}/get_allusers`);
+    return res.data;
+  } catch (error) {
+    return error.response.data;
+  }
+});
+
+export const getUsertypeThunk = createAsyncThunk("/get_usertype", async () => {
+  try {
+    const res = await axios.get(`${BASE_URL}/get_usertype`);
+    return res.data;
+  } catch (error) {
+    return error.response.data;
+  }
+});
+
 const initialState = {
   loading: false,
   updateDone: false,
@@ -58,12 +109,20 @@ const initialState = {
   data: {
     permission: [],
     loadplan: {},
+    containerList: [],
+    users: [],
+    userType: [],
   },
   status: {
     permissionThunk: IDLE,
     getPermissionThunk: IDLE,
     loadPlanThunk: IDLE,
     getLoadPlanThunk: IDLE,
+    addContainerThunk: IDLE,
+    getContainerThunk: IDLE,
+    sendEmailThunk: IDLE,
+    getAllUsersThunk: IDLE,
+    getUsertypeThunk: IDLE,
   },
 };
 
@@ -178,6 +237,137 @@ const companyAdminSlice = createSlice({
       })
       .addCase(getLoadPlanThunk.rejected, (state, action) => {
         state.status.getLoadPlanThunk = ERROR;
+        state.loading = false;
+        state.errorData.message = action.error.message;
+      })
+      //addContainerThunk=====================================================================================================
+      .addCase(addContainerThunk.pending, (state, { payload }) => {
+        state.loading = true;
+      })
+      .addCase(addContainerThunk.fulfilled, (state, { payload }) => {
+        switch (Object.keys(payload)[0]) {
+          case SUCCESS:
+            console.log(payload);
+
+            state.loading = false;
+            state.successMsg = payload[SUCCESS]?.message;
+            state.data.containerList = payload[SUCCESS]?.result;
+            state.updateDone = !state.updateDone;
+            break;
+          case ERROR:
+            state.loading = false;
+            state.isError = true;
+            state.errorData.message = payload[ERROR];
+            break;
+          default:
+            break;
+        }
+      })
+      .addCase(addContainerThunk.rejected, (state, action) => {
+        state.status.addContainerThunk = ERROR;
+        state.loading = false;
+        state.errorData.message = action.error.message;
+      })
+      //getContainerThunk==========================================================================================================
+      .addCase(getContainerThunk.pending, (state, { payload }) => {
+        state.loading = false;
+      })
+      .addCase(getContainerThunk.fulfilled, (state, { payload }) => {
+        switch (Object.keys(payload)[0]) {
+          case SUCCESS:
+            state.loading = false;
+            state.successMsg = payload[SUCCESS]?.message;
+            state.data.containerList = payload[SUCCESS];
+            state.updateDone = !state.updateDone;
+            break;
+          case ERROR:
+            state.loading = false;
+            state.isError = true;
+            state.errorData.message = payload[ERROR];
+            break;
+          default:
+            break;
+        }
+      })
+      .addCase(getContainerThunk.rejected, (state, action) => {
+        state.status.getContainerThunk = ERROR;
+        state.loading = false;
+        state.errorData.message = action.error.message;
+      })
+      //sendEmailThunk==========================================================================================================
+      .addCase(sendEmailThunk.pending, (state, { payload }) => {
+        state.loading = false;
+      })
+      .addCase(sendEmailThunk.fulfilled, (state, { payload }) => {
+        switch (Object.keys(payload)[0]) {
+          case SUCCESS:
+            state.loading = false;
+            state.successMsg = payload[SUCCESS];
+            state.updateDone = !state.updateDone;
+            break;
+          case ERROR:
+            state.loading = false;
+            state.isError = true;
+            state.errorData.message = payload[ERROR];
+            break;
+          default:
+            break;
+        }
+      })
+      .addCase(sendEmailThunk.rejected, (state, action) => {
+        state.status.sendEmailThunk = ERROR;
+        state.loading = false;
+        state.errorData.message = action.error.message;
+      })
+      //getAllUsersThunk==========================================================================================================
+      .addCase(getAllUsersThunk.pending, (state, { payload }) => {
+        state.loading = false;
+      })
+      .addCase(getAllUsersThunk.fulfilled, (state, { payload }) => {
+        switch (Object.keys(payload)[0]) {
+          case SUCCESS:
+            state.loading = false;
+            state.successMsg = payload[SUCCESS]?.message;
+            state.data.users = payload[SUCCESS]?.result;
+            state.updateDone = !state.updateDone;
+            break;
+          case ERROR:
+            state.loading = false;
+            state.isError = true;
+            state.errorData.message = payload[ERROR];
+            break;
+          default:
+            break;
+        }
+      })
+      .addCase(getAllUsersThunk.rejected, (state, action) => {
+        state.status.getAllUsersThunk = ERROR;
+        state.loading = false;
+        state.errorData.message = action.error.message;
+      })
+      //getUsertypeThunk==========================================================================================================
+      .addCase(getUsertypeThunk.pending, (state, { payload }) => {
+        state.loading = false;
+      })
+      .addCase(getUsertypeThunk.fulfilled, (state, { payload }) => {
+        switch (Object.keys(payload)[0]) {
+          case SUCCESS:
+            state.loading = false;
+            state.successMsg = payload[SUCCESS]?.message;
+            state.data.userType = payload[SUCCESS]?.result;
+            state.updateDone = !state.updateDone;
+            break;
+          case ERROR:
+            state.loading = false;
+            state.isError = true;
+            state.errorData.message = payload[ERROR];
+            break;
+          default:
+            break;
+        }
+      })
+      .addCase(getUsertypeThunk.rejected, (state, action) => {
+        state.status.getUsertypeThunk = ERROR;
         state.loading = false;
         state.errorData.message = action.error.message;
       });

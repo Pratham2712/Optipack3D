@@ -6,6 +6,7 @@ import { autoFillerBox } from "./Util/data";
 import { checkLoginThunk } from "./redux/Slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "./components/Loader/Loader";
+import toast, { Toaster } from "react-hot-toast";
 
 function App() {
   const isAuthenticated = useSelector(
@@ -72,6 +73,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <Toaster />
       <div className="App">
         {isAuthenticated ? (
           <AuthRoutes

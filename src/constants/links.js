@@ -5,3 +5,4 @@ export const loginurl = "/login";
 export const signupurl = "/additionalInformation";
 export const free_output = "/freeOutput";
 export const admin_setting = "/admin/setting";
+export const admin_manageuser = "/admin/mangageuser";

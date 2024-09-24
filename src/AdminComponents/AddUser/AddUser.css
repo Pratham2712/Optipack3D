@@ -1,0 +1,45 @@
+.popup-user-content {
+  background-color: white;
+  padding: 1.5rem 2rem;
+  border-radius: 10px;
+  position: relative;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  max-width: 95%;
+  max-height: 95%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  width: 40%;
+}
+
+.popup-user {
+  margin: 0 auto;
+  margin-bottom: 1.5rem;
+}
+
+.popup-user-text {
+  width: 100%;
+}
+
+textarea#message {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.user-inputs div {
+  margin-top: 1rem;
+}
+
+.user-inputs input,
+textarea {
+  margin-top: 0.2rem;
+}
+
+.user-inputs p {
+  color: red;
+  font-size: 0.7rem;
+}
