@@ -96,6 +96,29 @@ export const getUsertypeThunk = createAsyncThunk("/get_usertype", async () => {
   }
 });
 
+export const updateUserTypeThunk = createAsyncThunk(
+  "/update_usertype",
+  async (data) => {
+    try {
+      const res = await axios.post(`${BASE_URL}/update_usertype`, data);
+      return res.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  }
+);
+export const removeUserThunk = createAsyncThunk(
+  "/remove_user",
+  async (data) => {
+    try {
+      const res = await axios.post(`${BASE_URL}/remove_user`, data);
+      return res.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  }
+);
+
 const initialState = {
   loading: false,
   updateDone: false,
@@ -123,6 +146,8 @@ const initialState = {
     sendEmailThunk: IDLE,
     getAllUsersThunk: IDLE,
     getUsertypeThunk: IDLE,
+    updateUserTypeThunk: IDLE,
+    removeUserThunk: IDLE,
   },
 };
 
@@ -368,6 +393,56 @@ const companyAdminSlice = createSlice({
       })
       .addCase(getUsertypeThunk.rejected, (state, action) => {
         state.status.getUsertypeThunk = ERROR;
+        state.loading = false;
+        state.errorData.message = action.error.message;
+      })
+      //updateUserTypeThunk=====================================================================================================
+      .addCase(updateUserTypeThunk.pending, (state, { payload }) => {
+        state.loading = true;
+      })
+      .addCase(updateUserTypeThunk.fulfilled, (state, { payload }) => {
+        switch (Object.keys(payload)[0]) {
+          case SUCCESS:
+            state.loading = false;
+            state.successMsg = payload[SUCCESS]?.message;
+            state.updateDone = !state.updateDone;
+            break;
+          case ERROR:
+            state.loading = false;
+            state.isError = true;
+            state.errorData.message = payload[ERROR];
+            break;
+          default:
+            break;
+        }
+      })
+      .addCase(updateUserTypeThunk.rejected, (state, action) => {
+        state.status.updateUserTypeThunk = ERROR;
+        state.loading = false;
+        state.errorData.message = action.error.message;
+      })
+      //removeUserThunk=====================================================================================================
+      .addCase(removeUserThunk.pending, (state, { payload }) => {
+        state.loading = true;
+      })
+      .addCase(removeUserThunk.fulfilled, (state, { payload }) => {
+        switch (Object.keys(payload)[0]) {
+          case SUCCESS:
+            state.loading = false;
+            state.successMsg = payload[SUCCESS]?.message;
+            state.updateDone = !state.updateDone;
+            break;
+          case ERROR:
+            state.loading = false;
+            state.isError = true;
+            state.errorData.message = payload[ERROR];
+            break;
+          default:
+            break;
+        }
+      })
+      .addCase(removeUserThunk.rejected, (state, action) => {
+        state.status.removeUserThunk = ERROR;
         state.loading = false;
         state.errorData.message = action.error.message;
       });

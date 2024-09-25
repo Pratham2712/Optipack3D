@@ -3,8 +3,11 @@ import "./AddUser.css";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useDispatch } from "react-redux";
-import { sendEmailThunk } from "../../redux/Slices/companyAdminSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getUsertypeThunk,
+  sendEmailThunk,
+} from "../../redux/Slices/companyAdminSlice";
 import toast from "react-hot-toast";
 
 const AddUser = ({ user, setUser }) => {
@@ -17,6 +20,10 @@ const AddUser = ({ user, setUser }) => {
     "hotmail.com",
     "aol.com",
   ];
+  //useEffect============================================================================================================
+  const userType = useSelector(
+    (state) => state.rootReducer.companyAdminSlice.data.userType
+  );
   //schema=================================================================================================
   const schema = yup.object().shape({
     email: yup
@@ -29,6 +36,7 @@ const AddUser = ({ user, setUser }) => {
         return !publicEmailDomains.includes(domain);
       }),
     message: yup.string().required("message is required"),
+    userType: yup.string().required("Role is required"),
   });
   const {
     register,
@@ -74,6 +82,7 @@ const AddUser = ({ user, setUser }) => {
       document.removeEventListener("mousedown", handleClickOutside);
     }
 
+    dispatch(getUsertypeThunk());
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -90,13 +99,36 @@ const AddUser = ({ user, setUser }) => {
               <input type="text" id="email" {...register("email")} />
               {errors.email && <p>{errors.email.message}</p>}
             </div>
+            <div className="role">
+              <label htmlFor="select-box1">Role</label>
+              <select
+                id="select-box1"
+                style={{ width: "100%", fontSize: "1rem" }}
+                {...register("userType")}
+              >
+                <option selected disabled>
+                  {" "}
+                  Select role
+                </option>
+                {userType?.map((data) => (
+                  <option value={data}>{data}</option>
+                ))}
+              </select>
+              {errors.userType && <p>{errors.userType.message}</p>}
+            </div>
             <div>
               <label htmlFor="message">Message</label>
               <textarea
                 name="message"
                 id="message"
                 {...register("message")}
-              ></textarea>
+                rows={10}
+              >
+                The administrator of the application for your organization is
+                inviting you to join Optipack3d. Pls click on the link to
+                complete the sign up process. Optipack3d.com empowers logistics
+                operations team to optimise their container loading plan.
+              </textarea>
               {errors.message && <p>{errors.message.message}</p>}
             </div>
           </div>

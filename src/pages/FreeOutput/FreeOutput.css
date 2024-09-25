@@ -335,8 +335,7 @@
 .note {
   width: 60%;
   border-radius: 1rem;
-  color: var(--primary);
-  border: 5px solid #dcdcdc;
+  border: 5px solid var(--primary);
   padding: 1.3rem 1rem;
   margin-top: 1rem;
 }

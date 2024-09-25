@@ -17,3 +17,15 @@ th {
   text-align: left;
   padding: 8px;
 }
+
+.select,
+.label {
+  color: #414141;
+  display: block;
+  font-size: 1rem;
+  border: none;
+}
+
+.select-box1 {
+  background: #ececec;
+}

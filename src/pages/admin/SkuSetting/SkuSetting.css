@@ -1,0 +1,14 @@
+.input-admin-row {
+  display: flex;
+  flex-wrap: nowrap;
+  margin-right: 10px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  width: 100%;
+  align-items: center;
+}
+
+.input p {
+  color: red;
+  font-size: 0.7rem;
+}

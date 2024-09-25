@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 const InputPopup = ({ loadData, setLoadData, inputPop, setInputPop }) => {
   const popupRef = useRef(null);

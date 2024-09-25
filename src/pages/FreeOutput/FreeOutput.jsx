@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { getDataThunk } from "../../redux/Slices/mainSlice";
 import Loader from "../../components/Loader/Loader";
-import premiumIcon from "../../assests/premium.png";
 import Popup from "../../components/Popup/Popup";
 import ShareContent from "../../components/ShareContent/ShareContent";
 
@@ -185,8 +184,8 @@ const FreeOutput = () => {
                 display: totalFilled < totalCasesSum ? "block" : "none",
               }}
             >
-              *There are still boxes that need to be filled in the container.
-              Recommend you to go back and change the number of container
+              There are still boxes that need to be filled in the container.
+              Recommend you to go back and change the number of container.
             </div>
             <div className="container-tabs">
               {container?.map((ele, index) => (

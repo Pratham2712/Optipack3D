@@ -14,6 +14,7 @@ import InputPopup from "../../../AdminComponents/InputPopup/InputPopup";
 import AddUser from "../../../AdminComponents/AddUser/AddUser";
 import { admin_manageuser } from "../../../constants/links";
 import { useNavigate } from "react-router-dom";
+import SkuSetting from "../SkuSetting/SkuSetting";
 
 const Setting = () => {
   const [is700, setIs700] = useState(window.innerWidth < 700);
@@ -247,6 +248,11 @@ const Setting = () => {
                     className="styled-select"
                   >
                     <option>Select From Dropdown</option>
+                    <option>60 %</option>
+                    <option>70 %</option>
+                    <option>80 %</option>
+                    <option>90 %</option>
+                    <option>95 %</option>
                   </select>
                 </div>
                 <div className="settings-group">
@@ -258,6 +264,9 @@ const Setting = () => {
                     className="styled-select"
                   >
                     <option>Select From Dropdown</option>
+                    {[...Array(30)].map((_, index) => (
+                      <option>{index + 1} days</option>
+                    ))}
                   </select>
                 </div>
               </section>
@@ -268,141 +277,6 @@ const Setting = () => {
               <div style={{ margin: "2rem 0rem" }}>
                 <h2>Dashboard permission settings</h2>
               </div>
-              {/* <section className="settings-section2" id="dashboard">
-            <div className="permissions-table">
-              <div className="permissions-header">
-                <span className="permission-type"></span>
-                <span className="permission-role">Loading team</span>
-                <span className="permission-role">Load planner</span>
-                <span className="permission-role">Shipping coordinator</span>
-                <span className="permission-role">Leadership team</span>
-              </div>
-
-              <div className="permissions-row">
-                <span className="permission-type">CFR</span>
-                <select>
-                  <option>Select from Dropdown</option>
-                  <option value="allowed">Allowed</option>
-                  <option value="not_allowed">Not Allowed</option>
-                </select>
-                <select>
-                  <option>Select from Dropdown</option>
-                  <option value="allowed">Allowed</option>
-                  <option value="not_allowed">Not Allowed</option>
-                </select>
-                <select>
-                  <option>Select from Dropdown</option>
-                  <option value="allowed">Allowed</option>
-                  <option value="not_allowed">Not Allowed</option>
-                </select>
-                <select>
-                  <option>Select from Dropdown</option>
-                  <option value="allowed">Allowed</option>
-                  <option value="not_allowed">Not Allowed</option>
-                </select>
-              </div>
-
-              <div className="permissions-row">
-                <span className="permission-type">One time rate</span>
-                <select>
-                  <option>Select from Dropdown</option>
-                  <option value="allowed">Allowed</option>
-                  <option value="not_allowed">Not Allowed</option>
-                </select>
-                <select>
-                  <option>Select from Dropdown</option>
-                  <option value="allowed">Allowed</option>
-                  <option value="not_allowed">Not Allowed</option>
-                </select>
-                <select>
-                  <option>Select from Dropdown</option>
-                  <option value="allowed">Allowed</option>
-                  <option value="not_allowed">Not Allowed</option>
-                </select>
-                <select>
-                  <option>Select from Dropdown</option>
-                  <option value="allowed">Allowed</option>
-                  <option value="not_allowed">Not Allowed</option>
-                </select>
-              </div>
-
-              <div className="permissions-row">
-                <span className="permission-type">
-                  Location Wise Performance
-                </span>
-                <select>
-                  <option>Select from Dropdown</option>
-                  <option value="allowed">Allowed</option>
-                  <option value="not_allowed">Not Allowed</option>
-                </select>
-                <select>
-                  <option>Select from Dropdown</option>
-                  <option value="allowed">Allowed</option>
-                  <option value="not_allowed">Not Allowed</option>
-                </select>
-                <select>
-                  <option>Select from Dropdown</option>
-                  <option value="allowed">Allowed</option>
-                  <option value="not_allowed">Not Allowed</option>
-                </select>
-                <select>
-                  <option>Select from Dropdown</option>
-                  <option value="allowed">Allowed</option>
-                  <option value="not_allowed">Not Allowed</option>
-                </select>
-              </div>
-
-              <div className="permissions-row">
-                <span className="permission-type">
-                  Source Destination Combinations Loss
-                </span>
-                <select>
-                  <option>Select from Dropdown</option>
-                  <option value="allowed">Allowed</option>
-                  <option value="not_allowed">Not Allowed</option>
-                </select>
-                <select>
-                  <option>Select from Dropdown</option>
-                  <option value="allowed">Allowed</option>
-                  <option value="not_allowed">Not Allowed</option>
-                </select>
-                <select>
-                  <option>Select from Dropdown</option>
-                  <option value="allowed">Allowed</option>
-                  <option value="not_allowed">Not Allowed</option>
-                </select>
-                <select>
-                  <option>Select from Dropdown</option>
-                  <option value="allowed">Allowed</option>
-                  <option value="not_allowed">Not Allowed</option>
-                </select>
-              </div>
-
-              <div className="permissions-row">
-                <span className="permission-type">Planning volume loss</span>
-                <select>
-                  <option>Select from Dropdown</option>
-                  <option value="allowed">Allowed</option>
-                  <option value="not_allowed">Not Allowed</option>
-                </select>
-                <select>
-                  <option>Select from Dropdown</option>
-                  <option value="allowed">Allowed</option>
-                  <option value="not_allowed">Not Allowed</option>
-                </select>
-                <select>
-                  <option>Select from Dropdown</option>
-                  <option value="allowed">Allowed</option>
-                  <option value="not_allowed">Not Allowed</option>
-                </select>
-                <select>
-                  <option>Select from Dropdown</option>
-                  <option value="allowed">Allowed</option>
-                  <option value="not_allowed">Not Allowed</option>
-                </select>
-              </div>
-            </div>
-          </section> */}
               <section
                 style={{
                   display: "flex",
@@ -569,8 +443,8 @@ const Setting = () => {
                   Apply
                 </button>
               </div>
+              <SkuSetting />
             </main>
-            <div>dfh</div>
           </div>
         </div>
       )}
