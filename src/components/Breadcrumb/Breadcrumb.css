@@ -8,7 +8,7 @@
   padding: 20px;
   border-bottom: 2px solid #e6e8edcc; /* Example border */
   margin-left: 5rem;
-  z-index: 1;
+  z-index: 2;
   background-color: #fff;
 }
 .breadcrumb {

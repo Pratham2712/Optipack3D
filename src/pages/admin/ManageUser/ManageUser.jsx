@@ -12,11 +12,14 @@ import {
 import "./ManageUser.css";
 import toast from "react-hot-toast";
 import ConfirmPopup from "../../../AdminComponents/ConfirmPopup/ConfirmPopup";
+import AddUser from "../../../AdminComponents/AddUser/AddUser";
 
 const ManageUser = () => {
   const [is700, setIs700] = useState(window.innerWidth < 700);
   const [confirm, setConfirm] = useState(false);
   const [userData, setUserData] = useState({});
+  const [user, setUser] = useState(false);
+
   const dispatch = useDispatch();
 
   const heading = [
@@ -42,6 +45,7 @@ const ManageUser = () => {
   const loginUser = useSelector(
     (state) => state.rootReducer.authSlice.data.user
   );
+
   //function ==================================================================================================================
   const formatDate = (date) => {
     const dateObj = new Date(date);
@@ -140,8 +144,19 @@ const ManageUser = () => {
           )}
           <Breadcrumb />
           {!is700 ? <Sidebar className="hide-sidebar" /> : <></>}
+          {user ? <AddUser setUser={setUser} user={user} /> : ""}
           <main className="container-form">
             <h1>Registered users</h1>
+            <a
+              className="btn-cancel"
+              style={{
+                marginBottom: "2rem",
+                display: "inline-block",
+              }}
+              onClick={() => setUser(true)}
+            >
+              Add Users
+            </a>
             <div className="user-content">
               <table>
                 <tr className="user-head">
@@ -163,25 +178,24 @@ const ManageUser = () => {
                           id="select-box1"
                           onChange={(e) => updateRole(ele, e.target.value)}
                         >
-                          <option selected={ele?.user_type == "None"} disabled>
+                          <option
+                            value=""
+                            selected={ele?.user_type == "None"}
+                            disabled
+                          >
                             Select user type
                           </option>
 
-                          {ele?.user_type != "Company_Admin" ? (
+                          {ele?.user_type == "Company_Admin" &&
+                          loginUser?.userType == "Company_Admin" &&
+                          ele?.email_id === loginUser?.email ? (
+                            <option>Admin</option>
+                          ) : (
                             userType?.map((data) => (
-                              <option
-                                value={ele?.user_type}
-                                selected={ele?.user_type == data}
-                              >
+                              <option selected={ele?.user_type == data}>
                                 {data}
                               </option>
                             ))
-                          ) : (
-                            <option
-                              selected={loginUser?.user_type == "Company_Admin"}
-                            >
-                              Admin
-                            </option>
                           )}
                         </select>
                       </div>
@@ -208,7 +222,11 @@ const ManageUser = () => {
                             setUserData(ele);
                           }}
                           disabled={
-                            ele?.user_type == "Company_Admin" ? true : false
+                            ele?.user_type == "Company_Admin" &&
+                            loginUser?.userType == "Company_Admin" &&
+                            ele?.email_id === loginUser?.email
+                              ? true
+                              : false
                           }
                         >
                           Remove

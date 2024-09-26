@@ -119,6 +119,33 @@ export const removeUserThunk = createAsyncThunk(
   }
 );
 
+export const addSkuThunk = createAsyncThunk("/add_sku", async (data) => {
+  try {
+    const res = await axios.post(`${BASE_URL}/add_sku`, data);
+    return res.data;
+  } catch (error) {
+    return error.response.data;
+  }
+});
+
+export const getSkuThunk = createAsyncThunk("/get_sku", async (data) => {
+  try {
+    const res = await axios.post(`${BASE_URL}/get_sku`, data);
+    return res.data;
+  } catch (error) {
+    return error.response.data;
+  }
+});
+
+export const deleteSkuThunk = createAsyncThunk("/delete_sku", async (data) => {
+  try {
+    const res = await axios.post(`${BASE_URL}/delete_sku`, data);
+    return res.data;
+  } catch (error) {
+    return error.response.data;
+  }
+});
+
 const initialState = {
   loading: false,
   updateDone: false,
@@ -135,6 +162,8 @@ const initialState = {
     containerList: [],
     users: [],
     userType: [],
+    sku: [],
+    total_sku: 0,
   },
   status: {
     permissionThunk: IDLE,
@@ -148,6 +177,9 @@ const initialState = {
     getUsertypeThunk: IDLE,
     updateUserTypeThunk: IDLE,
     removeUserThunk: IDLE,
+    addSkuThunk: IDLE,
+    getSkuThunk: IDLE,
+    deleteSkuThunk: IDLE,
   },
 };
 
@@ -443,6 +475,83 @@ const companyAdminSlice = createSlice({
       })
       .addCase(removeUserThunk.rejected, (state, action) => {
         state.status.removeUserThunk = ERROR;
+        state.loading = false;
+        state.errorData.message = action.error.message;
+      })
+      //addSkuThunk=====================================================================================================
+      .addCase(addSkuThunk.pending, (state, { payload }) => {
+        state.loading = true;
+      })
+      .addCase(addSkuThunk.fulfilled, (state, { payload }) => {
+        switch (Object.keys(payload)[0]) {
+          case SUCCESS:
+            state.loading = false;
+            state.successMsg = payload[SUCCESS]?.message;
+            state.updateDone = !state.updateDone;
+            break;
+          case ERROR:
+            state.loading = false;
+            state.isError = true;
+            state.errorData.message = payload[ERROR];
+            break;
+          default:
+            break;
+        }
+      })
+      .addCase(addSkuThunk.rejected, (state, action) => {
+        state.status.addSkuThunk = ERROR;
+        state.loading = false;
+        state.errorData.message = action.error.message;
+      })
+      //getSkuThunk==========================================================================================================
+      .addCase(getSkuThunk.pending, (state, { payload }) => {
+        state.loading = false;
+      })
+      .addCase(getSkuThunk.fulfilled, (state, { payload }) => {
+        switch (Object.keys(payload)[0]) {
+          case SUCCESS:
+            state.loading = false;
+            state.successMsg = payload[SUCCESS]?.message;
+            state.data.sku = payload[SUCCESS]?.result;
+            state.data.total_sku = payload[SUCCESS]?.total;
+            state.updateDone = !state.updateDone;
+            break;
+          case ERROR:
+            state.loading = false;
+            state.isError = true;
+            state.errorData.message = payload[ERROR];
+            break;
+          default:
+            break;
+        }
+      })
+      .addCase(getSkuThunk.rejected, (state, action) => {
+        state.status.getSkuThunk = ERROR;
+        state.loading = false;
+        state.errorData.message = action.error.message;
+      })
+      //deleteSkuThunk=====================================================================================================
+      .addCase(deleteSkuThunk.pending, (state, { payload }) => {
+        state.loading = true;
+      })
+      .addCase(deleteSkuThunk.fulfilled, (state, { payload }) => {
+        switch (Object.keys(payload)[0]) {
+          case SUCCESS:
+            state.loading = false;
+            state.successMsg = payload[SUCCESS]?.message;
+            state.updateDone = !state.updateDone;
+            break;
+          case ERROR:
+            state.loading = false;
+            state.isError = true;
+            state.errorData.message = payload[ERROR];
+            break;
+          default:
+            break;
+        }
+      })
+      .addCase(deleteSkuThunk.rejected, (state, action) => {
+        state.status.deleteSkuThunk = ERROR;
         state.loading = false;
         state.errorData.message = action.error.message;
       });

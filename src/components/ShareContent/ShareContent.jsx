@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   FacebookShareButton,
   TwitterShareButton,
@@ -20,6 +20,7 @@ import cross from "../../assests/cross.png";
 
 const ShareContent = ({ url, title, setShareit, shareit }) => {
   const popupRef = useRef(null);
+  const [image, setImage] = useState(localStorage.getItem("screenshot"));
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -42,6 +43,18 @@ const ShareContent = ({ url, title, setShareit, shareit }) => {
     <div className="share-overlay">
       <div className="share-container" ref={popupRef}>
         <h3>Share</h3>
+        <div className="preview">
+          <img
+            src={image}
+            style={{
+              width: "250px",
+              height: "300px",
+              objectFit: "cover",
+              zoom: "1",
+            }}
+            alt=""
+          />
+        </div>
         <div className="share-content">
           <FacebookShareButton url={url} quote={title}>
             <FacebookIcon size={36} round />

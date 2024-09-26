@@ -51,22 +51,19 @@ const FreeOutput = () => {
   const containerInf = useSelector(
     (state) => state.rootReducer.mainSlice.data.data.container_inf
   );
+  const isLogin = useSelector((state) => state.rootReducer.authSlice.isLogin);
 
   localStorage.setItem("threed_paths", JSON.stringify(threedPaths));
   localStorage.setItem("container_inf", JSON.stringify(containerInf?.[0]));
 
   const iframeSrc = `three_render.html?container=${encodeURIComponent(
     contIndex
-  )}&animation=${encodeURIComponent(animate)}`;
+  )}&animation=${encodeURIComponent(animate)}&isLogin=${encodeURIComponent(
+    isLogin
+  )}`;
   //function===============================================================================================================
   const setAnimation = () => {
     setAnimate(!animate);
-    localStorage.setItem("animation", animate);
-    // if (!animate) {
-    //   modelRef.current.contentWindow.postMessage("startAnimation", "*");
-    // } else {
-    //   modelRef.current.contentWindow.postMessage("stopAnimation", "*");
-    // }
   };
   const share = () => {
     setShareit(!shareit);
@@ -247,7 +244,7 @@ const FreeOutput = () => {
                   <h3>
                     3d Loading Animation
                     {/* <img className="premium-icon" src={premiumIcon} /> */}
-                    <i class="fa-solid fa-lock premium-icon"></i>
+                    {/* <i class="fa-solid fa-lock premium-icon"></i> */}
                   </h3>
                   <button
                     className="btn-apply"
@@ -275,7 +272,7 @@ const FreeOutput = () => {
                   <h3>
                     Share/Export Loading
                     {/* <img className="premium-icon" src={premiumIcon} /> */}
-                    <i class="fa-solid fa-lock premium-icon"></i>
+                    {/* <i class="fa-solid fa-lock premium-icon"></i> */}
                   </h3>
                   <input
                     type="email"

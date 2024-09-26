@@ -5,6 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  getAllUsersThunk,
   getUsertypeThunk,
   sendEmailThunk,
 } from "../../redux/Slices/companyAdminSlice";
@@ -65,6 +66,7 @@ const AddUser = ({ user, setUser }) => {
           },
         });
         setUser(false);
+        dispatch(getAllUsersThunk());
       }
     });
   };
@@ -106,7 +108,7 @@ const AddUser = ({ user, setUser }) => {
                 style={{ width: "100%", fontSize: "1rem" }}
                 {...register("userType")}
               >
-                <option selected disabled>
+                <option value="" selected disabled>
                   {" "}
                   Select role
                 </option>

@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const containerInfPath = JSON.parse(localStorage.getItem("container_inf"));
   const urlParams = new URLSearchParams(window.location.search);
   const ind = parseInt(urlParams.get("container"), 0);
+  const isLogin = urlParams.get("isLogin", false);
   const threedPath = JSON.parse(localStorage.getItem("threed_paths"));
   const speedButton = document.getElementById("speeds");
   const speedButtons = speedButton.querySelectorAll("button");
@@ -37,7 +38,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  const renderer = new THREE.WebGLRenderer({
+    antialias: true,
+    preserveDrawingBuffer: true,
+  });
+
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
@@ -296,17 +301,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
     speedButtons.forEach((button) => {
       button.addEventListener("click", () => {
-        if (isAnimating) {
-          return;
+        console.log(isLogin);
+
+        if (isLogin) {
+          if (isAnimating) {
+            return;
+          }
+
+          const newSpeed = parseFloat(button.dataset.speed);
+          currentSpeed = newSpeed;
+          speedButtons.forEach((btn) => {
+            btn.style.backgroundColor = "white";
+            btn.style.color = "black";
+          });
+          button.style.backgroundColor = "#9d4edd";
+          button.style.color = "white";
+        } else {
+          alert("Register or login required");
         }
-        const newSpeed = parseFloat(button.dataset.speed);
-        currentSpeed = newSpeed;
-        speedButtons.forEach((btn) => {
-          btn.style.backgroundColor = "white";
-          btn.style.color = "black";
-        });
-        button.style.backgroundColor = "#9d4edd";
-        button.style.color = "white";
       });
     });
     const animateSmallBoxes = (boxes) => {
@@ -566,11 +578,19 @@ document.addEventListener("DOMContentLoaded", () => {
         if (boxes.length > 0) {
           createSmallBoxesFromCoordinates(boxes);
 
-          // Calculate box counts per row
-          // const rowCounts = countBoxesByRowAndColor(boxes);
+          const originalWidth = window.innerWidth;
+          const originalHeight = window.innerHeight;
+          const screenshotWidth = window.innerWidth * window.devicePixelRatio; // High resolution
+          const screenshotHeight = window.innerHeight * window.devicePixelRatio; // High resolution
 
-          // Add count labels to the scene
-          // addCountLabels(rowCounts);
+          renderer.setSize(screenshotWidth, screenshotHeight);
+          renderer.render(scene, camera); // Render the scene at the new resolution
+
+          const screenshotDataURL = renderer.domElement.toDataURL("image/png");
+
+          localStorage.setItem("screenshot", screenshotDataURL);
+          renderer.setSize(originalWidth, originalHeight);
+          renderer.render(scene, camera);
         }
 
         if (lastBoxYItem) {
@@ -594,6 +614,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const topViewButton = document.getElementById("topViewButton");
     const bottomViewButton = document.getElementById("bottomViewButton");
     const sideViewButton = document.getElementById("sideViewButton");
+    const screenshot = document.getElementById("screenshot");
 
     // Function to reset the view
     const resetView = () => {
@@ -737,6 +758,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       //animateSmallBoxes(threedPath[ind]);
     );
+
     let animationFrameId;
 
     const gltfLoader = new GLTFLoader();
