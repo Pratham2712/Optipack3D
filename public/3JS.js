@@ -302,6 +302,7 @@ document.addEventListener("DOMContentLoaded", () => {
     speedButtons.forEach((button) => {
       button.addEventListener("click", () => {
         console.log(isLogin);
+        console.log(isAnimating);
 
         if (isLogin) {
           if (isAnimating) {
@@ -738,8 +739,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("animate").addEventListener(
       "click",
       () => {
-        console.log(isAnimating);
-
         if (!isAnimating) {
           speedButtons.forEach((button) => {
             button.style.opacity = "0.5";

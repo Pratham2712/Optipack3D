@@ -42,6 +42,11 @@
   justify-content: center;
 }
 
+.logo-footer img {
+  width: 40px;
+  margin-right: 10px;
+  vertical-align: middle;
+}
 .logo img {
   width: 40px;
   margin-right: 10px;
@@ -261,7 +266,8 @@ footer a:hover {
   color: red;
   font-size: 0.8rem;
   position: absolute;
-  left: 10%;
+  left: 9%;
+  top: 30%;
   margin-bottom: 1rem;
 }
 .all-errors {
@@ -334,7 +340,9 @@ footer a:hover {
     margin-top: 10px;
   }
   .action-button {
-    width: 50%;
+    width: 35%;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
   }
   .dashboard-image img {
     width: 100%;

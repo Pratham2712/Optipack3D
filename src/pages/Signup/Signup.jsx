@@ -17,7 +17,7 @@ import Loader from "../../components/Loader/Loader";
 import toast, { Toaster } from "react-hot-toast";
 import { BASE_URL } from "../../constants/constants";
 import axios from "axios";
-import { admin_setting, loginurl } from "../../constants/links";
+import { admin_setting, loginurl, User_root } from "../../constants/links";
 import { Link, useNavigate } from "react-router-dom";
 
 const Signup = () => {
@@ -273,7 +273,7 @@ const Signup = () => {
   return (
     <div className="container">
       <div className="left-side">
-        <div className="logo">
+        <div className="logo" onClick={() => navigate(User_root)}>
           <img src={logo} alt="ShelfLyf Logo" />
           <span
             style={{ fontWeight: "600", fontSize: "22px", lineHeight: "24px" }}
@@ -290,7 +290,7 @@ const Signup = () => {
             {loading ? (
               <Loader />
             ) : otpSend && email ? (
-              <div className="input-group">
+              <form className="input-group" onSubmit={handleSubmit3(verify)}>
                 <div
                   style={{
                     display: "flex",
@@ -352,7 +352,7 @@ const Signup = () => {
                   {minuteLeft}:{secondLeft < 10 ? "0" : ""}
                   {secondLeft}
                 </span>
-              </div>
+              </form>
             ) : (
               <>
                 <div className="input-group">

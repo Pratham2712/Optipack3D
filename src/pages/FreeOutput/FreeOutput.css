@@ -413,7 +413,7 @@
   }
   h1 {
     font-size: 24px;
-    line-height: 0px;
+    /* line-height: 0px; */
   }
   .info-icon img {
     margin-top: 12px;

@@ -186,8 +186,7 @@ const ManageUser = () => {
                             Select user type
                           </option>
 
-                          {ele?.user_type == "Company_Admin" &&
-                          loginUser?.userType == "Company_Admin" &&
+                          {loginUser?.userType == "Company_Admin" &&
                           ele?.email_id === loginUser?.email ? (
                             <option>Admin</option>
                           ) : (
@@ -222,7 +221,6 @@ const ManageUser = () => {
                             setUserData(ele);
                           }}
                           disabled={
-                            ele?.user_type == "Company_Admin" &&
                             loginUser?.userType == "Company_Admin" &&
                             ele?.email_id === loginUser?.email
                               ? true

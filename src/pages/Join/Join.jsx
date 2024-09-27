@@ -3,13 +3,13 @@ import logo from "../../assests/logo.png";
 import dashboard from "../../assests/dashboard.png";
 import "./Join.css";
 import { useNavigate } from "react-router-dom";
-import { loginurl, signupurl } from "../../constants/links";
+import { loginurl, signupurl, User_root } from "../../constants/links";
 const Join = () => {
   const navigate = useNavigate();
   return (
     <div class="container">
       <div class="left-side">
-        <div class="logo">
+        <div class="logo" onClick={() => navigate(User_root)}>
           <img src={logo} alt="ShelfLyf Logo" />
           <span
             style={{ fontWeight: "600", fontSize: "22px", lineHeight: "24px" }}

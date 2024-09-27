@@ -38,7 +38,7 @@ const validationSchema = yup.object().shape({
   numberOfCases: yup
     .number()
     .typeError("Number of Cases must be a number")
-    .required("Number of Cases is required")
+    // .required("Number of Cases is required")
     .integer("Number of Cases cannot have decimal values"),
   tiltAllowed: yup.boolean(),
 });
@@ -49,7 +49,6 @@ const heading = [
   "Length",
   "Width",
   "Height",
-  "Number of cases",
   "Tilt allowed",
   "Delete",
 ];
@@ -172,11 +171,11 @@ const SkuSetting = () => {
             <input type="number" {...register("height")} />
             <p>{errors.height?.message}</p>
           </div>
-          <div className="input">
+          {/* <div className="input">
             <label>Number of Cases:</label>
             <input type="number" {...register("numberOfCases")} />
             <p>{errors.numberOfCases?.message}</p>
-          </div>
+          </div> */}
           <div className="input checkbox-label">
             <label htmlFor="tilt">Tilt Allowed:</label>
             <input type="checkbox" id="tilt" {...register("tiltAllowed")} />
@@ -223,9 +222,6 @@ const SkuSetting = () => {
               </td>
               <td>
                 <div>{ele?.height}</div>
-              </td>
-              <td>
-                <div>{ele?.numberOfCases}</div>
               </td>
               <td>
                 <div>{ele?.tiltAllowed ? "Allowed" : "Not allowed"}</div>

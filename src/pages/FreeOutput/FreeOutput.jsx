@@ -298,6 +298,8 @@ const FreeOutput = () => {
               title={title}
               setShareit={setShareit}
               shareit={shareit}
+              tableData={tableData}
+              filled={filled}
             />
           )}
         </div>

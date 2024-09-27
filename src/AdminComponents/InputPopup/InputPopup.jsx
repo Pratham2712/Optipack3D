@@ -222,7 +222,9 @@ const InputPopup = ({ loadData, setLoadData, inputPop, setInputPop }) => {
                     setInputVal(e.target.value);
                     setLoadData((prev) => ({
                       ...prev,
-                      [inputPop.name]: e.target.value,
+                      [inputPop.name]:
+                        e.target.value.charAt(0).toUpperCase() +
+                        e.target.value.slice(1).toLowerCase(),
                     }));
                   }}
                   value={loadData[inputPop.name]}

@@ -127,7 +127,7 @@ const Setting = () => {
               ""
             )}
             {user ? <AddUser setUser={setUser} user={user} /> : ""}
-            <main className="container-form">
+            <main className="container-setting-form">
               <section className="settings-header-head">
                 <h2>User Based Settings</h2>
                 <div className="actions-head">
