@@ -16,7 +16,7 @@ const Footer = () => {
           <a href="#">Privacy Policy</a>
           <a href="#">Terms of Service</a>
         </div>
-        <div className="logo">
+        <div className="logo-footer">
           <img src={logo} alt="" />
           <div>OptiPack3D</div>
         </div>

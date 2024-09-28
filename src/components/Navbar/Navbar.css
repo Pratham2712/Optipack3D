@@ -92,7 +92,7 @@ nav ul li a {
 
 main {
   margin: 0 auto;
-  margin-bottom: 200px;
+  /* margin-bottom: 200px; */
   padding-top: 6rem;
 }
 
@@ -360,7 +360,7 @@ main {
     display: none;
     flex-direction: column;
     position: absolute;
-    top: 350px;
+    top: 325px;
     width: 50%;
     background-color: white;
     padding: 20px;

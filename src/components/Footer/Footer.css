@@ -37,11 +37,11 @@
 .social-media a:hover {
   color: var(--primary);
 }
-.logo {
+.logo-footer {
   margin-top: 2rem;
   margin-bottom: 1rem;
 }
-.logo div {
+.logo-footer div {
   font-size: 20px;
   font-weight: 700;
   line-height: 22.5px;

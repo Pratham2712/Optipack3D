@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { getDataThunk } from "../../redux/Slices/mainSlice";
 import Loader from "../../components/Loader/Loader";
-import premiumIcon from "../../assests/premium.png";
 import Popup from "../../components/Popup/Popup";
 import ShareContent from "../../components/ShareContent/ShareContent";
 
@@ -17,6 +16,8 @@ const FreeOutput = () => {
   const dispatch = useDispatch();
   const { filteredSkuData } = location.state || {};
   const [is700, setIs700] = useState(window.innerWidth < 700);
+  const [totalCasesSum, setTotalCasesSum] = useState(0);
+  const [totalFilled, setTotalFilled] = useState(0);
   const [premium, setPremium] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
   const [contIndex, setContIndex] = useState(0);
@@ -50,28 +51,24 @@ const FreeOutput = () => {
   const containerInf = useSelector(
     (state) => state.rootReducer.mainSlice.data.data.container_inf
   );
+  const isLogin = useSelector((state) => state.rootReducer.authSlice.isLogin);
 
   localStorage.setItem("threed_paths", JSON.stringify(threedPaths));
   localStorage.setItem("container_inf", JSON.stringify(containerInf?.[0]));
 
   const iframeSrc = `three_render.html?container=${encodeURIComponent(
     contIndex
+  )}&animation=${encodeURIComponent(animate)}&isLogin=${encodeURIComponent(
+    isLogin
   )}`;
-
+  //function===============================================================================================================
   const setAnimation = () => {
-    console.log("check");
-
     setAnimate(!animate);
-    localStorage.setItem("animation", animate);
-    if (!animate) {
-      modelRef.current.contentWindow.postMessage("startAnimation", "*");
-    } else {
-      modelRef.current.contentWindow.postMessage("stopAnimation", "*");
-    }
   };
   const share = () => {
     setShareit(!shareit);
   };
+  //useEffect=================================================================================================================
   useEffect(() => {
     if (!containerType) {
       const formData = new FormData();
@@ -125,7 +122,17 @@ const FreeOutput = () => {
       boxInfo.reduce((sum, arr) => sum + arr[index], 0)
     );
     setFilled(sums);
-  }, [boxInfo]);
+    setTotalFilled(sums?.reduce((sum, curr) => sum + curr));
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(tableData, "text/html");
+    const totalCasesElements = doc.querySelectorAll("tbody tr td:nth-child(6)");
+    const totalSum = Array.from(totalCasesElements).reduce((sum, td) => {
+      const value = parseFloat(td.textContent);
+      return sum + (isNaN(value) ? 0 : value);
+    }, 0);
+
+    setTotalCasesSum(totalSum);
+  }, [boxInfo, tableData]);
 
   const url = "https://yourwebsite.com";
   const title = "Check out this amazing website!";
@@ -167,6 +174,15 @@ const FreeOutput = () => {
                   <tbody></tbody>
                 </table>
               </div>
+            </div>
+            <div
+              className="note"
+              style={{
+                display: totalFilled < totalCasesSum ? "block" : "none",
+              }}
+            >
+              There are still boxes that need to be filled in the container.
+              Recommend you to go back and change the number of container.
             </div>
             <div className="container-tabs">
               {container?.map((ele, index) => (
@@ -227,7 +243,8 @@ const FreeOutput = () => {
                 <div className="features">
                   <h3>
                     3d Loading Animation
-                    <img className="premium-icon" src={premiumIcon} />
+                    {/* <img className="premium-icon" src={premiumIcon} /> */}
+                    {/* <i class="fa-solid fa-lock premium-icon"></i> */}
                   </h3>
                   <button
                     className="btn-apply"
@@ -240,7 +257,8 @@ const FreeOutput = () => {
                 <div className="features">
                   <h3 onClick={() => setPremium(!premium)}>
                     Edit Loading Pattern
-                    <img className="premium-icon" src={premiumIcon} />
+                    {/* <img className="premium-icon" src={premiumIcon} /> */}
+                    <i class="fa-solid fa-lock premium-icon"></i>
                   </h3>
                   <button
                     className="btn-apply"
@@ -253,7 +271,8 @@ const FreeOutput = () => {
                 <div className="features">
                   <h3>
                     Share/Export Loading
-                    <img className="premium-icon" src={premiumIcon} />
+                    {/* <img className="premium-icon" src={premiumIcon} /> */}
+                    {/* <i class="fa-solid fa-lock premium-icon"></i> */}
                   </h3>
                   <input
                     type="email"
@@ -279,6 +298,8 @@ const FreeOutput = () => {
               title={title}
               setShareit={setShareit}
               shareit={shareit}
+              tableData={tableData}
+              filled={filled}
             />
           )}
         </div>

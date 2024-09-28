@@ -12,7 +12,7 @@
 .info-icon img {
   width: 20px;
   height: 20px;
-  margin-top: 35px;
+  margin-top: 22px;
   margin-left: 5px;
   cursor: pointer;
 }
@@ -332,6 +332,13 @@
   padding: 20px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
+.note {
+  width: 60%;
+  border-radius: 1rem;
+  border: 5px solid var(--primary);
+  padding: 1.3rem 1rem;
+  margin-top: 1rem;
+}
 @media (max-width: 1300px) {
   .order-details {
     padding-left: 7rem;
@@ -406,7 +413,7 @@
   }
   h1 {
     font-size: 24px;
-    line-height: 0px;
+    /* line-height: 0px; */
   }
   .info-icon img {
     margin-top: 12px;

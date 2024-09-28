@@ -20,20 +20,40 @@
   display: flex;
   overflow: hidden;
   padding: 9px 30px;
-  transition: background-color 0.2s ease-in;
+  position: relative;
+  /* transition: background-color 0.2s ease-in; */
   cursor: pointer;
+}
+.tab::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0%;
+  height: 100%;
+  background-color: var(--primary);
+  transition: width 0.5s ease-in-out;
+  border-radius: 1000px;
+  z-index: -1; /* Puts the background color behind the text */
 }
 .tab:hover {
   background-color: #ebebeb;
   color: black;
 }
-.tab.active {
+/* .tab.active {
   background-color: var(--primary);
   color: white;
+} */
+.tab.active {
+  color: white;
+}
+
+.tab.active::before {
+  width: 100%;
 }
 .tab.active:hover {
-  /* background-color: initial !important;
-  color: initial !important; */
+  background-color: initial !important;
+  color: white !important;
 }
 .tab_container {
   outline-offset: 0px;

@@ -93,9 +93,18 @@ export const verifyLoginThunk = createAsyncThunk(
     }
   }
 );
+export const checkLoginThunk = createAsyncThunk("/check_login", async () => {
+  try {
+    const res = await axios.get(`${BASE_URL}/check_login`);
+    return res.data;
+  } catch (error) {
+    return error.response.data;
+  }
+});
 
 const initialState = {
   loading: false,
+  initialLoad: true,
   updateDone: false,
   isLogin: false,
   otpSend: false,
@@ -107,7 +116,7 @@ const initialState = {
   successMsg: "",
   isError: false,
   data: {
-    data: {},
+    user: {},
   },
   status: {
     signupThunk: IDLE,
@@ -116,6 +125,7 @@ const initialState = {
     verifyOtpThunk: IDLE,
     verifyLoginThunk: IDLE,
     checkEmailThunk: IDLE,
+    checkLoginThunk: IDLE,
   },
 };
 
@@ -200,6 +210,7 @@ const authSlice = createSlice({
             state.isError = true;
             state.errorData.message = payload[ERROR];
             state.successMsg = "";
+            state.otpSend = false;
             break;
           default:
             break;
@@ -219,8 +230,10 @@ const authSlice = createSlice({
           case SUCCESS:
             state.successMsg = "";
             state.loading = false;
-            state.successMsg = payload[SUCCESS];
+            state.successMsg = payload[SUCCESS]?.message;
             state.errorData.message = "";
+            state.isLogin = true;
+            state.data.user = payload[SUCCESS];
             break;
           case ERROR:
             state.errorData.message = "";
@@ -247,8 +260,10 @@ const authSlice = createSlice({
           case SUCCESS:
             state.successMsg = "";
             state.loading = false;
-            state.successMsg = payload[SUCCESS];
+            state.successMsg = payload[SUCCESS]?.message;
             state.errorData.message = "";
+            state.isLogin = true;
+            state.data.user = payload[SUCCESS];
             break;
           case ERROR:
             state.errorData.message = "";
@@ -292,6 +307,41 @@ const authSlice = createSlice({
       .addCase(checkEmailThunk.rejected, (state, action) => {
         state.status.checkEmailThunk = ERROR;
         state.loading = false;
+        state.errorData.message = action.error.message;
+      })
+      //checkLoginThunk==============================================================================================================
+      .addCase(checkLoginThunk.pending, (state, { payload }) => {
+        state.loading = true;
+        state.initialLoad = true;
+      })
+      .addCase(checkLoginThunk.fulfilled, (state, { payload }) => {
+        switch (Object.keys(payload)[0]) {
+          case SUCCESS:
+            state.successMsg = "";
+            state.loading = false;
+            state.successMsg = payload[SUCCESS]?.message;
+            state.data.user = payload[SUCCESS];
+            state.errorData.message = "";
+            state.isLogin = true;
+            state.initialLoad = false;
+            break;
+          case ERROR:
+            state.errorData.message = "";
+            state.loading = false;
+            state.isError = true;
+            state.errorData.message = payload[ERROR];
+            state.successMsg = "";
+            state.isLogin = false;
+            state.initialLoad = false;
+            break;
+          default:
+            break;
+        }
+      })
+      .addCase(checkLoginThunk.rejected, (state, action) => {
+        state.status.checkLoginThunk = ERROR;
+        state.loading = false;
+        state.initialLoad = false;
         state.errorData.message = action.error.message;
       });
   },

@@ -3,6 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <title>Getting Started with Three.js</title>
     <style>
       body {
@@ -34,9 +41,22 @@
         border-radius: 5px;
         cursor: pointer;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        width: 7rem;
       }
       .view-button:hover {
         background-color: #45a049;
+      }
+      .animate {
+        background-color: #9d4edd;
+      }
+      .speeds button {
+        border-radius: 5px;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        border: 2px solid #9d4edd;
+        background-color: white;
+        color: black;
+        font-size: 0.7rem;
       }
     </style>
     <script type="importmap">
@@ -47,6 +67,7 @@
         }
       }
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   </head>
   <body>
     <div class="button-container">
@@ -54,10 +75,26 @@
       <button id="topViewButton" class="view-button">Top View</button>
       <button id="bottomViewButton" class="view-button">Bottom View</button>
       <button id="sideViewButton" class="view-button">Side View</button>
-      <button id="animate" class="animate">Animate</button>
+      <button id="animate" class="animate view-button">
+        <i class="fa-solid fa-meteor fa-shake"></i> Animate
+        <i class="fa-solid fa-meteor fa-shake"></i>
+      </button>
+      <div class="speeds" id="speeds">
+        <button data-speed="1000">0.25x</button>
+        <button data-speed="500">0.5x</button>
+        <button data-speed="20" style="background-color: #9d4edd; color: white">
+          1x
+        </button>
+        <button data-speed="10">2x</button>
+        <button data-speed="5">3x</button>
+      </div>
       <div id="gltf-container"></div>
     </div>
     <script>
+      const animateButton = document.getElementById("animate");
+      const speedButton = document.getElementById("speeds");
+      const speedButtons = speedButton.querySelectorAll("button");
+
       // Function to get query parameter value by name
       function getQueryParam(param) {
         const urlParams = new URLSearchParams(window.location.search);
@@ -66,14 +103,20 @@
 
       // Get the file paths from the query parameters
       const threedPath = getQueryParam("threed_paths");
-      console.log(threedPath);
       const containerInfPath = getQueryParam("container_inf");
+      const animation = getQueryParam("animation");
+      const isLogin = getQueryParam("isLogin");
+      const shouldShowAnimateButton = animation?.toLowerCase() === "true";
+      animateButton.style.display = shouldShowAnimateButton ? "block" : "none";
+      speedButton.style.display = shouldShowAnimateButton ? "block" : "none";
+      speedButtons.style.display = shouldShowAnimateButton ? "block" : "none";
 
       // Ensure paths are passed to the external 3JS.js script
       window.threedPath = threedPath;
       window.containerInfPath = containerInfPath;
+      window.isLogin = isLogin;
     </script>
-    <script type="module" src="./threejs/3JS.js"></script>
+    <script type="module" src="3JS.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.js"></script>
   </body>
 </html>

@@ -1,0 +1,22 @@
+.popup-confirm-content {
+  background-color: white;
+  padding: 1.5rem 2rem;
+  border-radius: 10px;
+  position: relative;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  max-width: 95%;
+  max-height: 95%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+}
+
+.popup-confirm-text h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.popup-confirm-text {
+  width: 100%;
+}

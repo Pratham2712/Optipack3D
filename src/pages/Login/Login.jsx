@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import logo from "../../assests/logo.png";
 import dashboard from "../../assests/dashboard.png";
 import eye from "../../assests/eye.png";
@@ -8,17 +8,28 @@ import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  checkEmailThunk,
   loginThunk,
   sendOtpThunk,
   verifyLoginThunk,
 } from "../../redux/Slices/authSlice";
 import Loader from "../../components/Loader/Loader";
 import toast, { Toaster } from "react-hot-toast";
+import { Link, useNavigate } from "react-router-dom";
+import { admin_setting, signupurl, User_root } from "../../constants/links";
+import axios from "axios";
+import { BASE_URL } from "../../constants/constants";
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [isResendDisabled, setIsResendDisabled] = useState(true);
+  const [minuteLeft, setMinuteLeft] = useState("00");
+  const [secondLeft, setSecondLeft] = useState("00");
+  const [otpTime, setOtpTime] = useState("");
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const [email, setEmail] = useState("");
   const inputsRef = useRef([]);
+  const navigate = useNavigate(); // Get the navigate function
+
   const publicEmailDomains = [
     //"gmail.com",
     "yahoo.com",
@@ -33,6 +44,9 @@ const Login = () => {
   const loading = useSelector((state) => state.rootReducer.authSlice.loading);
   const errorMsg = useSelector(
     (state) => state.rootReducer.authSlice.errorData.message
+  );
+  const userType = useSelector(
+    (state) => state.rootReducer.authSlice.data.user.userType
   );
   // Toggle password visibility
   const handleToggle = () => {
@@ -67,6 +81,21 @@ const Login = () => {
     }
     setOtp(newOtp);
   };
+  const resendTimer = (inputTime) => {
+    const givenTime = new Date(inputTime);
+    const currentTime = new Date();
+    const expirationTime = new Date(givenTime.getTime() + 2 * 60 * 1000);
+    const timeDifference = expirationTime - currentTime;
+    if (timeDifference <= 0) {
+      return true;
+    }
+    const minutesLeft = Math.floor(timeDifference / (1000 * 60));
+    setMinuteLeft(minutesLeft);
+    const secondsLeft = Math.floor((timeDifference % (1000 * 60)) / 1000);
+    setSecondLeft(secondsLeft);
+    // return `${minutesLeft}:${secondsLeft < 10 ? "0" : ""}${secondsLeft}`;
+    return false;
+  };
   const sendOtp = (data) => {
     const formData = new FormData();
     Object.keys(data).forEach((key) => {
@@ -74,18 +103,32 @@ const Login = () => {
     });
     setEmail(data?.email);
 
-    dispatch(sendOtpThunk(formData)).then((data) => {
+    dispatch(checkEmailThunk(formData)).then((data) => {
       if (data.payload["ERROR"]) {
-        toast.error(data.payload["ERROR"], {
-          style: {
-            border: "1px solid #713200",
-            padding: "16px",
-            color: "#713200",
-          },
+        dispatch(sendOtpThunk(formData)).then((data) => {
+          if (data.payload["ERROR"]) {
+            toast.error(data.payload["ERROR"], {
+              style: {
+                border: "1px solid #713200",
+                padding: "16px",
+                color: "#713200",
+              },
+            });
+          }
+          if (data.payload["SUCCESS"]) {
+            toast.success(data.payload["SUCCESS"], {
+              style: {
+                border: "1px solid #713200",
+                padding: "16px",
+                color: "#713200",
+              },
+            });
+            setOtpTime(data.payload.sendTime);
+            setIsResendDisabled(true);
+          }
         });
-      }
-      if (data.payload["SUCCESS"]) {
-        toast.success(data.payload["SUCCESS"], {
+      } else {
+        toast.error(data.payload["SUCCESS"], {
           style: {
             border: "1px solid #713200",
             padding: "16px",
@@ -95,8 +138,20 @@ const Login = () => {
       }
     });
   };
+
+  const extractDomain = (email) => {
+    const parts = email.split("@");
+    if (parts.length === 2) {
+      const domainPart = parts[1];
+      const domainParts = domainPart.split(".");
+      return domainParts[0];
+    }
+    return "";
+  };
   const verify = (data) => {
     setValue3("email", email);
+    const extractedDomain = extractDomain(email);
+    setValue3("company_name", extractedDomain);
     const otpString = data.otp.join("");
     const formData = new FormData();
     formData.append("otp", otpString);
@@ -116,13 +171,17 @@ const Login = () => {
         });
       }
       if (data.payload["SUCCESS"]) {
-        toast.success(data.payload["SUCCESS"], {
+        toast.success(data.payload["SUCCESS"]?.message, {
           style: {
             border: "1px solid #713200",
             padding: "16px",
             color: "#713200",
           },
         });
+        // const res = axios.get(`${BASE_URL}/dashboard_admin`);
+        if (data.payload["SUCCESS"]?.userType == "Company_Admin") {
+          navigate(admin_setting);
+        }
       }
     });
   };
@@ -168,6 +227,7 @@ const Login = () => {
     defaultValues: {
       email: "",
       otp: ["", "", "", "", "", ""],
+      company_name: "",
     },
   });
 
@@ -202,12 +262,23 @@ const Login = () => {
       email: "",
     },
   });
+  //useEffect=====================================================================================================================
+  useEffect(() => {
+    const checkTimer = () => {
+      const isTimerOver = resendTimer(otpTime);
+      setIsResendDisabled(!isTimerOver);
+    };
+
+    const intervalId = setInterval(checkTimer, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [otpTime]);
   return (
     <div className="container">
       <Toaster />
 
       <div className="left-side">
-        <div className="logo">
+        <div className="logo" onClick={() => navigate(User_root)}>
           <img src={logo} alt="ShelfLyf Logo" />
           <span
             style={{ fontWeight: "600", fontSize: "22px", lineHeight: "24px" }}
@@ -219,13 +290,13 @@ const Login = () => {
           <h1>Welcome to our platform</h1>
           <h1>Login to your account</h1>
           <p className="subtitle">Design your optimized load plan</p>
-          <div className="all-errors2">{errorMsg}</div>
+          {/* <div className="all-errors2">{errorMsg}</div> */}
 
           <>
             {loading ? (
               <Loader />
-            ) : otpSend ? (
-              <div className="input-group">
+            ) : otpSend && email ? (
+              <form className="input-group" onSubmit={handleSubmit3(verify)}>
                 <div
                   style={{
                     display: "flex",
@@ -268,7 +339,26 @@ const Login = () => {
                 >
                   Verify OTP
                 </button>
-              </div>
+                <button
+                  className="resend-button"
+                  style={{ color: isResendDisabled ? "grey" : "skyblue" }}
+                  disabled={isResendDisabled}
+                  onClick={handleSubmit2(sendOtp)}
+                >
+                  Resend OTP {"   "}
+                </button>
+                <span
+                  style={{
+                    fontSize: "1rem",
+                    color: "skyblue",
+                    display: isResendDisabled ? "inline-block" : "none",
+                  }}
+                >
+                  {minuteLeft < 1 ? "0" : ""}
+                  {minuteLeft}:{secondLeft < 10 ? "0" : ""}
+                  {secondLeft}
+                </span>
+              </form>
             ) : (
               <>
                 <div className="input-group">
@@ -291,6 +381,11 @@ const Login = () => {
                 >
                   Send OTP
                 </button>
+                <div className="blue-text">
+                  <Link to={signupurl} className="blue-text">
+                    Don't have account? Register
+                  </Link>
+                </div>
               </>
             )}
           </>

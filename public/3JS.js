@@ -6,11 +6,17 @@ import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/
 // Renderer setup
 
 document.addEventListener("DOMContentLoaded", () => {
+  let isAnimating = false;
   const containerInfPath = JSON.parse(localStorage.getItem("container_inf"));
   const urlParams = new URLSearchParams(window.location.search);
   const ind = parseInt(urlParams.get("container"), 0);
+  const isLogin = urlParams.get("isLogin", false);
   const threedPath = JSON.parse(localStorage.getItem("threed_paths"));
+  const speedButton = document.getElementById("speeds");
+  const speedButtons = speedButton.querySelectorAll("button");
 
+  let currentSpeed = 20;
+  let timeouts = [];
   function getLocalStorageItem(key) {
     return new Promise((resolve, reject) => {
       const item = localStorage.getItem(key);
@@ -32,7 +38,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  const renderer = new THREE.WebGLRenderer({
+    antialias: true,
+    preserveDrawingBuffer: true,
+  });
+
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
@@ -288,20 +298,57 @@ document.addEventListener("DOMContentLoaded", () => {
         scene.add(smallBoxWireframe);
       });
     };
-    let isAnimating = false;
 
+    speedButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        console.log(isLogin);
+        console.log(isAnimating);
+
+        if (isLogin) {
+          if (isAnimating) {
+            return;
+          }
+
+          const newSpeed = parseFloat(button.dataset.speed);
+          currentSpeed = newSpeed;
+          speedButtons.forEach((btn) => {
+            btn.style.backgroundColor = "white";
+            btn.style.color = "black";
+          });
+          button.style.backgroundColor = "#9d4edd";
+          button.style.color = "white";
+        } else {
+          alert("Register or login required");
+        }
+      });
+    });
     const animateSmallBoxes = (boxes) => {
       boxes.forEach((box, index) => {
         // Delay each animation to occur sequentially
-        setTimeout(() => {
-          console.log(isAnimating);
-          console.log("inside animateboxes");
-          // Create and add the small box to the scene
+        const timeoutId = setTimeout(() => {
+          // isAnimating = true;
           createSmallBox(box);
-        }, index * 10); // Adjust the delay (500ms) as needed
+
+          if (index == boxes.length - 2) {
+            // console.log("false", index, boxes.length);
+            isAnimating = false;
+            speedButtons.forEach((button) => {
+              button.style.opacity = "1";
+            });
+          } else {
+            // console.log("true", index, boxes.length);
+            isAnimating = true; // Animation completed
+          }
+        }, index * currentSpeed);
+        timeouts.push(timeoutId);
       });
     };
-
+    const clearTimeouts = () => {
+      timeouts.forEach((id) => {
+        clearTimeout(id); // Clear each timeout
+      });
+      timeouts = []; // Reset the array after clearing
+    };
     const createSmallBox = (box) => {
       const startX = box.start.x;
       const startZ = containerDepth - box.start.y;
@@ -532,11 +579,19 @@ document.addEventListener("DOMContentLoaded", () => {
         if (boxes.length > 0) {
           createSmallBoxesFromCoordinates(boxes);
 
-          // Calculate box counts per row
-          // const rowCounts = countBoxesByRowAndColor(boxes);
+          const originalWidth = window.innerWidth;
+          const originalHeight = window.innerHeight;
+          const screenshotWidth = window.innerWidth * window.devicePixelRatio; // High resolution
+          const screenshotHeight = window.innerHeight * window.devicePixelRatio; // High resolution
 
-          // Add count labels to the scene
-          // addCountLabels(rowCounts);
+          renderer.setSize(screenshotWidth, screenshotHeight);
+          renderer.render(scene, camera); // Render the scene at the new resolution
+
+          const screenshotDataURL = renderer.domElement.toDataURL("image/png");
+
+          localStorage.setItem("screenshot", screenshotDataURL);
+          renderer.setSize(originalWidth, originalHeight);
+          renderer.render(scene, camera);
         }
 
         if (lastBoxYItem) {
@@ -548,17 +603,6 @@ document.addEventListener("DOMContentLoaded", () => {
       })
       .catch((error) => console.error("Error loading coordinates:", error));
 
-    // Add some light to the scene
-    // const ambientLight = new THREE.AmbientLight(0xffffff, 10);
-    // scene.add(ambientLight);
-
-    // const directionalLight = new THREE.DirectionalLight(0xffffff, 2, 6000);
-    // directionalLight.position.set(5000, 8000, 5000);
-    // const ambientLight = new THREE.AmbientLight(0xffffff, 1); // Ambient light
-    // scene.add(ambientLight);
-
-    // const directionalLight = new THREE.DirectionalLight(0xffffff, 1); // Directional light
-    // directionalLight.position.set(0, 1, 1); // Adju
     const ambientLight = new THREE.AmbientLight(0xffffff, 3); // Adjust the intensity (0.6) as needed
     scene.add(ambientLight);
 
@@ -571,6 +615,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const topViewButton = document.getElementById("topViewButton");
     const bottomViewButton = document.getElementById("bottomViewButton");
     const sideViewButton = document.getElementById("sideViewButton");
+    const screenshot = document.getElementById("screenshot");
 
     // Function to reset the view
     const resetView = () => {
@@ -691,10 +736,28 @@ document.addEventListener("DOMContentLoaded", () => {
     topViewButton.addEventListener("click", setTopView);
     bottomViewButton.addEventListener("click", setBottomView);
     sideViewButton.addEventListener("click", setSideView);
-    document.getElementById("animate").addEventListener("click", () => {
-      clearContainer();
-      animateSmallBoxes(threedPath[ind]);
-    });
+    document.getElementById("animate").addEventListener(
+      "click",
+      () => {
+        if (!isAnimating) {
+          speedButtons.forEach((button) => {
+            button.style.opacity = "0.5";
+          });
+          clearContainer();
+          animateSmallBoxes(threedPath[ind]);
+        } else {
+          isAnimating = false;
+          speedButtons.forEach((button) => {
+            button.style.opacity = "1";
+          });
+          clearTimeouts();
+          clearContainer();
+          createSmallBoxesFromCoordinates(threedPath[ind]);
+        }
+      }
+      //animateSmallBoxes(threedPath[ind]);
+    );
+
     let animationFrameId;
 
     const gltfLoader = new GLTFLoader();
@@ -901,7 +964,7 @@ document.addEventListener("DOMContentLoaded", () => {
         //   cancelAnimationFrame(animationFrameId);
         // }
         clearContainer();
-        isAnimating = true; // Start animating
+        // isAnimating = true; // Start animating
         animateSmallBoxes(threedPath[ind]);
         animato();
       }

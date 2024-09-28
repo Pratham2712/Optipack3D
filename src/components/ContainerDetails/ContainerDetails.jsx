@@ -78,9 +78,22 @@ const ContainerDetails = ({
           min="1"
           max="2"
           defaultValue={skuData.numContainers}
-          onChange={(e) =>
-            setSkuData((prev) => ({ ...prev, numContainers: e.target.value }))
-          }
+          onChange={(e) => {
+            if (e.target.value <= 2 && e.target.value > 0) {
+              setSkuData((prev) => ({
+                ...prev,
+                numContainers: e.target.value,
+              }));
+            } else {
+              toast("Upgrade to premium version for more container", {
+                style: {
+                  border: "1px solid #713200",
+                  padding: "16px",
+                  color: "#713200",
+                },
+              });
+            }
+          }}
           className="num-containers-input"
         />
         <div id="typeInputs" class="container-types">

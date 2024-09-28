@@ -1,10 +1,21 @@
 import "./App.css";
 import { BrowserRouter } from "react-router-dom";
-import Routess from "./Routes";
-import { useState } from "react";
+import { AuthRoutes, UnAuthRoutes } from "./Routes";
+import { useLayoutEffect, useState } from "react";
 import { autoFillerBox } from "./Util/data";
+import { checkLoginThunk } from "./redux/Slices/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import Loader from "./components/Loader/Loader";
+import toast, { Toaster } from "react-hot-toast";
 
 function App() {
+  const isAuthenticated = useSelector(
+    (state) => state.rootReducer.authSlice.isLogin
+  );
+  const loading = useSelector(
+    (state) => state.rootReducer.authSlice.initialLoad
+  );
+  const dispatch = useDispatch();
   const [inputs, setInputs] = useState([0, 1, 2]);
   const [colors, setColors] = useState([
     "rgba(244, 67, 54, 1)", // Color 1
@@ -50,15 +61,35 @@ function App() {
     rotationAllowed1: autoFillerBox[1]["Rotation Allowed"] === 1 ? "on" : "off",
     rotationAllowed2: autoFillerBox[2]["Rotation Allowed"] === 1 ? "on" : "off",
   });
+
+  useLayoutEffect(() => {
+    dispatch(checkLoginThunk());
+  }, []);
+
+  console.log(loading);
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
     <BrowserRouter>
+      <Toaster />
       <div className="App">
-        <Routess
-          skuData={skuData}
-          setSkuData={setSkuData}
-          inputs={inputs}
-          setInputs={setInputs}
-        />
+        {isAuthenticated ? (
+          <AuthRoutes
+            skuData={skuData}
+            setSkuData={setSkuData}
+            inputs={inputs}
+            setInputs={setInputs}
+          />
+        ) : (
+          <UnAuthRoutes
+            skuData={skuData}
+            setSkuData={setSkuData}
+            inputs={inputs}
+            setInputs={setInputs}
+          />
+        )}
       </div>
     </BrowserRouter>
   );
