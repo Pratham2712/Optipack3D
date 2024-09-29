@@ -7,6 +7,7 @@ import {
   free_trail,
   join,
   loginurl,
+  planner_order,
   signupurl,
   User_root,
 } from "./constants/links";
@@ -18,6 +19,7 @@ import Signup from "./pages/Signup/Signup";
 import FreeOutput from "./pages/FreeOutput/FreeOutput";
 import Setting from "./pages/admin/AdminSetting/Setting";
 import ManageUser from "./pages/admin/ManageUser/ManageUser";
+import PlannerOrder from "./pages/planner/order/PlannerOrder";
 
 export const UnAuthRoutes = ({ skuData, setSkuData, inputs, setInputs }) => {
   return (
@@ -38,6 +40,7 @@ export const UnAuthRoutes = ({ skuData, setSkuData, inputs, setInputs }) => {
       <Route path={join} element={<Join />}></Route>
       <Route path={loginurl} element={<Login />}></Route>
       <Route path={signupurl} element={<Signup />}></Route>
+      <Route path={planner_order} element={<PlannerOrder />}></Route>
       <Route path={"*"} element={<Navigate to="/" />}></Route>
     </Routes>
   );
