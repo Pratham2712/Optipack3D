@@ -16,7 +16,12 @@ import {
 import Loader from "../../components/Loader/Loader";
 import toast, { Toaster } from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
-import { admin_setting, signupurl, User_root } from "../../constants/links";
+import {
+  admin_setting,
+  planner_order,
+  signupurl,
+  User_root,
+} from "../../constants/links";
 import axios from "axios";
 import { BASE_URL } from "../../constants/constants";
 const Login = () => {
@@ -181,6 +186,8 @@ const Login = () => {
         // const res = axios.get(`${BASE_URL}/dashboard_admin`);
         if (data.payload["SUCCESS"]?.userType == "Company_Admin") {
           navigate(admin_setting);
+        } else if (data.payload["SUCCESS"]?.userType == "Company_loader") {
+          navigate(planner_order);
         }
       }
     });

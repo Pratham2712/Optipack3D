@@ -304,8 +304,6 @@ const companyAdminSlice = createSlice({
       .addCase(addContainerThunk.fulfilled, (state, { payload }) => {
         switch (Object.keys(payload)[0]) {
           case SUCCESS:
-            console.log(payload);
-
             state.loading = false;
             state.successMsg = payload[SUCCESS]?.message;
             state.data.containerList = payload[SUCCESS]?.result;

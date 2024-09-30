@@ -14,7 +14,7 @@ const FreeOutput = () => {
   const modelRef = useRef(null);
   const location = useLocation();
   const dispatch = useDispatch();
-  const { filteredSkuData } = location.state || {};
+  // const { filteredSkuData } = location.state || {};
   const [is700, setIs700] = useState(window.innerWidth < 700);
   const [totalCasesSum, setTotalCasesSum] = useState(0);
   const [totalFilled, setTotalFilled] = useState(0);
@@ -23,6 +23,7 @@ const FreeOutput = () => {
   const [contIndex, setContIndex] = useState(0);
   const [animate, setAnimate] = useState(false);
   const [shareit, setShareit] = useState(false);
+  const [filteredSkuData, setFilteredSkuData] = useState({});
   //useSelector=========================================================================================================================
   const loading = useSelector((state) => state.rootReducer.mainSlice.loading);
   const tableData = useSelector(
@@ -68,26 +69,27 @@ const FreeOutput = () => {
   const share = () => {
     setShareit(!shareit);
   };
+
+  const postData = (data) => {
+    const formData = new FormData();
+    Object.keys(data)?.forEach((key) => {
+      formData.append(key, data[key]);
+    });
+    dispatch(getDataThunk(formData)).then((data) => {
+      if (data.payload) {
+        localStorage.setItem(
+          "threed_paths",
+          JSON.stringify(data?.payload?.threed_paths)
+        );
+        localStorage.setItem(
+          "container_inf",
+          JSON.stringify(data?.payload?.container_inf?.[0])
+        );
+      }
+    });
+  };
   //useEffect=================================================================================================================
   useEffect(() => {
-    if (!containerType) {
-      const formData = new FormData();
-      Object.keys(filteredSkuData)?.forEach((key) => {
-        formData.append(key, filteredSkuData[key]);
-      });
-      dispatch(getDataThunk(formData)).then((data) => {
-        if (data.payload) {
-          localStorage.setItem(
-            "threed_paths",
-            JSON.stringify(data?.payload?.threed_paths)
-          );
-          localStorage.setItem(
-            "container_inf",
-            JSON.stringify(data?.payload?.container_inf?.[0])
-          );
-        }
-      });
-    }
     const handleResize = () => {
       setIs700(window.innerWidth < 700);
     };
@@ -118,6 +120,19 @@ const FreeOutput = () => {
   }, [fullscreen, setFullscreen]);
 
   useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const data = {};
+    queryParams.forEach((value, key) => {
+      data[key] = value;
+    });
+
+    setFilteredSkuData(data);
+    if (queryParams) {
+      postData(data);
+    }
+  }, [location.search]);
+
+  useEffect(() => {
     const sums = boxInfo?.[0]?.map((_, index) =>
       boxInfo.reduce((sum, arr) => sum + arr[index], 0)
     );
@@ -134,7 +149,7 @@ const FreeOutput = () => {
     setTotalCasesSum(totalSum);
   }, [boxInfo, tableData]);
 
-  const url = "https://yourwebsite.com";
+  const url = `${window.location.origin}${location.pathname}${location.search}`;
   const title = "Check out this amazing website!";
 
   return (
@@ -298,8 +313,6 @@ const FreeOutput = () => {
               title={title}
               setShareit={setShareit}
               shareit={shareit}
-              tableData={tableData}
-              filled={filled}
             />
           )}
         </div>

@@ -40,7 +40,6 @@ export const UnAuthRoutes = ({ skuData, setSkuData, inputs, setInputs }) => {
       <Route path={join} element={<Join />}></Route>
       <Route path={loginurl} element={<Login />}></Route>
       <Route path={signupurl} element={<Signup />}></Route>
-      <Route path={planner_order} element={<PlannerOrder />}></Route>
       <Route path={"*"} element={<Navigate to="/" />}></Route>
     </Routes>
   );
@@ -68,6 +67,8 @@ export const AuthRoutes = ({ skuData, setSkuData, inputs, setInputs }) => {
       {/* admin ====================================================================================================== */}
       <Route path={admin_setting} element={<Setting />}></Route>
       <Route path={admin_manageuser} element={<ManageUser />}></Route>
+      {/* planner=============================================================================================================== */}
+      <Route path={planner_order} element={<PlannerOrder />}></Route>
     </Routes>
   );
 };

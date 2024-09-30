@@ -1,6 +1,30 @@
 .order-inputs {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-    margin-top: 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+input[type="date"] {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  margin-top: 0.5rem;
+}
+.error-order {
+  color: red;
+  font-size: 0.7rem;
+}
+
+.order-button {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.planner-order-content {
+  display: flex;
+  justify-content: space-around;
+  gap: 1rem;
 }
