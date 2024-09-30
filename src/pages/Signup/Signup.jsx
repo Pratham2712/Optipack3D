@@ -99,7 +99,7 @@ const Signup = () => {
     });
     setEmail(data?.email);
     dispatch(checkEmailThunk(formData)).then((data) => {
-      if (data.payload["SUCCESS"]) {
+      if (data?.payload["SUCCESS"]) {
         dispatch(sendOtpThunk(formData)).then((data) => {
           if (data.payload["ERROR"]) {
             toast.error(data.payload["ERROR"], {
@@ -110,7 +110,7 @@ const Signup = () => {
               },
             });
           }
-          if (data.payload["SUCCESS"]) {
+          if (data?.payload["SUCCESS"]) {
             toast.success(data.payload["SUCCESS"], {
               style: {
                 border: "1px solid #713200",

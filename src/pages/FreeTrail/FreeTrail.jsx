@@ -84,6 +84,11 @@ const FreeTrail = ({ skuData, setSkuData, inputs, setInputs }) => {
       });
     });
 
+    const queryParams = new URLSearchParams();
+    Object.keys(filteredSkuData).forEach((key) => {
+      queryParams.append(key, filteredSkuData[key]);
+    });
+
     const formData = new FormData();
     Object.keys(filteredSkuData).forEach((key) => {
       formData.append(key, filteredSkuData[key]);
@@ -106,12 +111,14 @@ const FreeTrail = ({ skuData, setSkuData, inputs, setInputs }) => {
       });
     }
     if (isValid && inputSuccess && contSuccess) {
-      console.log("SKU Data is valid:", skuData);
+      console.log("SKU Data is valid:", filteredSkuData);
 
       dispatch(getDataThunk(formData)).then((data) => {
         if (data?.payload) {
           setInputSuccess(true);
-          navigate(free_output, { state: { filteredSkuData } });
+          const url = `/freeOutput?${queryParams.toString()}`;
+          navigate(url);
+          // navigate(free_output, { state: { filteredSkuData } });
         }
       });
     } else {
