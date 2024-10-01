@@ -89,7 +89,14 @@ const plannerSlice = createSlice({
           case SUCCESS:
             state.loading = false;
             state.successMsg = payload[SUCCESS]?.message;
-            state.data.skuData = payload[SUCCESS]?.result;
+            if (Array.isArray(state.data.skuData)) {
+              state.data.skuData = [
+                ...state.data.skuData,
+                payload[SUCCESS]?.result,
+              ];
+            } else {
+              state.data.skuData = [payload[SUCCESS]?.result];
+            }
             state.updateDone = !state.updateDone;
             break;
           case ERROR:
