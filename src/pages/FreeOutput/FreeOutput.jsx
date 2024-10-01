@@ -71,22 +71,24 @@ const FreeOutput = () => {
   };
 
   const postData = (data) => {
-    const formData = new FormData();
-    Object.keys(data)?.forEach((key) => {
-      formData.append(key, data[key]);
-    });
-    dispatch(getDataThunk(formData)).then((data) => {
-      if (data.payload) {
-        localStorage.setItem(
-          "threed_paths",
-          JSON.stringify(data?.payload?.threed_paths)
-        );
-        localStorage.setItem(
-          "container_inf",
-          JSON.stringify(data?.payload?.container_inf?.[0])
-        );
-      }
-    });
+    if (!containerType) {
+      const formData = new FormData();
+      Object.keys(data)?.forEach((key) => {
+        formData.append(key, data[key]);
+      });
+      dispatch(getDataThunk(formData)).then((data) => {
+        if (data.payload) {
+          localStorage.setItem(
+            "threed_paths",
+            JSON.stringify(data?.payload?.threed_paths)
+          );
+          localStorage.setItem(
+            "container_inf",
+            JSON.stringify(data?.payload?.container_inf?.[0])
+          );
+        }
+      });
+    }
   };
   //useEffect=================================================================================================================
   useEffect(() => {
@@ -151,6 +153,7 @@ const FreeOutput = () => {
 
   const url = `${window.location.origin}${location.pathname}${location.search}`;
   const title = "Check out this amazing website!";
+  console.log(url);
 
   return (
     <>

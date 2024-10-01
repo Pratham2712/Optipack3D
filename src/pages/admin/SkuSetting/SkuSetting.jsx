@@ -16,6 +16,7 @@ import ConfirmPopup from "../../../AdminComponents/ConfirmPopup/ConfirmPopup";
 
 const validationSchema = yup.object().shape({
   sku_name: yup.string().required("SKU name is required"),
+  sku_code: yup.number().required("SKU code is required"),
   gross_weight: yup
     .number()
     .typeError("Gross Weight must be a number")
@@ -44,6 +45,7 @@ const validationSchema = yup.object().shape({
 });
 
 const heading = [
+  "Code",
   "Name",
   "Gross weight",
   "Length",
@@ -147,6 +149,11 @@ const SkuSetting = () => {
         <h2>SKU settings</h2>
         <div className="input-admin-row">
           <div className="input">
+            <label>SKU code</label>
+            <input type="text" {...register("sku_code")} />
+            <p>{errors.sku_code?.message}</p>
+          </div>
+          <div className="input">
             <label>SKU name</label>
             <input type="text" {...register("sku_name")} />
             <p>{errors.sku_name?.message}</p>
@@ -208,6 +215,9 @@ const SkuSetting = () => {
           </tr>
           {sku?.map((ele) => (
             <tr>
+              <td>
+                <h4>{ele?.sku_code}</h4>
+              </td>
               <td>
                 <h4>{ele?.sku_name}</h4>
               </td>
