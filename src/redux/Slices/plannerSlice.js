@@ -12,6 +12,17 @@ export const addOrderThunk = createAsyncThunk("/add_order", async (data) => {
     return error.response.data;
   }
 });
+export const getSkuByCodeThunk = createAsyncThunk(
+  "/get_skuByCode",
+  async (data) => {
+    try {
+      const res = await axios.post(`${BASE_URL}/get_skuByCode`, data);
+      return res.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  }
+);
 
 const initialState = {
   loading: false,
@@ -25,9 +36,11 @@ const initialState = {
   isError: false,
   data: {
     currentOrder: {},
+    skuData: [],
   },
   status: {
     addOrderThunk: IDLE,
+    getSkuByCodeThunk: IDLE,
   },
 };
 
@@ -64,6 +77,32 @@ const plannerSlice = createSlice({
       })
       .addCase(addOrderThunk.rejected, (state, action) => {
         state.status.addOrderThunk = ERROR;
+        state.loading = false;
+        state.errorData.message = action.error.message;
+      })
+      //getSkuByCodeThunk=========================================================================================================
+      .addCase(getSkuByCodeThunk.pending, (state, { payload }) => {
+        state.loading = true;
+      })
+      .addCase(getSkuByCodeThunk.fulfilled, (state, { payload }) => {
+        switch (Object.keys(payload)[0]) {
+          case SUCCESS:
+            state.loading = false;
+            state.successMsg = payload[SUCCESS]?.message;
+            state.data.skuData = payload[SUCCESS]?.result;
+            state.updateDone = !state.updateDone;
+            break;
+          case ERROR:
+            state.loading = false;
+            state.isError = true;
+            state.errorData.message = payload[ERROR];
+            break;
+          default:
+            break;
+        }
+      })
+      .addCase(getSkuByCodeThunk.rejected, (state, action) => {
+        state.status.getSkuByCodeThunk = ERROR;
         state.loading = false;
         state.errorData.message = action.error.message;
       });

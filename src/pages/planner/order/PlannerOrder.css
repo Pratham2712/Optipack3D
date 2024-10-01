@@ -28,3 +28,20 @@ input[type="date"] {
   justify-content: space-around;
   gap: 1rem;
 }
+
+.order-data {
+  font-weight: bold;
+  color: #555;
+  margin-bottom: 5px;
+  font-size: 14px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-row-gap: 2.5rem;
+  margin-top: 2rem;
+}
+
+.order-two-buttons {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: space-evenly;
+}
