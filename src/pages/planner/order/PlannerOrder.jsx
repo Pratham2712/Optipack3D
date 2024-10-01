@@ -18,7 +18,7 @@ import SkuSetting from "../../admin/SkuSetting/SkuSetting";
 import SkuSelect from "../../../PlannerComponents/SkuSelect/SkuSelect";
 
 const schema = yup.object().shape({
-  orderNumber: yup
+  order_number: yup
     .number()
     .typeError("Order Number must be a number")
     .required("Order Number is required"),
@@ -92,7 +92,7 @@ const PlannerOrder = () => {
                         type="text"
                         style={{ marginTop: "0.5rem" }}
                         placeholder="Type here"
-                        {...register("orderNumber")}
+                        {...register("order_number")}
                       />
                       {errors.orderNumber && (
                         <p style={{ color: "red" }} className="error-order">
