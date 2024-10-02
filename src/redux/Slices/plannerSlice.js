@@ -52,6 +52,14 @@ const plannerSlice = createSlice({
       state.isError = false;
       state.errorData = {};
     },
+    deleteSku: (state, action) => {
+      console.log(action.payload);
+
+      const skuIdToDelete = action.payload;
+      state.data.skuData = state.data.skuData.filter(
+        (sku) => sku.sku_code !== skuIdToDelete
+      );
+    },
   },
   extraReducers: (builders) => {
     builders
@@ -117,4 +125,4 @@ const plannerSlice = createSlice({
 });
 
 export default plannerSlice.reducer;
-export const { clearErrorSlice } = plannerSlice.actions;
+export const { clearErrorSlice, deleteSku } = plannerSlice.actions;

@@ -3,3 +3,46 @@
   padding-top: 7rem;
   padding-right: 2rem;
 }
+
+.order-data div {
+  padding-left: 1rem;
+}
+
+.load-head {
+  font-weight: 700;
+  font-size: 20px;
+  margin-bottom: 1rem;
+}
+
+.user-planner-head {
+  color: #6B7280;
+  text-align: left;
+  padding: 8px;
+  font-size: 0.875rem;
+}
+
+.planner-table td, th {
+  text-align: left;
+  padding: 8px;
+  font-size: 0.875rem;
+  border: none;
+}
+.small-btn {
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 0.875rem;
+  background: #040E20;
+  color: white;
+  padding: 0.3rem 0.5rem;
+
+}
+
+.load-details {
+  padding: 1rem;
+}
+
+.order-two-buttons {
+  margin-bottom: 2rem;
+}
