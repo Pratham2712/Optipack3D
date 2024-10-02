@@ -68,9 +68,13 @@ const SkuSelect = () => {
           <div className="container-planner-form">
             <h1>Create Order</h1>
             <section
-              style={{ display: "flex", justifyContent: "space-between" }}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                gap: "1rem",
+              }}
             >
-              <div>
+              <div style={{ width: "100%" }}>
                 <button
                   type="button"
                   className="collapsible"
