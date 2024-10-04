@@ -7,6 +7,7 @@ import {
   free_trail,
   join,
   loginurl,
+  planner_contSelection,
   planner_order,
   planner_skuSelection,
   signupurl,
@@ -22,6 +23,7 @@ import Setting from "./pages/admin/AdminSetting/Setting";
 import ManageUser from "./pages/admin/ManageUser/ManageUser";
 import PlannerOrder from "./pages/planner/order/PlannerOrder";
 import SkuSelect from "./pages/planner/SkuSelect/SkuSelect";
+import NextOrder from "./pages/planner/NextOrder/NextOrder";
 
 export const UnAuthRoutes = ({ skuData, setSkuData, inputs, setInputs }) => {
   return (
@@ -72,6 +74,7 @@ export const AuthRoutes = ({ skuData, setSkuData, inputs, setInputs }) => {
       {/* planner=============================================================================================================== */}
       <Route path={planner_order} element={<PlannerOrder />}></Route>
       <Route path={planner_skuSelection} element={<SkuSelect />}></Route>
+      <Route path={planner_contSelection} element={<NextOrder />}></Route>
     </Routes>
   );
 };

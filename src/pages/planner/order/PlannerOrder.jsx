@@ -11,7 +11,10 @@ import { getLoadPlanThunk } from "../../../redux/Slices/companyAdminSlice";
 import { useForm, Controller } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { addOrderThunk } from "../../../redux/Slices/plannerSlice";
+import {
+  addOrderThunk,
+  EditOrderThunk,
+} from "../../../redux/Slices/plannerSlice";
 import { planner_skuSelection } from "../../../constants/links";
 
 const schema = yup.object().shape({
@@ -41,8 +44,11 @@ const PlannerOrder = () => {
   });
   //function===============================================================================================================
   const createOrder = (data) => {
-    console.log(data);
-    dispatch(addOrderThunk(data)).then((data) => {
+    const queryParams = new URLSearchParams();
+    Object.keys(data).forEach((key) => {
+      queryParams.append(key, data[key]);
+    });
+    dispatch(EditOrderThunk(data)).then((data) => {
       if (data.payload["ERROR"]) {
         toast.error(data.payload["ERROR"], {
           style: {
@@ -60,10 +66,11 @@ const PlannerOrder = () => {
             color: "#713200",
           },
         });
+
         setDisplayInput(true);
-        navigate(planner_skuSelection, {
-          state: { result: data.payload["SUCCESS"]?.result },
-        });
+
+        const url = `${planner_skuSelection}?${queryParams.toString()}`;
+        navigate(url);
       }
     });
   };
