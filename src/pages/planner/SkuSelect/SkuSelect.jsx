@@ -10,12 +10,10 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   deleteSku,
-  getContainerByNameThunk,
   getSkuByCodeThunk,
 } from "../../../redux/Slices/plannerSlice";
 import "./SkuSelect.css";
 import {
-  getContainerThunk,
   getLoadPlanThunk,
 } from "../../../redux/Slices/companyAdminSlice";
 import OrderPopup from "../../../PlannerComponents/OrderPopup/OrderPopup";
@@ -24,10 +22,6 @@ import { planner_contSelection } from "../../../constants/links";
 const schema = yup.object().shape({
   sku_code: yup.number().required("SKU code is required"),
   quantity: yup.number().required("Quantity is required"),
-});
-const containerschema = yup.object().shape({
-  container_name: yup.string().required("Container name is required"),
-  containerQuantity: yup.number().required("Quantity is required"),
 });
 
 const heading = ["Code", "Quantity", "Length", "Width", "Height"];
@@ -40,8 +34,6 @@ const SkuSelect = () => {
   const [is700, setIs700] = useState(window.innerWidth < 700);
   const dispatch = useDispatch();
   const [quan, setQuan] = useState({});
-  const [containerQuan, setContainerQuan] = useState({});
-  const [showCont, setShowCont] = useState(false);
   const [edit, setEdit] = useState(false);
   const [editQuan, setEditQuan] = useState({});
 
@@ -54,33 +46,18 @@ const SkuSelect = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
-  const {
-    control: control2,
-    handleSubmit: handleSubmit2,
-    register: register2,
-    setValue: setValue2,
-    formState: { errors: errors2 },
-  } = useForm({
-    resolver: yupResolver(containerschema),
-  });
-  //useselector
+ 
+  //useselector========================================================================================================
   const loading = useSelector((state) => state.rootReducer.mainSlice.loading);
   const skuData = useSelector(
     (state) => state.rootReducer.plannerSlice.data.skuData
   );
-  const containerList = useSelector(
-    (state) => state.rootReducer.companyAdminSlice.data.containerList
-  );
+  
   const loadplanData = useSelector(
     (state) => state.rootReducer.companyAdminSlice.data.loadplan
   );
-  const currentOrder = useSelector(
-    (state) => state.rootReducer.plannerSlice.data.currentOrder
-  );
-  const containerData = useSelector(
-    (state) => state.rootReducer.plannerSlice.data.containerData
-  );
 
+  
   //function===============================================================================================================
   const getSku = (data) => {
     const info = {
@@ -92,19 +69,7 @@ const SkuSelect = () => {
     setValue("sku_code", "");
     setValue("quantity", "");
   };
-  const getContainer = (data) => {
-    const info = {
-      container_name: data.container_name,
-    };
-    if (`${data.container_name}` in containerQuan) return;
-    setContainerQuan((prev) => ({
-      ...prev,
-      [data.container_name]: data.containerQuantity,
-    }));
-    dispatch(getContainerByNameThunk(info));
-    setValue2("container_name", "");
-    setValue2("containerQuantity", "");
-  };
+ 
   const handleDelSku = (data) => {
     dispatch(deleteSku(data));
     const newquan = { ...quan };
@@ -113,7 +78,6 @@ const SkuSelect = () => {
   };
   //useEffect=========================================================================================================
   useEffect(() => {
-    dispatch(getContainerThunk());
     dispatch(getLoadPlanThunk());
   }, []);
   useEffect(() => {
@@ -237,68 +201,7 @@ const SkuSelect = () => {
                   )}
                 </div>
 
-                {/* <button
-                  type="button"
-                  className="collapsible"
-                  id="addLoadDetailsButton"
-                  onClick={() => {
-                    setShowCont(!showCont);
-                  }}
-                >
-                  Add container details
-                  <img
-                    src={unlock}
-                    alt="Lock Icon"
-                    id="addLoadDetailsIcon"
-                    className="icon"
-                  />
-                </button>
-                {showCont && !load && (
-                  <div>
-                    <div className="order-inputs">
-                      <div className="settings-group">
-                        <label>Container type</label>
-                        <select {...register2("container_name")}>
-                          <option value="" selected>
-                            Select From Dropdown
-                          </option>
-
-                          {containerList?.map((ele) => (
-                            <option value={ele}>{ele}</option>
-                          ))}
-                        </select>
-                        {errors2.container_name && (
-                          <p className="error-order">
-                            {errors2.container_name.message}
-                          </p>
-                        )}
-                      </div>
-                      <div className="settings-group">
-                        <label> Quantity</label>
-                        <input
-                          type="number"
-                          style={{ marginTop: "0.5rem" }}
-                          placeholder="Type here"
-                          {...register2("containerQuantity")}
-                        />
-                        {errors2.containerQuantity && (
-                          <p className="error-order">
-                            {errors2.containerQuantity.message}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                    <div className="order-two-buttons">
-                      <button
-                        className="btn-apply"
-                        onClick={handleSubmit2(getContainer)}
-                      >
-                        Add Container
-                      </button>
-                      <button className="btn-cancel">Finish </button>
-                    </div>
-                  </div>
-                )} */}
+              
               </div>
               <div
                 className="order-planner-details"
@@ -393,58 +296,7 @@ const SkuSelect = () => {
                     </>
                   )}
                 </div>
-                {/* {containerData.length > 0 && (
-                  <>
-                    <div className="load-head">Container details</div>
-                    <table className="planner-table">
-                      <tr className="user-planner-head">
-                        {heading.map((ele) => (
-                          <th>
-                            <h4>{ele}</h4>
-                          </th>
-                        ))}
-                      </tr>
-                      {containerData?.map((ele) => (
-                        <tr>
-                          <td>
-                            <h4>{ele?.container_id}</h4>
-                          </td>
-                          <td>
-                            <div>{containerQuan[ele?.container_name]}</div>
-                          </td>
 
-                          <td>
-                            <div>{ele?.length}</div>
-                          </td>
-                          <td>
-                            <div>{ele?.width}</div>
-                          </td>
-                          <td>
-                            <div>{ele?.height}</div>
-                          </td>
-
-                          <td>
-                            <div>
-                              <button className="small-btn">Edit</button>
-                            </div>
-                          </td>
-                          <td>
-                            <div>
-                              <button
-                                className="small-btn"
-                                onClick={() => {
-                                  handleDelSku(ele?.sku_code);
-                                }}
-                              >
-                                Delete
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </table>
-                  </>
-                )} */}
               </div>
             </section>
           </div>
