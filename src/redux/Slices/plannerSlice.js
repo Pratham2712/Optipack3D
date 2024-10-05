@@ -96,6 +96,18 @@ const plannerSlice = createSlice({
         (sku) => sku.sku_code !== skuIdToDelete
       );
     },
+    deleteContainer: (state, action) => {
+      const containerToDelete = action.payload;
+      state.data.containerData = state.data.containerData.filter(
+        (ele) => ele.container_name !== containerToDelete
+      );
+    },
+    deleteOrder: (state, action) => {
+      const orderToDelete = action.payload;
+      state.data.orderData = state.data.orderData.filter(
+        (ele) => ele.order_number !== orderToDelete
+      );
+    },
   },
   extraReducers: (builders) => {
     builders
@@ -228,4 +240,5 @@ const plannerSlice = createSlice({
 });
 
 export default plannerSlice.reducer;
-export const { clearErrorSlice, deleteSku } = plannerSlice.actions;
+export const { clearErrorSlice, deleteSku, deleteContainer, deleteOrder } =
+  plannerSlice.actions;
