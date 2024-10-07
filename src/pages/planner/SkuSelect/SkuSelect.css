@@ -1,0 +1,51 @@
+.container-planner-form {
+  padding-left: 8rem;
+  padding-top: 4.8rem;
+  padding-right: 0rem;
+}
+
+.order-data div {
+  padding-left: 1rem;
+}
+
+.load-head {
+  font-weight: 700;
+  font-size: 20px;
+  margin-bottom: 1rem;
+}
+
+.user-planner-head {
+  color: #6b7280;
+  text-align: left;
+  padding: 8px;
+  font-size: 0.875rem;
+}
+
+.planner-table td,
+th {
+  text-align: center;
+  padding: 12px;
+  font-size: 0.875rem;
+  border: none;
+}
+.small-btn {
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 0.875rem;
+  background: #040e20;
+  color: white;
+  padding: 0.3rem 0.5rem;
+}
+
+.order-two-buttons {
+  margin-bottom: 2rem;
+}
+
+.sku-list {
+  padding: 2rem 2rem;
+}
+.order-planner-details {
+  height: 100vh;
+}

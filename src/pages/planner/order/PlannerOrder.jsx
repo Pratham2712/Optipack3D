@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import Loader from "../../../components/Loader/Loader";
 import Sidebar from "../../../components/Sidebar/Sidebar";
 import Breadcrumb from "../../../components/Breadcrumb/Breadcrumb";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import unlock from "../../../assests/unlock.png";
-import lock from "../../../assests/lock.png";
-import tick from "../../../assests/tick.png";
 import "./PlannerOrder.css";
 import { getLoadPlanThunk } from "../../../redux/Slices/companyAdminSlice";
 import { useForm, Controller } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { addOrderThunk } from "../../../redux/Slices/plannerSlice";
-import SkuSetting from "../../admin/SkuSetting/SkuSetting";
-import SkuSelect from "../../../PlannerComponents/SkuSelect/SkuSelect";
+import {
+  addOrderThunk,
+  EditOrderThunk,
+} from "../../../redux/Slices/plannerSlice";
+import { planner_skuSelection } from "../../../constants/links";
 
 const schema = yup.object().shape({
   order_number: yup
@@ -32,6 +32,7 @@ const PlannerOrder = () => {
   const dispatch = useDispatch();
   const [orderInput, setOrderInput] = useState(false);
   const [is700, setIs700] = useState(window.innerWidth < 700);
+  const [displayInput, setDisplayInput] = useState(false);
 
   const {
     control,
@@ -43,8 +44,35 @@ const PlannerOrder = () => {
   });
   //function===============================================================================================================
   const createOrder = (data) => {
-    console.log(data);
-    dispatch(addOrderThunk(data));
+    const queryParams = new URLSearchParams();
+    Object.keys(data).forEach((key) => {
+      queryParams.append(key, data[key]);
+    });
+    dispatch(EditOrderThunk(data)).then((data) => {
+      if (data.payload["ERROR"]) {
+        toast.error(data.payload["ERROR"], {
+          style: {
+            border: "1px solid #713200",
+            padding: "16px",
+            color: "#713200",
+          },
+        });
+      }
+      if (data.payload["SUCCESS"]?.message) {
+        toast.success(data.payload["SUCCESS"]?.message, {
+          style: {
+            border: "1px solid #713200",
+            padding: "16px",
+            color: "#713200",
+          },
+        });
+
+        setDisplayInput(true);
+
+        const url = `${planner_skuSelection}?${queryParams.toString()}`;
+        navigate(url);
+      }
+    });
   };
   //useselector
   const loading = useSelector((state) => state.rootReducer.mainSlice.loading);
@@ -66,24 +94,24 @@ const PlannerOrder = () => {
           {!is700 ? <Sidebar className="hide-sidebar" /> : <></>}
           <div className="container-form">
             <h1>Create Order</h1>
-            <div className="planner-order-content">
+            <button
+              type="button"
+              className="collapsible"
+              id="addLoadDetailsButton"
+              onClick={() => {
+                setOrderInput(!orderInput);
+              }}
+            >
+              Add order details
+              <img
+                src={unlock}
+                alt="Lock Icon"
+                id="addLoadDetailsIcon"
+                className="icon"
+              />
+            </button>
+            {!displayInput && (
               <form>
-                <button
-                  type="button"
-                  className="collapsible"
-                  id="addLoadDetailsButton"
-                  onClick={() => {
-                    setOrderInput(!orderInput);
-                  }}
-                >
-                  Add order details
-                  <img
-                    src={unlock}
-                    alt="Lock Icon"
-                    id="addLoadDetailsIcon"
-                    className="icon"
-                  />
-                </button>
                 <div className="content">
                   <div className="order-inputs">
                     <div className="settings-group">
@@ -94,9 +122,9 @@ const PlannerOrder = () => {
                         placeholder="Type here"
                         {...register("order_number")}
                       />
-                      {errors.orderNumber && (
+                      {errors.order_number && (
                         <p style={{ color: "red" }} className="error-order">
-                          {errors.orderNumber.message}
+                          {errors.order_number.message}
                         </p>
                       )}
                     </div>
@@ -176,10 +204,7 @@ const PlannerOrder = () => {
                   </button>
                 </div>
               </form>
-              <div className="planner-sku-content">
-                <SkuSelect />
-              </div>
-            </div>
+            )}
           </div>
         </div>
       )}

@@ -7,3 +7,5 @@ export const free_output = "/freeOutput";
 export const admin_setting = "/admin/setting";
 export const admin_manageuser = "/admin/manage-user";
 export const planner_order = "/planner/order";
+export const planner_skuSelection = "/planner/order-details";
+export const planner_contSelection = "/planner/container-details";

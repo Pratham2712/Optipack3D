@@ -55,7 +55,7 @@ const FreeOutput = () => {
   const isLogin = useSelector((state) => state.rootReducer.authSlice.isLogin);
 
   localStorage.setItem("threed_paths", JSON.stringify(threedPaths));
-  localStorage.setItem("container_inf", JSON.stringify(containerInf?.[0]));
+  localStorage.setItem("container_inf", JSON.stringify(containerInf));
 
   const iframeSrc = `three_render.html?container=${encodeURIComponent(
     contIndex
@@ -84,7 +84,7 @@ const FreeOutput = () => {
           );
           localStorage.setItem(
             "container_inf",
-            JSON.stringify(data?.payload?.container_inf?.[0])
+            JSON.stringify(data?.payload?.container_inf)
           );
         }
       });
