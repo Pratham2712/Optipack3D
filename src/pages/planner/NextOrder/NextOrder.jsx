@@ -4,16 +4,20 @@ import Breadcrumb from "../../../components/Breadcrumb/Breadcrumb";
 import Sidebar from "../../../components/Sidebar/Sidebar";
 import Loader from "../../../components/Loader/Loader";
 import unlock from "../../../assests/unlock.png";
+import toast from "react-hot-toast";
+
 import {
   deleteContainer,
   deleteOrder,
   getContainerByNameThunk,
   getOrderByNumberThunk,
+  getSkuByOrderThunk,
 } from "../../../redux/Slices/plannerSlice";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { getContainerThunk } from "../../../redux/Slices/companyAdminSlice";
+import { useNavigate } from "react-router-dom";
 
 const heading = ["Number", "Date", "Source", "Destination"];
 const heading2 = ["Name", "Quantity", "Length", "Width", "Height"];
@@ -21,7 +25,13 @@ const schema = yup.object().shape({
   container_name: yup.string().required("Container name is required"),
   containerQuantity: yup.number().required("Quantity is required"),
 });
+
 const NextOrder = () => {
+  const [colors, setColors] = useState([
+    "rgba(244, 67, 54, 1)", // Color 1
+    "rgba(76, 175, 80, 1)", // Color 2
+    "rgba(33, 150, 243, 1)", // Color 3
+  ]);
   const [is700, setIs700] = useState(window.innerWidth < 700);
   const [showOrder, setShowOrder] = useState(false);
   const [orderNumber, setOrderNumber] = useState();
@@ -29,7 +39,20 @@ const NextOrder = () => {
   const [containerQuan, setContainerQuan] = useState({});
   const [editQuan, setEditQuan] = useState({});
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
+  //useselector
+  const loading = useSelector((state) => state.rootReducer.mainSlice.loading);
+  const orderData = useSelector(
+    (state) => state.rootReducer.plannerSlice.data.orderData
+  );
+  const containerData = useSelector(
+    (state) => state.rootReducer.plannerSlice.data.containerData
+  );
+
+  const containerList = useSelector(
+    (state) => state.rootReducer.companyAdminSlice.data.containerList
+  );
   const {
     control,
     handleSubmit,
@@ -53,18 +76,69 @@ const NextOrder = () => {
     setValue("container_name", "");
     setValue("containerQuantity", "");
   };
-  //useselector
-  const loading = useSelector((state) => state.rootReducer.mainSlice.loading);
-  const orderData = useSelector(
-    (state) => state.rootReducer.plannerSlice.data.orderData
-  );
-  const containerData = useSelector(
-    (state) => state.rootReducer.plannerSlice.data.containerData
-  );
+  console.log(containerData);
 
-  const containerList = useSelector(
-    (state) => state.rootReducer.companyAdminSlice.data.containerList
-  );
+  const finalObject = (input) => {
+    // Initialize the output object
+    const output = {
+      numTypes: input.length,
+      totalContainers: containerData.length,
+      sumContainers: 0,
+    };
+
+    // Loop through each SKU and populate the output object
+    input.forEach((sku, index) => {
+      // Add SKU name and related properties to the output
+      output[`sku${index}`] = sku.sku_name; // SKU name
+      output[`grossWeight${index}`] = sku.gross_weight; // Gross weight
+      output[`length${index}`] = sku.length; // Length
+      output[`width${index}`] = sku.width; // Width
+      output[`height${index}`] = sku.height; // Height
+      output[`numberOfCases${index}`] = sku.quantity; // Quantity
+      output[`volume${index}`] = sku.volume; // Volume
+      output[`netWeight${index}`] = sku.netWeight; // Net weight
+      output[`rotationAllowed${index}`] = sku.rotationAllowed ? "on" : "off"; // Rotation allowed
+
+      // Add color if available
+      if (colors[index]) {
+        output[`color${index}`] = colors[index]; // Color
+      }
+    });
+
+    containerData.forEach((ele, ind) => {
+      output[`containerType${ind}`] = ele.container_name;
+      output[`numContainers${ind}`] = containerQuan[ele.container_name];
+      output["sumContainers"] += parseInt(containerQuan[ele.container_name]);
+    });
+
+    return output;
+  };
+  const onSubmit = () => {
+    if (orderData.length > 0 && containerData.length > 0) {
+      const data = {
+        order_numbers: [],
+      };
+      orderData?.forEach((ele) => {
+        data.order_numbers.push(ele.order_number);
+      });
+
+      dispatch(getSkuByOrderThunk(data)).then((data) => {
+        if (data.payload["SUCCESS"]?.message) {
+          const result = data.payload["SUCCESS"]?.result;
+          let skuArray = [];
+          skuArray = Object.values(result).flat();
+          const final = finalObject(skuArray);
+          console.log(final);
+          const queryParams = new URLSearchParams();
+          Object.keys(final).forEach((key) => {
+            queryParams.append(key, final[key]);
+          });
+          const url = `/freeOutput?${queryParams.toString()}`;
+          navigate(url);
+        }
+      });
+    }
+  };
 
   //function=============================================================================================
   const getOrder = () => {
@@ -211,7 +285,13 @@ const NextOrder = () => {
                     </div>
                   </div>
                 )}
+                <div className="optimize">
+                  <button className="btn-apply" onClick={onSubmit}>
+                    Optimize
+                  </button>
+                </div>
               </div>
+
               <div
                 className="order-planner-details"
                 style={{ background: "#F7F9FD" }}
@@ -334,7 +414,9 @@ const NextOrder = () => {
                                     }))
                                   }
                                 >
-                                  Edit
+                                  {editQuan[ele.container_name]
+                                    ? "Save"
+                                    : "Edit"}
                                 </button>
                               </div>
                             </td>

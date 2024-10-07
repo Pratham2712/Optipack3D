@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
           if (key == "threed_paths") {
             resolve(JSON.parse(item)[ind]);
           } else {
-            resolve(JSON.parse(item));
+            resolve(JSON.parse(item)[ind]);
           }
         } catch (error) {
           reject(

@@ -8,14 +8,15 @@ import unlock from "../../../assests/unlock.png";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import toast from "react-hot-toast";
+
 import {
   deleteSku,
   getSkuByCodeThunk,
+  saveSkuThunk,
 } from "../../../redux/Slices/plannerSlice";
 import "./SkuSelect.css";
-import {
-  getLoadPlanThunk,
-} from "../../../redux/Slices/companyAdminSlice";
+import { getLoadPlanThunk } from "../../../redux/Slices/companyAdminSlice";
 import OrderPopup from "../../../PlannerComponents/OrderPopup/OrderPopup";
 import { planner_contSelection } from "../../../constants/links";
 
@@ -46,18 +47,17 @@ const SkuSelect = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
- 
+
   //useselector========================================================================================================
   const loading = useSelector((state) => state.rootReducer.mainSlice.loading);
   const skuData = useSelector(
     (state) => state.rootReducer.plannerSlice.data.skuData
   );
-  
+
   const loadplanData = useSelector(
     (state) => state.rootReducer.companyAdminSlice.data.loadplan
   );
 
-  
   //function===============================================================================================================
   const getSku = (data) => {
     const info = {
@@ -69,12 +69,52 @@ const SkuSelect = () => {
     setValue("sku_code", "");
     setValue("quantity", "");
   };
- 
+
   const handleDelSku = (data) => {
     dispatch(deleteSku(data));
     const newquan = { ...quan };
     delete newquan[data];
     setQuan(newquan);
+  };
+  const saveSku = () => {
+    const data = {
+      order_number: result?.order_number,
+      skus: [],
+    };
+
+    const skus_data = [];
+    skuData.forEach((ele) => {
+      const obj = {
+        sku_code: ele.sku_code,
+        quantity: quan[ele.sku_code],
+      };
+
+      skus_data.push(obj);
+    });
+
+    data.skus = skus_data;
+    dispatch(saveSkuThunk(data)).then((data) => {
+      if (data.payload["ERROR"]) {
+        toast.error(data.payload["ERROR"], {
+          style: {
+            border: "1px solid #713200",
+            padding: "16px",
+            color: "#713200",
+          },
+        });
+      }
+      if (data.payload["SUCCESS"]?.message) {
+        toast.success(data.payload["SUCCESS"]?.message, {
+          style: {
+            border: "1px solid #713200",
+            padding: "16px",
+            color: "#713200",
+          },
+        });
+
+        navigate(planner_contSelection);
+      }
+    });
   };
   //useEffect=========================================================================================================
   useEffect(() => {
@@ -190,18 +230,13 @@ const SkuSelect = () => {
                         >
                           Add SKU
                         </button>
-                        <button
-                          className="btn-cancel"
-                          onClick={() => navigate(planner_contSelection)}
-                        >
-                          Finish Adding
+                        <button className="btn-cancel" onClick={saveSku}>
+                          Save all SKUs
                         </button>
                       </div>
                     </div>
                   )}
                 </div>
-
-              
               </div>
               <div
                 className="order-planner-details"
@@ -296,7 +331,6 @@ const SkuSelect = () => {
                     </>
                   )}
                 </div>
-
               </div>
             </section>
           </div>

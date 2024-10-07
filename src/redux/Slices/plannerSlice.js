@@ -56,6 +56,31 @@ export const getOrderByNumberThunk = createAsyncThunk(
     }
   }
 );
+export const saveSkuThunk = createAsyncThunk(
+  "/attach_skus_to_order",
+  async (data) => {
+    try {
+      const res = await axios.post(`${BASE_URL}/attach_skus_to_order`, data);
+      return res.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  }
+);
+export const getSkuByOrderThunk = createAsyncThunk(
+  "/get_skus_by_order_numbers",
+  async (data) => {
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/get_skus_by_order_numbers`,
+        data
+      );
+      return res.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  }
+);
 
 const initialState = {
   loading: false,
@@ -79,6 +104,8 @@ const initialState = {
     EditOrderThunk: IDLE,
     getContainerByNameThunk: IDLE,
     getOrderByNumberThunk: IDLE,
+    saveSkuThunk: IDLE,
+    getSkuByOrderThunk: IDLE,
   },
 };
 
@@ -233,6 +260,56 @@ const plannerSlice = createSlice({
       })
       .addCase(getOrderByNumberThunk.rejected, (state, action) => {
         state.status.getOrderByNumberThunk = ERROR;
+        state.loading = false;
+        state.errorData.message = action.error.message;
+      })
+      //saveSkuThunk===========================================================================================
+      .addCase(saveSkuThunk.pending, (state, { payload }) => {
+        state.loading = true;
+      })
+      .addCase(saveSkuThunk.fulfilled, (state, { payload }) => {
+        switch (Object.keys(payload)[0]) {
+          case SUCCESS:
+            state.loading = false;
+            state.successMsg = payload[SUCCESS]?.message;
+            state.updateDone = !state.updateDone;
+            break;
+          case ERROR:
+            state.loading = false;
+            state.isError = true;
+            state.errorData.message = payload[ERROR];
+            break;
+          default:
+            break;
+        }
+      })
+      .addCase(saveSkuThunk.rejected, (state, action) => {
+        state.status.saveSkuThunk = ERROR;
+        state.loading = false;
+        state.errorData.message = action.error.message;
+      })
+      //getSkuByOrderThunk===========================================================================================
+      .addCase(getSkuByOrderThunk.pending, (state, { payload }) => {
+        state.loading = true;
+      })
+      .addCase(getSkuByOrderThunk.fulfilled, (state, { payload }) => {
+        switch (Object.keys(payload)[0]) {
+          case SUCCESS:
+            state.loading = false;
+            state.successMsg = payload[SUCCESS]?.message;
+            state.updateDone = !state.updateDone;
+            break;
+          case ERROR:
+            state.loading = false;
+            state.isError = true;
+            state.errorData.message = payload[ERROR];
+            break;
+          default:
+            break;
+        }
+      })
+      .addCase(getSkuByOrderThunk.rejected, (state, action) => {
+        state.status.saveSkuThunk = ERROR;
         state.loading = false;
         state.errorData.message = action.error.message;
       });
