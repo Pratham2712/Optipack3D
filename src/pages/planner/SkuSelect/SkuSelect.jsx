@@ -9,10 +9,12 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import toast from "react-hot-toast";
+import * as XLSX from "xlsx";
 
 import {
   deleteSku,
   getSkuByCodeThunk,
+  getSkuCodeNameThunk,
   saveSkuThunk,
 } from "../../../redux/Slices/plannerSlice";
 import "./SkuSelect.css";
@@ -25,7 +27,7 @@ const schema = yup.object().shape({
   quantity: yup.number().required("Quantity is required"),
 });
 
-const heading = ["Code", "Quantity", "Length", "Width", "Height"];
+const heading = ["Code", "Name", "Quantity", "Length", "Width", "Height"];
 
 const SkuSelect = () => {
   const location = useLocation();
@@ -37,6 +39,7 @@ const SkuSelect = () => {
   const [quan, setQuan] = useState({});
   const [edit, setEdit] = useState(false);
   const [editQuan, setEditQuan] = useState({});
+  const [codeArray, setCodeArray] = useState([]);
 
   const {
     control,
@@ -57,11 +60,14 @@ const SkuSelect = () => {
   const loadplanData = useSelector(
     (state) => state.rootReducer.companyAdminSlice.data.loadplan
   );
+  const skuCodeName = useSelector(
+    (state) => state.rootReducer.plannerSlice.skuCodeName
+  );
 
   //function===============================================================================================================
   const getSku = (data) => {
     const info = {
-      sku_code: data.sku_code,
+      sku_code: [data.sku_code],
     };
     if (`${data.sku_code}` in quan) return;
     setQuan((prev) => ({ ...prev, [data.sku_code]: data.quantity }));
@@ -116,9 +122,45 @@ const SkuSelect = () => {
       }
     });
   };
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0]; // Get the uploaded file
+    const reader = new FileReader();
+
+    reader.onload = (event) => {
+      const data = event.target.result;
+      const workbook = XLSX.read(data, { type: "binary" });
+
+      const sheetName = workbook.SheetNames[0]; // Get the first sheet
+      const sheet = workbook.Sheets[sheetName];
+
+      const jsonData = XLSX.utils.sheet_to_json(sheet); // Convert sheet to JSON
+
+      // Extract 'code' field from each row and store in an array
+      const extractedCodes = jsonData
+        // .filter((row) => !(row.sku_code in quan)) // Filter out rows where sku_code is already in quan
+        .map((row) => row.sku_code);
+      const skuQuantities = jsonData.reduce((acc, row) => {
+        if (row.code && row.quantity) {
+          // acc[row.code] = row.quantity;
+          setQuan((prev) => ({
+            ...prev,
+            [row.code]: row.quantity,
+          }));
+        }
+      }, {});
+      setCodeArray(extractedCodes);
+      const info = {
+        sku_code: extractedCodes,
+      };
+      dispatch(getSkuByCodeThunk(info));
+    };
+
+    reader.readAsBinaryString(file); // Read the file as binary
+  };
   //useEffect=========================================================================================================
   useEffect(() => {
     dispatch(getLoadPlanThunk());
+    dispatch(getSkuCodeNameThunk());
   }, []);
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
@@ -183,7 +225,12 @@ const SkuSelect = () => {
                     </button>
                   </div>
                   <div className="order-two-buttons">
-                    <button className="btn-apply">Upload SKU excel</button>
+                    <input
+                      className="custom-file-input"
+                      type="file"
+                      accept=".xlsx, .xls"
+                      onChange={handleFileUpload}
+                    />
                     <button
                       className="btn-apply"
                       onClick={() => setManual(!manual)}
@@ -196,12 +243,22 @@ const SkuSelect = () => {
                       <div className="order-inputs">
                         <div className="settings-group">
                           <label>SKU code</label>
-                          <input
+                          {/* <input
                             type="text"
                             style={{ marginTop: "0.5rem" }}
                             placeholder="Type here"
                             {...register("sku_code")}
-                          />
+                          /> */}
+                          <select {...register("sku_code")}>
+                            <option selected disabled>
+                              Select SKU
+                            </option>
+                            {skuCodeName?.map((ele) => (
+                              <option value={ele?.sku_code}>
+                                {ele?.sku_code} / {ele?.sku_name}
+                              </option>
+                            ))}
+                          </select>
                           {errors.sku_code && (
                             <p className="error-order">
                               {errors.sku_code.message}
@@ -268,6 +325,9 @@ const SkuSelect = () => {
                             </td>
 
                             <td>
+                              <div>{ele?.sku_name}</div>
+                            </td>
+                            <td>
                               <div>
                                 {editQuan[ele?.sku_code] ? (
                                   <input
@@ -309,7 +369,7 @@ const SkuSelect = () => {
                                     }))
                                   }
                                 >
-                                  Edit
+                                  {editQuan[ele.sku_code] ? "Save" : "Edit"}
                                 </button>
                               </div>
                             </td>

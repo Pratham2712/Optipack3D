@@ -81,6 +81,17 @@ export const getSkuByOrderThunk = createAsyncThunk(
     }
   }
 );
+export const getSkuCodeNameThunk = createAsyncThunk(
+  "/get_skuCodeAndName",
+  async () => {
+    try {
+      const res = await axios.post(`${BASE_URL}/get_skuCodeAndName`);
+      return res.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  }
+);
 
 const initialState = {
   loading: false,
@@ -97,6 +108,7 @@ const initialState = {
     skuData: [],
     containerData: [],
     orderData: [],
+    skuCodeName: [],
   },
   status: {
     addOrderThunk: IDLE,
@@ -106,6 +118,7 @@ const initialState = {
     getOrderByNumberThunk: IDLE,
     saveSkuThunk: IDLE,
     getSkuByOrderThunk: IDLE,
+    getSkuCodeNameThunk: IDLE,
   },
 };
 
@@ -150,10 +163,10 @@ const plannerSlice = createSlice({
             if (Array.isArray(state.data.skuData)) {
               state.data.skuData = [
                 ...state.data.skuData,
-                payload[SUCCESS]?.result,
+                ...payload[SUCCESS]?.result,
               ];
             } else {
-              state.data.skuData = [payload[SUCCESS]?.result];
+              state.data.skuData = [...payload[SUCCESS]?.result];
             }
             state.updateDone = !state.updateDone;
             break;
@@ -310,6 +323,32 @@ const plannerSlice = createSlice({
       })
       .addCase(getSkuByOrderThunk.rejected, (state, action) => {
         state.status.saveSkuThunk = ERROR;
+        state.loading = false;
+        state.errorData.message = action.error.message;
+      })
+      //getSkuCodeNameThunk===========================================================================================
+      .addCase(getSkuCodeNameThunk.pending, (state, { payload }) => {
+        state.loading = false;
+      })
+      .addCase(getSkuCodeNameThunk.fulfilled, (state, { payload }) => {
+        switch (Object.keys(payload)[0]) {
+          case SUCCESS:
+            state.loading = false;
+            state.successMsg = payload[SUCCESS]?.message;
+            state.skuCodeName = payload[SUCCESS]?.result;
+            state.updateDone = !state.updateDone;
+            break;
+          case ERROR:
+            state.loading = false;
+            state.isError = true;
+            state.errorData.message = payload[ERROR];
+            break;
+          default:
+            break;
+        }
+      })
+      .addCase(getSkuCodeNameThunk.rejected, (state, action) => {
+        state.status.getSkuCodeNameThunk = ERROR;
         state.loading = false;
         state.errorData.message = action.error.message;
       });

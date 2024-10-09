@@ -493,6 +493,7 @@ const companyAdminSlice = createSlice({
             state.errorData.message = payload[ERROR];
             break;
           default:
+            state.loading = false;
             break;
         }
       })

@@ -54,10 +54,13 @@ const Setting = () => {
   const containerList = useSelector(
     (state) => state.rootReducer.companyAdminSlice.data.containerList
   );
+  const company = useSelector(
+    (state) => state.rootReducer.authSlice.data.user.company
+  );
 
   const handleChange = (dash, userType, value) => {
     const info = {
-      company: "gmail",
+      company: company,
       user_type: userType,
       dashboard: dash,
       allowed: value === "allowed" ? true : false,
