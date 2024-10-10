@@ -85,26 +85,42 @@ const SkuSetting = () => {
   const pageSize = parseInt(searchParams.get("pagesize")) || 1; // Default to 1 if pagesize is invalid
   const totalPages = Math.ceil(total / pageSize);
   const onSubmit = (data) => {
-    dispatch(addSkuThunk(data)).then((data) => {
-      if (data.payload["ERROR"]) {
-        toast.error(data.payload["ERROR"], {
+    let exist = false;
+    sku?.map((ele) => {
+      if (ele.sku_code == data.sku_code) {
+        exist = true;
+        toast.error("SKU already exist", {
           style: {
             border: "1px solid #713200",
             padding: "16px",
             color: "#713200",
           },
         });
-      }
-      if (data.payload["SUCCESS"]?.message) {
-        toast.success(data.payload["SUCCESS"]?.message, {
-          style: {
-            border: "1px solid #713200",
-            padding: "16px",
-            color: "#713200",
-          },
-        });
+        return;
       }
     });
+    if (!exist) {
+      dispatch(addSkuThunk(data)).then((data) => {
+        if (data.payload["ERROR"]) {
+          toast.error(data.payload["ERROR"], {
+            style: {
+              border: "1px solid #713200",
+              padding: "16px",
+              color: "#713200",
+            },
+          });
+        }
+        if (data.payload["SUCCESS"]?.message) {
+          toast.success(data.payload["SUCCESS"]?.message, {
+            style: {
+              border: "1px solid #713200",
+              padding: "16px",
+              color: "#713200",
+            },
+          });
+        }
+      });
+    }
   };
   const prevPage = () => {
     const currentPage = parseInt(searchParams.get("page")) || 1;

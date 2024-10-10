@@ -89,38 +89,69 @@ const SkuSelect = () => {
     };
 
     const skus_data = [];
+    const seenSkuCodes = new Set();
+    let duplicate = false;
+    let allQuantitiesValid = true;
     skuData.forEach((ele) => {
-      const obj = {
-        sku_code: ele.sku_code,
-        quantity: quan[ele.sku_code],
-      };
+      if (!seenSkuCodes.has(ele.sku_code)) {
+        seenSkuCodes.add(ele.sku_code);
 
-      skus_data.push(obj);
+        const quantity = quan[ele.sku_code];
+        if (!quantity || quantity <= 0) {
+          // Validate quantity
+          toast.error(`Quantity required for SKU: ${ele.sku_name}`, {
+            style: {
+              border: "1px solid #713200",
+              padding: "16px",
+              color: "#713200",
+            },
+          });
+          allQuantitiesValid = false;
+          return;
+        }
+
+        const obj = {
+          sku_code: ele.sku_code,
+          quantity: quantity,
+        };
+
+        skus_data.push(obj);
+      } else {
+        toast.error("No duplicate SKU", {
+          style: {
+            border: "1px solid #713200",
+            padding: "16px",
+            color: "#713200",
+          },
+        });
+        duplicate = true;
+      }
     });
-
     data.skus = skus_data;
-    dispatch(saveSkuThunk(data)).then((data) => {
-      if (data.payload["ERROR"]) {
-        toast.error(data.payload["ERROR"], {
-          style: {
-            border: "1px solid #713200",
-            padding: "16px",
-            color: "#713200",
-          },
-        });
-      }
-      if (data.payload["SUCCESS"]?.message) {
-        toast.success(data.payload["SUCCESS"]?.message, {
-          style: {
-            border: "1px solid #713200",
-            padding: "16px",
-            color: "#713200",
-          },
-        });
+    if (!duplicate && data.skus.length > 0) {
+      dispatch(saveSkuThunk(data)).then((data) => {
+        if (data.payload["ERROR"]) {
+          toast.error(data.payload["ERROR"], {
+            style: {
+              border: "1px solid #713200",
+              padding: "16px",
+              color: "#713200",
+            },
+          });
+        }
+        if (data.payload["SUCCESS"]?.message) {
+          toast.success(data.payload["SUCCESS"]?.message, {
+            style: {
+              border: "1px solid #713200",
+              padding: "16px",
+              color: "#713200",
+            },
+          });
 
-        navigate(planner_contSelection);
-      }
-    });
+          navigate(planner_contSelection);
+        }
+      });
+    }
   };
   const handleFileUpload = (e) => {
     const file = e.target.files[0]; // Get the uploaded file
@@ -134,24 +165,23 @@ const SkuSelect = () => {
       const sheet = workbook.Sheets[sheetName];
 
       const jsonData = XLSX.utils.sheet_to_json(sheet); // Convert sheet to JSON
-
-      // Extract 'code' field from each row and store in an array
+      console.log(quan);
       const extractedCodes = jsonData
-        // .filter((row) => !(row.sku_code in quan)) // Filter out rows where sku_code is already in quan
-        .map((row) => row.sku_code);
+        .filter((row) => !Object.keys(quan).includes(`${row.sku_code}`))
+        .map((row) => row.code);
+      setCodeArray(extractedCodes);
+      console.log(extractedCodes); // You can view the code array in the console
+      const info = {
+        sku_code: extractedCodes,
+      };
       const skuQuantities = jsonData.reduce((acc, row) => {
         if (row.code && row.quantity) {
-          // acc[row.code] = row.quantity;
           setQuan((prev) => ({
             ...prev,
             [row.code]: row.quantity,
           }));
         }
       }, {});
-      setCodeArray(extractedCodes);
-      const info = {
-        sku_code: extractedCodes,
-      };
       dispatch(getSkuByCodeThunk(info));
     };
 
@@ -287,12 +317,14 @@ const SkuSelect = () => {
                         >
                           Add SKU
                         </button>
-                        <button className="btn-cancel" onClick={saveSku}>
-                          Save all SKUs
-                        </button>
                       </div>
                     </div>
                   )}
+                  <div style={{ textAlign: "center" }}>
+                    <button className="btn-cancel" onClick={saveSku}>
+                      Save all SKUs
+                    </button>
+                  </div>
                 </div>
               </div>
               <div

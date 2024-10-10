@@ -220,7 +220,12 @@ const NextOrder = () => {
                       <button className="btn-apply" onClick={() => getOrder()}>
                         Add order
                       </button>
-                      <button className="btn-cancel">Finish </button>
+                      <button
+                        className="btn-cancel"
+                        onClick={() => setShowOrder(!showOrder)}
+                      >
+                        Finish{" "}
+                      </button>
                     </div>
                   </>
                 )}
@@ -282,7 +287,14 @@ const NextOrder = () => {
                       >
                         Add Container
                       </button>
-                      <button className="btn-cancel">Finish </button>
+                      <button
+                        className="btn-cancel"
+                        onClick={() => {
+                          setShowCont(!showCont);
+                        }}
+                      >
+                        Finish{" "}
+                      </button>
                     </div>
                   </div>
                 )}
@@ -321,7 +333,9 @@ const NextOrder = () => {
                             </td>
 
                             <td>
-                              <div>{ele?.planned_start_date}</div>
+                              <div style={{ width: "72px" }}>
+                                {ele?.planned_start_date}
+                              </div>
                             </td>
 
                             <td>
