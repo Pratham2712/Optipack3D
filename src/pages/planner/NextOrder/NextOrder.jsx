@@ -200,28 +200,34 @@ const NextOrder = () => {
                   />
                 </button>
                 {showOrder && (
-                  <div
-                    className="order-two-buttons"
-                    style={{ alignItems: "center" }}
-                  >
-                    <div className="settings-group">
-                      <label>Order Number</label>
-                      <input
-                        type="number"
-                        style={{ marginTop: "0.5rem", width: "100%" }}
-                        placeholder="Type here"
-                        value={orderNumber}
-                        onChange={(e) => setOrderNumber(e.target.value)}
-                      />
-                    </div>
-                    <button
-                      className="btn-apply"
-                      style={{ marginLeft: "1rem", height: "min-content" }}
-                      onClick={() => getOrder()}
+                  <>
+                    <div
+                      className="order-two-buttons"
+                      style={{ alignItems: "center" }}
                     >
-                      Add order
-                    </button>
-                  </div>
+                      <div className="settings-group">
+                        <label>Order Number</label>
+                        <input
+                          type="number"
+                          style={{ marginTop: "0.5rem", width: "100%" }}
+                          placeholder="Type here"
+                          value={orderNumber}
+                          onChange={(e) => setOrderNumber(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                    <div className="order-two-buttons">
+                      <button className="btn-apply" onClick={() => getOrder()}>
+                        Add order
+                      </button>
+                      <button
+                        className="btn-cancel"
+                        onClick={() => setShowOrder(!showOrder)}
+                      >
+                        Finish{" "}
+                      </button>
+                    </div>
+                  </>
                 )}
                 <button
                   type="button"
@@ -281,7 +287,14 @@ const NextOrder = () => {
                       >
                         Add Container
                       </button>
-                      <button className="btn-cancel">Finish </button>
+                      <button
+                        className="btn-cancel"
+                        onClick={() => {
+                          setShowCont(!showCont);
+                        }}
+                      >
+                        Finish{" "}
+                      </button>
                     </div>
                   </div>
                 )}
@@ -320,7 +333,9 @@ const NextOrder = () => {
                             </td>
 
                             <td>
-                              <div>{ele?.planned_start_date}</div>
+                              <div style={{ width: "72px" }}>
+                                {ele?.planned_start_date}
+                              </div>
                             </td>
 
                             <td>
