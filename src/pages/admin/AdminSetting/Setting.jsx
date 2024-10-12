@@ -38,8 +38,8 @@ const Setting = () => {
     head: "",
   });
   const [loadData, setLoadData] = useState({
-    shipping_location: "",
-    destination_location: "",
+    shipping_location: [],
+    destination_location: [],
     container_type: "",
   });
   //useSelector====================================================================================================================
