@@ -15,6 +15,7 @@ import AddUser from "../../../AdminComponents/AddUser/AddUser";
 import { admin_manageuser } from "../../../constants/links";
 import { useNavigate } from "react-router-dom";
 import SkuSetting from "../SkuSetting/SkuSetting";
+import toast from "react-hot-toast";
 
 const Setting = () => {
   const [is700, setIs700] = useState(window.innerWidth < 700);
@@ -37,8 +38,8 @@ const Setting = () => {
     head: "",
   });
   const [loadData, setLoadData] = useState({
-    shipping_location: "",
-    destination_location: "",
+    shipping_location: [],
+    destination_location: [],
     container_type: "",
   });
   //useSelector====================================================================================================================
@@ -84,7 +85,25 @@ const Setting = () => {
   };
 
   const submitPermission = () => {
-    dispatch(permissionThunk(permData));
+    if (permissionData.length == 0) {
+      console.log(permData.length);
+      if (permData.length == 20) {
+        dispatch(permissionThunk(permData));
+      } else {
+        toast.error("Select all permissions", {
+          style: {
+            border: "1px solid #713200",
+            padding: "16px",
+            color: "#713200",
+          },
+        });
+      }
+    } else {
+      if (permData.length > 0) {
+        dispatch(permissionThunk(permData));
+      }
+      console.log(permData.length, "eles");
+    }
   };
 
   const checkVal = (dashboard, user_type) => {
