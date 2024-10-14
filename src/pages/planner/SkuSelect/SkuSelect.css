@@ -5,7 +5,8 @@
 }
 
 .order-data div {
-  padding-left: 1rem;
+  display: flex;
+  justify-content: center;
 }
 
 .load-head {

@@ -6,8 +6,9 @@
 :root {
   --blue: #37367f;
   --black: #1c2434;
-  --primary : #CC9C87;
-  --mainText: #101010
+  --primary: #cc9c87;
+  --mainText: #101010;
+  --green: "#CFFBBF";
 }
 html {
   &::-webkit-scrollbar {

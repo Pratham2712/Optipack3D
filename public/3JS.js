@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const containerInfPath = JSON.parse(localStorage.getItem("container_inf"));
   const urlParams = new URLSearchParams(window.location.search);
   const ind = parseInt(urlParams.get("container"), 0);
-  const isLogin = urlParams.get("isLogin");
+  const isLogin = urlParams.get("isLogin") === "true";
   // const isLogin = localStorage.getItem("login");
   const threedPath = JSON.parse(localStorage.getItem("threed_paths"));
   const speedButton = document.getElementById("speeds");

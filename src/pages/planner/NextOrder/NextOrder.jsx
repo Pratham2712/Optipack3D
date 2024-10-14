@@ -4,7 +4,7 @@ import Breadcrumb from "../../../components/Breadcrumb/Breadcrumb";
 import Sidebar from "../../../components/Sidebar/Sidebar";
 import Loader from "../../../components/Loader/Loader";
 import unlock from "../../../assests/unlock.png";
-import toast from "react-hot-toast";
+import editIcon from "../../../assests/edit.png";
 
 import {
   deleteContainer,
@@ -18,6 +18,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { getContainerThunk } from "../../../redux/Slices/companyAdminSlice";
 import { useNavigate } from "react-router-dom";
+import tick from "../../../assests/tick.png";
 
 const heading = ["Number", "Date", "Source", "Destination"];
 const heading2 = ["Name", "Quantity", "Length", "Width", "Height"];
@@ -38,6 +39,8 @@ const NextOrder = () => {
   const [showCont, setShowCont] = useState(false);
   const [containerQuan, setContainerQuan] = useState({});
   const [editQuan, setEditQuan] = useState({});
+  const [addOrderFinish, setAddOrderFinish] = useState(false);
+  const [addContFinish, setAddContFinish] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -76,7 +79,6 @@ const NextOrder = () => {
     setValue("container_name", "");
     setValue("containerQuantity", "");
   };
-  console.log(containerData);
 
   const finalObject = (input) => {
     // Initialize the output object
@@ -163,6 +165,18 @@ const NextOrder = () => {
     dispatch(deleteOrder(data));
     setOrderNumber("");
   };
+  const FinishAddOrder = () => {
+    setShowOrder(!showOrder);
+    if (orderData.length > 0) {
+      setAddOrderFinish(true);
+    }
+  };
+  const FinishAddCont = () => {
+    setShowCont(!showCont);
+    if (containerData.length > 0) {
+      setAddContFinish(true);
+    }
+  };
   //useEffect=-================================================================================================
   useEffect(() => {
     dispatch(getContainerThunk());
@@ -190,10 +204,11 @@ const NextOrder = () => {
                   className="collapsible"
                   id="addLoadDetailsButton"
                   onClick={() => setShowOrder(!showOrder)}
+                  style={{ background: addOrderFinish ? "#CFFBBF" : "" }}
                 >
-                  Select order
+                  Create load
                   <img
-                    src={unlock}
+                    src={addOrderFinish ? tick : unlock}
                     alt="Lock Icon"
                     id="addLoadDetailsIcon"
                     className="icon"
@@ -220,10 +235,7 @@ const NextOrder = () => {
                       <button className="btn-apply" onClick={() => getOrder()}>
                         Add order
                       </button>
-                      <button
-                        className="btn-cancel"
-                        onClick={() => setShowOrder(!showOrder)}
-                      >
+                      <button className="btn-cancel" onClick={FinishAddOrder}>
                         Finish{" "}
                       </button>
                     </div>
@@ -236,10 +248,11 @@ const NextOrder = () => {
                   onClick={() => {
                     setShowCont(!showCont);
                   }}
+                  style={{ background: addContFinish ? "#CFFBBF" : "" }}
                 >
                   Add container details
                   <img
-                    src={unlock}
+                    src={addContFinish ? tick : unlock}
                     alt="Lock Icon"
                     id="addLoadDetailsIcon"
                     className="icon"
@@ -287,12 +300,7 @@ const NextOrder = () => {
                       >
                         Add Container
                       </button>
-                      <button
-                        className="btn-cancel"
-                        onClick={() => {
-                          setShowCont(!showCont);
-                        }}
-                      >
+                      <button className="btn-cancel" onClick={FinishAddCont}>
                         Finish{" "}
                       </button>
                     </div>
@@ -376,8 +384,21 @@ const NextOrder = () => {
                       <table className="planner-table">
                         <tr className="user-planner-head">
                           {heading2.map((ele) => (
-                            <th>
+                            <th
+                              style={{
+                                display: ele === "Quantity" ? "flex" : "",
+                              }}
+                            >
                               <h4>{ele}</h4>
+                              {ele === "Quantity" ? (
+                                <img
+                                  src={editIcon}
+                                  alt=""
+                                  style={{ marginLeft: "0.3rem" }}
+                                />
+                              ) : (
+                                <></>
+                              )}
                             </th>
                           ))}
                         </tr>
