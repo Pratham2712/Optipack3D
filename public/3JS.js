@@ -10,7 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const containerInfPath = JSON.parse(localStorage.getItem("container_inf"));
   const urlParams = new URLSearchParams(window.location.search);
   const ind = parseInt(urlParams.get("container"), 0);
-  const isLogin = urlParams.get("isLogin", false);
+  const isLogin = urlParams.get("isLogin");
+  // const isLogin = localStorage.getItem("login");
   const threedPath = JSON.parse(localStorage.getItem("threed_paths"));
   const speedButton = document.getElementById("speeds");
   const speedButtons = speedButton.querySelectorAll("button");
@@ -299,29 +300,33 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     };
 
+    // if (isLogin === true) {
     speedButtons.forEach((button) => {
       button.addEventListener("click", () => {
-        console.log(isLogin);
         console.log(isAnimating);
 
-        if (isLogin) {
-          if (isAnimating) {
-            return;
-          }
-
-          const newSpeed = parseFloat(button.dataset.speed);
+        if (isAnimating) {
+          return;
+        }
+        const newSpeed = parseFloat(button.dataset.speed);
+        if (isLogin === true) {
           currentSpeed = newSpeed;
+        } else {
+          alert("Register or login required");
+        }
+
+        if (isLogin === true) {
           speedButtons.forEach((btn) => {
             btn.style.backgroundColor = "white";
             btn.style.color = "black";
           });
           button.style.backgroundColor = "#9d4edd";
           button.style.color = "white";
-        } else {
-          alert("Register or login required");
         }
       });
     });
+    // }
+
     const animateSmallBoxes = (boxes) => {
       boxes.forEach((box, index) => {
         // Delay each animation to occur sequentially

@@ -96,8 +96,15 @@ export const verifyLoginThunk = createAsyncThunk(
 export const checkLoginThunk = createAsyncThunk("/check_login", async () => {
   try {
     const res = await axios.get(`${BASE_URL}/check_login`);
+    if (res.data[SUCCESS]) {
+      localStorage.setItem("login", true);
+    } else {
+      localStorage.setItem("login", false);
+    }
+
     return res.data;
   } catch (error) {
+    localStorage.setItem("login", false);
     return error.response.data;
   }
 });
