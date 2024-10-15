@@ -5,6 +5,7 @@ import Sidebar from "../../../components/Sidebar/Sidebar";
 import Loader from "../../../components/Loader/Loader";
 import unlock from "../../../assests/unlock.png";
 import editIcon from "../../../assests/edit.png";
+import toast from "react-hot-toast";
 
 import {
   deleteContainer,
@@ -151,7 +152,26 @@ const NextOrder = () => {
       const data = {
         order_number: orderNumber,
       };
-      dispatch(getOrderByNumberThunk(data));
+      dispatch(getOrderByNumberThunk(data)).then((data) => {
+        if (data.payload["ERROR"]) {
+          toast.error(data.payload["ERROR"], {
+            style: {
+              border: "1px solid #713200",
+              padding: "16px",
+              color: "#713200",
+            },
+          });
+        }
+        if (data.payload["SUCCESS"]?.message) {
+          toast.success(data.payload["SUCCESS"]?.message, {
+            style: {
+              border: "1px solid #713200",
+              padding: "16px",
+              color: "#713200",
+            },
+          });
+        }
+      });
     }
     setOrderNumber("");
   };
@@ -169,12 +189,16 @@ const NextOrder = () => {
     setShowOrder(!showOrder);
     if (orderData.length > 0) {
       setAddOrderFinish(true);
+    } else {
+      setAddOrderFinish(false);
     }
   };
   const FinishAddCont = () => {
     setShowCont(!showCont);
     if (containerData.length > 0) {
       setAddContFinish(true);
+    } else {
+      setAddContFinish(false);
     }
   };
   //useEffect=-================================================================================================
@@ -405,7 +429,9 @@ const NextOrder = () => {
                         {containerData?.map((ele) => (
                           <tr>
                             <td>
-                              <h4>{ele?.container_name}</h4>
+                              <h4 style={{ width: "155px" }}>
+                                {ele?.container_name}
+                              </h4>
                             </td>
                             <td>
                               <div>
