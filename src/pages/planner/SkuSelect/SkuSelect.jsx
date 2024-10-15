@@ -10,6 +10,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import toast from "react-hot-toast";
 import * as XLSX from "xlsx";
+import editIcon from "../../../assests/edit.png";
 
 import {
   deleteSku,
@@ -345,8 +346,21 @@ const SkuSelect = () => {
                       <table className="planner-table">
                         <tr className="user-planner-head">
                           {heading.map((ele) => (
-                            <th>
+                            <th
+                              style={{
+                                display: ele === "Quantity" ? "flex" : "",
+                              }}
+                            >
                               <h4>{ele}</h4>
+                              {ele === "Quantity" ? (
+                                <img
+                                  src={editIcon}
+                                  alt=""
+                                  style={{ marginLeft: "0.3rem" }}
+                                />
+                              ) : (
+                                <></>
+                              )}
                             </th>
                           ))}
                         </tr>

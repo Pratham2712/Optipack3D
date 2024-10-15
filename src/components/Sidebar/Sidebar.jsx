@@ -28,6 +28,8 @@ const Sidebar = () => {
       } else if (action == "order_detail") {
         navigate(planner_contSelection);
       }
+    } else {
+      setPremium(!premium);
     }
   };
 
