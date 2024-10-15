@@ -11,12 +11,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const urlParams = new URLSearchParams(window.location.search);
   const ind = parseInt(urlParams.get("container"), 0);
   const isLogin = urlParams.get("isLogin") === "true";
+  // const isLogin = localStorage.getItem("login");
   const threedPath = JSON.parse(localStorage.getItem("threed_paths"));
   const speedButton = document.getElementById("speeds");
   const speedButtons = speedButton.querySelectorAll("button");
 
   let currentSpeed = 20;
-  let timeouts = [];
+  let animationQueue = [];
+  let lastAnimationTime = 0;
+
   function getLocalStorageItem(key) {
     return new Promise((resolve, reject) => {
       const item = localStorage.getItem(key);
@@ -299,60 +302,65 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     };
 
-    // if (isLogin === true) {
     speedButtons.forEach((button) => {
       button.addEventListener("click", () => {
-        console.log("isLogin", isLogin);
+        console.log("Speed button clicked");
+        console.log("isAnimating:", isAnimating);
+        console.log("isLogin:", isLogin);
 
-        if (isAnimating) {
-          return;
-        }
-        const newSpeed = parseFloat(button.dataset.speed);
-        if (isLogin === true) {
+        if (isLogin) {
+          const newSpeed = parseFloat(button.dataset.speed);
+          console.log("Changing speed to:", newSpeed);
           currentSpeed = newSpeed;
-        } else {
-          alert("Register or login required");
-        }
+          updateSpeedButtonStyles(button);
 
-        if (isLogin === true) {
-          speedButtons.forEach((btn) => {
-            btn.style.backgroundColor = "white";
-            btn.style.color = "black";
-          });
-          button.style.backgroundColor = "#9d4edd";
-          button.style.color = "white";
+          if (isAnimating) {
+            // Adjust ongoing animation
+            lastAnimationTime = performance.now();
+          }
+        } else {
+          console.log("Login required");
+          alert("Register or login required");
         }
       });
     });
-    // }
+
+    function updateSpeedButtonStyles(selectedButton) {
+      speedButtons.forEach((btn) => {
+        btn.style.backgroundColor = "white";
+        btn.style.color = "black";
+      });
+      selectedButton.style.backgroundColor = "#9d4edd";
+      selectedButton.style.color = "white";
+    }
 
     const animateSmallBoxes = (boxes) => {
-      boxes.forEach((box, index) => {
-        // Delay each animation to occur sequentially
-        const timeoutId = setTimeout(() => {
-          // isAnimating = true;
-          createSmallBox(box);
+      isAnimating = true;
+      animationQueue = [...boxes];
+      lastAnimationTime = performance.now();
+      requestAnimationFrame(animateNextBox);
+    };
 
-          if (index == boxes.length - 2) {
-            // console.log("false", index, boxes.length);
-            isAnimating = false;
-            speedButtons.forEach((button) => {
-              button.style.opacity = "1";
-            });
-          } else {
-            // console.log("true", index, boxes.length);
-            isAnimating = true; // Animation completed
-          }
-        }, index * currentSpeed);
-        timeouts.push(timeoutId);
-      });
+    const animateNextBox = (timestamp) => {
+      if (!isAnimating) return;
+
+      const elapsedTime = timestamp - lastAnimationTime;
+
+      if (elapsedTime >= currentSpeed) {
+        if (animationQueue.length > 0) {
+          const box = animationQueue.shift();
+          createSmallBox(box);
+          lastAnimationTime = timestamp;
+        } else {
+          console.log("Animation completed");
+          isAnimating = false;
+          return;
+        }
+      }
+
+      requestAnimationFrame(animateNextBox);
     };
-    const clearTimeouts = () => {
-      timeouts.forEach((id) => {
-        clearTimeout(id); // Clear each timeout
-      });
-      timeouts = []; // Reset the array after clearing
-    };
+
     const createSmallBox = (box) => {
       const startX = box.start.x;
       const startZ = containerDepth - box.start.y;
@@ -740,27 +748,19 @@ document.addEventListener("DOMContentLoaded", () => {
     topViewButton.addEventListener("click", setTopView);
     bottomViewButton.addEventListener("click", setBottomView);
     sideViewButton.addEventListener("click", setSideView);
-    document.getElementById("animate").addEventListener(
-      "click",
-      () => {
-        if (!isAnimating) {
-          speedButtons.forEach((button) => {
-            button.style.opacity = "0.5";
-          });
-          clearContainer();
-          animateSmallBoxes(threedPath[ind]);
-        } else {
-          isAnimating = false;
-          speedButtons.forEach((button) => {
-            button.style.opacity = "1";
-          });
-          clearTimeouts();
-          clearContainer();
-          createSmallBoxesFromCoordinates(threedPath[ind]);
-        }
+    document.getElementById("animate").addEventListener("click", () => {
+      if (!isAnimating) {
+        console.log("Starting animation");
+        clearContainer();
+        animateSmallBoxes(threedPath[ind]);
+      } else {
+        console.log("Stopping animation");
+        isAnimating = false;
+
+        clearContainer();
+        createSmallBoxesFromCoordinates(threedPath[ind]);
       }
-      //animateSmallBoxes(threedPath[ind]);
-    );
+    });
 
     let animationFrameId;
 

@@ -25,6 +25,9 @@ const AddUser = ({ user, setUser }) => {
   const userType = useSelector(
     (state) => state.rootReducer.companyAdminSlice.data.userType
   );
+  const company = useSelector(
+    (state) => state.rootReducer.authSlice.data.user.company
+  );
   //schema=================================================================================================
   const schema = yup.object().shape({
     email: yup
@@ -46,7 +49,28 @@ const AddUser = ({ user, setUser }) => {
   } = useForm({
     resolver: yupResolver(schema),
   });
+  const extractDomain = (email) => {
+    const parts = email.split("@");
+    if (parts.length === 2) {
+      const domainPart = parts[1];
+      const domainParts = domainPart.split(".");
+      return domainParts[0];
+    }
+    return "";
+  };
   const addUser = (data) => {
+    const extractedDomain = extractDomain(data.email);
+    if (extractedDomain != company) {
+      toast.error("Enter your company email", {
+        style: {
+          border: "1px solid #713200",
+          padding: "16px",
+          color: "#713200",
+        },
+      });
+      return;
+    }
+
     dispatch(sendEmailThunk(data)).then((data) => {
       if (data.payload["ERROR"]) {
         toast.error(data.payload["ERROR"], {
@@ -65,10 +89,10 @@ const AddUser = ({ user, setUser }) => {
             color: "#713200",
           },
         });
-        setUser(false);
         dispatch(getAllUsersThunk());
       }
     });
+    setUser(false);
   };
   //useEffect===================================================================================================================
   useEffect(() => {
