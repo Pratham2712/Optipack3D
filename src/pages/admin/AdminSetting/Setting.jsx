@@ -102,7 +102,6 @@ const Setting = () => {
       if (permData.length > 0) {
         dispatch(permissionThunk(permData));
       }
-      console.log(permData.length, "eles");
     }
   };
 
