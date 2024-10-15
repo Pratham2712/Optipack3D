@@ -128,8 +128,9 @@ const AddUser = ({ user, setUser }) => {
               >
                 The administrator of the application for your organization is
                 inviting you to join Optipack3d. Pls click on the link to
-                complete the sign up process. Optipack3d.com empowers logistics
-                operations team to optimise their container loading plan.
+                complete the sign up process https://optipack3d.com/login .
+                Optipack3d.com empowers logistics operations team to optimise
+                their container loading plan.
               </textarea>
               {errors.message && <p>{errors.message.message}</p>}
             </div>

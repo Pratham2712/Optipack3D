@@ -9,10 +9,20 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import toast from "react-hot-toast";
+import Chip from "@mui/material/Chip";
+import { TextField, Autocomplete } from "@mui/material";
+
+const cities = [
+  "Cochin",
+  "Visakhapatnam",
+  "Chennai",
+  "Vochidambaranar",
+  "Kandla",
+];
 
 const InputPopup = ({ loadData, setLoadData, inputPop, setInputPop }) => {
   const popupRef = useRef(null);
-  const [inputVal, setInputVal] = useState(loadData[inputPop.name]);
+  const [inputVal, setInputVal] = useState([]);
   const dispatch = useDispatch();
   const [unit, setUnit] = useState("mm");
   //schema=================================================================================================
@@ -38,8 +48,9 @@ const InputPopup = ({ loadData, setLoadData, inputPop, setInputPop }) => {
   } = useForm({
     resolver: yupResolver(schema),
   });
+  //fucntion======================================================================================================================
   const submitLoadPlan = () => {
-    if (inputVal == "") {
+    if (inputVal.length <= 0) {
       return;
     }
     dispatch(loadPlanThunk(loadData));
@@ -84,8 +95,21 @@ const InputPopup = ({ loadData, setLoadData, inputPop, setInputPop }) => {
     });
   };
 
+  const handleCitiesChange = (event, newValue) => {
+    setLoadData((prevData) => ({
+      ...prevData,
+      [inputPop.name]: newValue,
+    }));
+    setInputVal((prev) => [...prev, newValue]);
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
+      console.log(event.target);
+      if (event.target.tagName.toLowerCase() === "li") {
+        return; // Do nothing if <li> is clicked
+      }
+
       if (popupRef.current && !popupRef.current.contains(event.target)) {
         setInputPop((prev) => ({ ...prev, action: false }));
       }
@@ -216,7 +240,7 @@ const InputPopup = ({ loadData, setLoadData, inputPop, setInputPop }) => {
               </>
             ) : (
               <>
-                <input
+                {/* <input
                   type="text"
                   onChange={(e) => {
                     setInputVal(e.target.value);
@@ -228,6 +252,36 @@ const InputPopup = ({ loadData, setLoadData, inputPop, setInputPop }) => {
                     }));
                   }}
                   value={loadData[inputPop.name]}
+                />  */}
+                <Autocomplete
+                  multiple
+                  id="tags-filled"
+                  options={cities.map((option) => option)}
+                  freeSolo
+                  // value={loadData[inputPop.name]}
+                  onChange={handleCitiesChange}
+                  renderTags={(value, getTagProps) =>
+                    value.map((option, index) => {
+                      const { key, ...tagProps } = getTagProps({ index });
+                      return (
+                        <Chip
+                          variant="outlined"
+                          label={option}
+                          key={key}
+                          {...tagProps}
+                        />
+                      );
+                    })
+                  }
+                  renderInput={(params) => (
+                    <TextField
+                      sx={{ padding: "0" }}
+                      {...params}
+                      variant="filled"
+                      // label="Add Cities"
+                      placeholder="Enter cities"
+                    />
+                  )}
                 />
                 <div className="popup-buttons">
                   <button

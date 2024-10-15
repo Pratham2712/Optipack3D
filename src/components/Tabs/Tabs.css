@@ -25,7 +25,7 @@
   cursor: pointer;
 }
 .tab::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 0;
@@ -62,7 +62,7 @@
   overflow: hidden;
   width: 66%;
   margin: 0 auto;
-  height: 380px;
+  height: 415px;
   /* height: auto; */
   outline: 4px solid #00000005;
   border-radius: 1rem;

@@ -13,7 +13,16 @@ const schema = yup.object().shape({
     .number()
     .typeError("Order Number must be a number")
     .required("Order Number is required"),
-  planned_start_date: yup.string().required("Order Date is required"),
+  planned_start_date: yup
+    .string()
+    .required("Order Date is required")
+    .test("is-future-date", "Past dates are not allowed", function (value) {
+      const selectedDate = new Date(value);
+      const today = new Date();
+      // Ignore the time part of the dates
+      today.setHours(0, 0, 0, 0);
+      return selectedDate >= today;
+    }),
   source_location: yup.string().required("Source is required"),
   destination_location: yup.string().required("Destination is required"),
 });
