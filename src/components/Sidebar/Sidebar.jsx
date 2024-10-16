@@ -22,7 +22,7 @@ const Sidebar = () => {
 
   //function=======================================================================================================================
   const navigateToUrl = (action) => {
-    if (userType == "Company_loader" || userType == "Company_Admin") {
+    if (userType == "Company_planner" || userType == "Company_Admin") {
       if (action == "setting") {
         navigate(planner_order);
       } else if (action == "order_detail") {

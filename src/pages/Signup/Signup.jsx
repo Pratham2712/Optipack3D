@@ -17,7 +17,12 @@ import Loader from "../../components/Loader/Loader";
 import toast, { Toaster } from "react-hot-toast";
 import { BASE_URL } from "../../constants/constants";
 import axios from "axios";
-import { admin_setting, loginurl, User_root } from "../../constants/links";
+import {
+  admin_setting,
+  loginurl,
+  planner_order,
+  User_root,
+} from "../../constants/links";
 import { Link, useNavigate } from "react-router-dom";
 
 const Signup = () => {
@@ -176,6 +181,8 @@ const Signup = () => {
         });
         if (data.payload["SUCCESS"]?.userType == "Company_Admin") {
           navigate(admin_setting);
+        } else if (data.payload["SUCCESS"]?.userType == "Company_planner") {
+          navigate(planner_order);
         }
       }
     });
