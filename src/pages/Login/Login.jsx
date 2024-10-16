@@ -186,7 +186,7 @@ const Login = () => {
         // const res = axios.get(`${BASE_URL}/dashboard_admin`);
         if (data.payload["SUCCESS"]?.userType == "Company_Admin") {
           navigate(admin_setting);
-        } else if (data.payload["SUCCESS"]?.userType == "Company_loader") {
+        } else if (data.payload["SUCCESS"]?.userType == "Company_planner") {
           navigate(planner_order);
         }
       }
