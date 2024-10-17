@@ -33,6 +33,10 @@ const NextOrder = () => {
     "rgba(244, 67, 54, 1)", // Color 1
     "rgba(76, 175, 80, 1)", // Color 2
     "rgba(33, 150, 243, 1)", // Color 3
+    "rgba(255, 181, 181,1)",
+    "rgba(255, 111, 60,1)",
+    "rgba(247, 7, 118,1)",
+    "rgba(239, 213, 16,1)",
   ]);
   const [is700, setIs700] = useState(window.innerWidth < 700);
   const [showOrder, setShowOrder] = useState(false);

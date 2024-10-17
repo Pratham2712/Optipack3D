@@ -24,6 +24,7 @@ import ManageUser from "./pages/admin/ManageUser/ManageUser";
 import PlannerOrder from "./pages/planner/order/PlannerOrder";
 import SkuSelect from "./pages/planner/SkuSelect/SkuSelect";
 import NextOrder from "./pages/planner/NextOrder/NextOrder";
+import { useSelector } from "react-redux";
 
 export const UnAuthRoutes = ({ skuData, setSkuData, inputs, setInputs }) => {
   return (
@@ -50,6 +51,10 @@ export const UnAuthRoutes = ({ skuData, setSkuData, inputs, setInputs }) => {
 };
 
 export const AuthRoutes = ({ skuData, setSkuData, inputs, setInputs }) => {
+  //useSelector=================================================================================================================
+  const userType = useSelector(
+    (state) => state.rootReducer.authSlice.data.user.userType
+  );
   return (
     <Routes>
       <Route path={User_root} element={<Home />}></Route>
@@ -69,12 +74,25 @@ export const AuthRoutes = ({ skuData, setSkuData, inputs, setInputs }) => {
       <Route path={loginurl} element={<Login />}></Route>
       <Route path={signupurl} element={<Signup />}></Route>
       {/* admin ====================================================================================================== */}
-      <Route path={admin_setting} element={<Setting />}></Route>
-      <Route path={admin_manageuser} element={<ManageUser />}></Route>
+      {userType == "Company_Admin" ? (
+        <>
+          <Route path={admin_setting} element={<Setting />}></Route>
+          <Route path={admin_manageuser} element={<ManageUser />}></Route>
+        </>
+      ) : (
+        <Route path="*" element={<Navigate to={User_root} replace />} />
+      )}
+
       {/* planner=============================================================================================================== */}
-      <Route path={planner_order} element={<PlannerOrder />}></Route>
-      <Route path={planner_skuSelection} element={<SkuSelect />}></Route>
-      <Route path={planner_contSelection} element={<NextOrder />}></Route>
+      {userType == "Company_Admin" || userType == "Company_planner" ? (
+        <>
+          <Route path={planner_order} element={<PlannerOrder />}></Route>
+          <Route path={planner_skuSelection} element={<SkuSelect />}></Route>
+          <Route path={planner_contSelection} element={<NextOrder />}></Route>
+        </>
+      ) : (
+        <Route path="*" element={<Navigate to={User_root} replace />} />
+      )}
     </Routes>
   );
 };

@@ -77,12 +77,12 @@ const ContainerDetails = ({
           name="numContainers"
           min="1"
           max="2"
-          defaultValue={skuData.numContainers}
+          defaultValue={skuData.numContainers0}
           onChange={(e) => {
             if (e.target.value <= 2 && e.target.value > 0) {
               setSkuData((prev) => ({
                 ...prev,
-                numContainers: e.target.value,
+                numContainers0: e.target.value,
               }));
             } else {
               toast("Upgrade to premium version for more container", {

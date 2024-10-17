@@ -71,7 +71,8 @@ const FreeTrail = ({ skuData, setSkuData, inputs, setInputs }) => {
     }
     const filteredSkuData = {
       totalContainers: 1,
-      numContainers: skuData.numContainers,
+      numContainers0: skuData.numContainers0,
+      sumContainers: skuData.numContainers0,
       numTypes: inputs.length,
     };
     inputs.forEach((index, i) => {
