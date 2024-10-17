@@ -25,7 +25,7 @@ function App() {
   const [skuData, setSkuData] = useState({
     numTypes: inputs.length,
     totalContainers: 1,
-    numContainers: 1,
+    numContainers0: 1,
     containerType0: "General Purpose container 20'",
     color0: colors[0],
     color1: colors[1],
@@ -66,7 +66,6 @@ function App() {
     dispatch(checkLoginThunk());
   }, []);
 
-  console.log(loading);
   if (loading) {
     return <Loader />;
   }

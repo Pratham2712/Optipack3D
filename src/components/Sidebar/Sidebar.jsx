@@ -9,7 +9,11 @@ import support from "../../assests/support.png";
 import Popup from "../Popup/Popup";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { planner_contSelection, planner_order } from "../../constants/links";
+import {
+  admin_setting,
+  planner_contSelection,
+  planner_order,
+} from "../../constants/links";
 
 const Sidebar = () => {
   const [premium, setPremium] = useState(false);
@@ -22,7 +26,15 @@ const Sidebar = () => {
 
   //function=======================================================================================================================
   const navigateToUrl = (action) => {
-    if (userType == "Company_planner" || userType == "Company_Admin") {
+    if (userType == "Company_Admin") {
+      if (action == "home") {
+        navigate(admin_setting);
+      } else if (action == "setting") {
+        navigate(planner_order);
+      } else if (action == "order_detail") {
+        navigate(planner_contSelection);
+      }
+    } else if (userType == "Company_planner" || userType == "Company_Admin") {
       if (action == "setting") {
         navigate(planner_order);
       } else if (action == "order_detail") {
@@ -40,8 +52,23 @@ const Sidebar = () => {
         <a href="#" onClick={() => setPremium(!premium)}>
           <img src={path_outline} class="cta" />
         </a>
-        <a href="#" onClick={() => setPremium(!premium)}>
-          <img src={home} class="cta" />
+        <a
+          href="#"
+          onClick={() => navigateToUrl("home")}
+          style={{
+            background: location.pathname == admin_setting ? "black" : "",
+          }}
+        >
+          <img
+            src={home}
+            class="cta"
+            style={{
+              filter:
+                location.pathname == admin_setting
+                  ? "invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%)"
+                  : "",
+            }}
+          />
         </a>
         <a
           href="#"
