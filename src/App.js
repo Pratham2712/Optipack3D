@@ -61,7 +61,7 @@ function App() {
     rotationAllowed1: autoFillerBox[1]["Rotation Allowed"] === 1 ? "on" : "off",
     rotationAllowed2: autoFillerBox[2]["Rotation Allowed"] === 1 ? "on" : "off",
   });
-
+  const [containerQuan, setContainerQuan] = useState({});
   useLayoutEffect(() => {
     dispatch(checkLoginThunk());
   }, []);
@@ -80,6 +80,8 @@ function App() {
             setSkuData={setSkuData}
             inputs={inputs}
             setInputs={setInputs}
+            containerQuan={containerQuan}
+            setContainerQuan={setContainerQuan}
           />
         ) : (
           <UnAuthRoutes

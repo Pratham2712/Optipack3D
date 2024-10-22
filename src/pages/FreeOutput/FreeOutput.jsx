@@ -4,17 +4,21 @@ import Sidebar from "../../components/Sidebar/Sidebar";
 import infoIcon from "../../assests/info-icon.png";
 import "./FreeOutput.css";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getDataThunk } from "../../redux/Slices/mainSlice";
 import Loader from "../../components/Loader/Loader";
 import Popup from "../../components/Popup/Popup";
 import ShareContent from "../../components/ShareContent/ShareContent";
+import { planner_contSelection } from "../../constants/links";
+import { createLoadplanThunk } from "../../redux/Slices/plannerSlice";
+import AssignPopup from "../../PlannerComponents/AssignPopup/AssignPopup";
+import toast from "react-hot-toast";
 
-const FreeOutput = () => {
+const FreeOutput = ({ containerQuan }) => {
   const modelRef = useRef(null);
   const location = useLocation();
   const dispatch = useDispatch();
-  // const { filteredSkuData } = location.state || {};
+  const navigate = useNavigate();
   const [is700, setIs700] = useState(window.innerWidth < 700);
   const [totalCasesSum, setTotalCasesSum] = useState(0);
   const [totalFilled, setTotalFilled] = useState(0);
@@ -23,13 +27,12 @@ const FreeOutput = () => {
   const [contIndex, setContIndex] = useState(0);
   const [animate, setAnimate] = useState(false);
   const [shareit, setShareit] = useState(false);
-  const [filteredSkuData, setFilteredSkuData] = useState({});
+  const [assignPopup, setAssignPopup] = useState(true);
   //useSelector=========================================================================================================================
   const loading = useSelector((state) => state.rootReducer.mainSlice.loading);
   const tableData = useSelector(
     (state) => state.rootReducer.mainSlice.data.data.df
   );
-  const [updatedTableData, setUpdatedTableData] = useState("");
   const [filled, setFilled] = useState([]);
   const boxInfo = useSelector(
     (state) => state.rootReducer.mainSlice.data.data.box_info
@@ -53,6 +56,9 @@ const FreeOutput = () => {
     (state) => state.rootReducer.mainSlice.data.data.container_inf
   );
   const isLogin = useSelector((state) => state.rootReducer.authSlice.isLogin);
+  const orderData = useSelector(
+    (state) => state.rootReducer.plannerSlice.data.orderData
+  );
 
   localStorage.setItem("threed_paths", JSON.stringify(threedPaths));
   localStorage.setItem("container_inf", JSON.stringify(containerInf));
@@ -71,24 +77,55 @@ const FreeOutput = () => {
   };
 
   const postData = (data) => {
-    if (!containerType) {
-      const formData = new FormData();
-      Object.keys(data)?.forEach((key) => {
-        formData.append(key, data[key]);
+    const formData = new FormData();
+    Object.keys(data)?.forEach((key) => {
+      formData.append(key, data[key]);
+    });
+    // dispatch(getDataThunk(formData)).then((data) => {
+    //   if (data.payload) {
+    //     localStorage.setItem(
+    //       "threed_paths",
+    //       JSON.stringify(data?.payload?.threed_paths)
+    //     );
+    //     localStorage.setItem(
+    //       "container_inf",
+    //       JSON.stringify(data?.payload?.container_inf)
+    //     );
+    //   }
+    // });
+  };
+  const assignLoadplan = () => {
+    if (orderData.length > 0 && containerQuan) {
+      const data = {
+        order_numbers: [],
+        containerData: containerQuan,
+      };
+      orderData?.forEach((ele) => {
+        data.order_numbers.push(ele.order_number);
       });
-      dispatch(getDataThunk(formData)).then((data) => {
-        if (data.payload) {
-          localStorage.setItem(
-            "threed_paths",
-            JSON.stringify(data?.payload?.threed_paths)
-          );
-          localStorage.setItem(
-            "container_inf",
-            JSON.stringify(data?.payload?.container_inf)
-          );
+      console.log(data);
+      dispatch(createLoadplanThunk(data)).then((data) => {
+        if (data.payload["ERROR"]) {
+          toast.error(data.payload["ERROR"], {
+            style: {
+              border: "1px solid #713200",
+              padding: "16px",
+              color: "#713200",
+            },
+          });
+        }
+        if (data.payload["SUCCESS"]?.message) {
+          toast.success(data.payload["SUCCESS"]?.message, {
+            style: {
+              border: "1px solid #713200",
+              padding: "16px",
+              color: "#713200",
+            },
+          });
         }
       });
     }
+    setAssignPopup(true);
   };
   //useEffect=================================================================================================================
   useEffect(() => {
@@ -128,7 +165,6 @@ const FreeOutput = () => {
       data[key] = value;
     });
 
-    setFilteredSkuData(data);
     if (queryParams) {
       postData(data);
     }
@@ -308,6 +344,29 @@ const FreeOutput = () => {
                 </div>
               </div>
             </div>
+            <div
+              className="two-button"
+              style={{
+                display: "flex",
+                justifyContent: "space-evenly",
+                marginTop: "4rem",
+              }}
+            >
+              <button
+                className="btn-apply"
+                style={{ padding: "15px 28px" }}
+                onClick={assignLoadplan}
+              >
+                Assign to loader
+              </button>
+              <button
+                className="btn-cancel"
+                style={{ padding: "15px 28px" }}
+                onClick={() => navigate(planner_contSelection)}
+              >
+                Edit loadplan
+              </button>
+            </div>
           </div>
           {premium && <Popup premium={premium} setPremium={setPremium} />}
           {shareit && (
@@ -317,6 +376,11 @@ const FreeOutput = () => {
               setShareit={setShareit}
               shareit={shareit}
             />
+          )}
+          {assignPopup ? (
+            <AssignPopup assignPopup={true} setAssignPopup={setAssignPopup} />
+          ) : (
+            <></>
           )}
         </div>
       )}

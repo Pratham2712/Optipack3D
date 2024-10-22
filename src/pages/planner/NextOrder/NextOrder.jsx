@@ -8,6 +8,7 @@ import editIcon from "../../../assests/edit.png";
 import toast from "react-hot-toast";
 
 import {
+  clearContainerData,
   deleteContainer,
   deleteOrder,
   getContainerByNameThunk,
@@ -28,7 +29,7 @@ const schema = yup.object().shape({
   containerQuantity: yup.number().required("Quantity is required"),
 });
 
-const NextOrder = () => {
+const NextOrder = ({ containerQuan, setContainerQuan }) => {
   const [colors, setColors] = useState([
     "rgba(244, 67, 54, 1)", // Color 1
     "rgba(76, 175, 80, 1)", // Color 2
@@ -42,7 +43,6 @@ const NextOrder = () => {
   const [showOrder, setShowOrder] = useState(false);
   const [orderNumber, setOrderNumber] = useState();
   const [showCont, setShowCont] = useState(false);
-  const [containerQuan, setContainerQuan] = useState({});
   const [editQuan, setEditQuan] = useState({});
   const [addOrderFinish, setAddOrderFinish] = useState(false);
   const [addContFinish, setAddContFinish] = useState(false);
@@ -75,7 +75,16 @@ const NextOrder = () => {
     const info = {
       container_name: data.container_name,
     };
-    if (`${data.container_name}` in containerQuan) return;
+    if (`${data.container_name}` in containerQuan) {
+      toast.error(`${data.container_name} is already added`, {
+        style: {
+          border: "1px solid #713200",
+          padding: "16px",
+          color: "#713200",
+        },
+      });
+      return;
+    }
     setContainerQuan((prev) => ({
       ...prev,
       [data.container_name]: data.containerQuantity,
@@ -175,6 +184,14 @@ const NextOrder = () => {
             },
           });
         }
+      });
+    } else {
+      toast.error(`Order #${orderNumber} is already added`, {
+        style: {
+          border: "1px solid #713200",
+          padding: "16px",
+          color: "#713200",
+        },
       });
     }
     setOrderNumber("");

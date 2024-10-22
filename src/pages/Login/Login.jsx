@@ -18,6 +18,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import {
   admin_setting,
+  new_user,
   planner_order,
   signupurl,
   User_root,
@@ -188,6 +189,8 @@ const Login = () => {
           navigate(admin_setting);
         } else if (data.payload["SUCCESS"]?.userType == "Company_planner") {
           navigate(planner_order);
+        } else {
+          navigate(new_user);
         }
       }
     });
