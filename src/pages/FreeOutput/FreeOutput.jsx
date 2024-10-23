@@ -27,7 +27,7 @@ const FreeOutput = ({ containerQuan }) => {
   const [contIndex, setContIndex] = useState(0);
   const [animate, setAnimate] = useState(false);
   const [shareit, setShareit] = useState(false);
-  const [assignPopup, setAssignPopup] = useState(true);
+  const [assignPopup, setAssignPopup] = useState(false);
   //useSelector=========================================================================================================================
   const loading = useSelector((state) => state.rootReducer.mainSlice.loading);
   const tableData = useSelector(
@@ -59,6 +59,9 @@ const FreeOutput = ({ containerQuan }) => {
   const orderData = useSelector(
     (state) => state.rootReducer.plannerSlice.data.orderData
   );
+  const loadplanCreated = useSelector(
+    (state) => state.rootReducer.plannerSlice.loadplanCreated
+  );
 
   localStorage.setItem("threed_paths", JSON.stringify(threedPaths));
   localStorage.setItem("container_inf", JSON.stringify(containerInf));
@@ -81,20 +84,20 @@ const FreeOutput = ({ containerQuan }) => {
     Object.keys(data)?.forEach((key) => {
       formData.append(key, data[key]);
     });
-    // dispatch(getDataThunk(formData)).then((data) => {
-    //   if (data.payload) {
-    //     localStorage.setItem(
-    //       "threed_paths",
-    //       JSON.stringify(data?.payload?.threed_paths)
-    //     );
-    //     localStorage.setItem(
-    //       "container_inf",
-    //       JSON.stringify(data?.payload?.container_inf)
-    //     );
-    //   }
-    // });
+    dispatch(getDataThunk(formData)).then((data) => {
+      if (data.payload) {
+        localStorage.setItem(
+          "threed_paths",
+          JSON.stringify(data?.payload?.threed_paths)
+        );
+        localStorage.setItem(
+          "container_inf",
+          JSON.stringify(data?.payload?.container_inf)
+        );
+      }
+    });
   };
-  const assignLoadplan = () => {
+  const createLoadplan = () => {
     if (orderData.length > 0 && containerQuan) {
       const data = {
         order_numbers: [],
@@ -104,28 +107,40 @@ const FreeOutput = ({ containerQuan }) => {
         data.order_numbers.push(ele.order_number);
       });
       console.log(data);
-      dispatch(createLoadplanThunk(data)).then((data) => {
-        if (data.payload["ERROR"]) {
-          toast.error(data.payload["ERROR"], {
-            style: {
-              border: "1px solid #713200",
-              padding: "16px",
-              color: "#713200",
-            },
-          });
-        }
-        if (data.payload["SUCCESS"]?.message) {
-          toast.success(data.payload["SUCCESS"]?.message, {
-            style: {
-              border: "1px solid #713200",
-              padding: "16px",
-              color: "#713200",
-            },
-          });
-        }
+      if (!loadplanCreated) {
+        dispatch(createLoadplanThunk(data)).then((data) => {
+          if (data.payload["ERROR"]) {
+            toast.error(data.payload["ERROR"], {
+              style: {
+                border: "1px solid #713200",
+                padding: "16px",
+                color: "#713200",
+              },
+            });
+          }
+          if (data.payload["SUCCESS"]?.message) {
+            toast.success(data.payload["SUCCESS"]?.message, {
+              style: {
+                border: "1px solid #713200",
+                padding: "16px",
+                color: "#713200",
+              },
+            });
+            setAssignPopup(true);
+          }
+        });
+      } else {
+        setAssignPopup(true);
+      }
+    } else {
+      toast.error("Something went wrong, create load plan again", {
+        style: {
+          border: "1px solid #713200",
+          padding: "16px",
+          color: "#713200",
+        },
       });
     }
-    setAssignPopup(true);
   };
   //useEffect=================================================================================================================
   useEffect(() => {
@@ -355,7 +370,7 @@ const FreeOutput = ({ containerQuan }) => {
               <button
                 className="btn-apply"
                 style={{ padding: "15px 28px" }}
-                onClick={assignLoadplan}
+                onClick={createLoadplan}
               >
                 Assign to loader
               </button>

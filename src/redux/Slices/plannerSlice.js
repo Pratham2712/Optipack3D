@@ -107,16 +107,29 @@ export const createLoadplanThunk = createAsyncThunk(
 
 export const getLoaderThunk = createAsyncThunk("/get_loaderUser", async () => {
   try {
-    const res = await axios.post(`${BASE_URL}/get_loaderUser`);
+    const res = await axios.get(`${BASE_URL}/get_loaderUser`);
     return res.data;
   } catch (error) {
     return error.response.data;
   }
 });
 
+export const assignLoadplanThunk = createAsyncThunk(
+  "/assign_load_plan",
+  async (data) => {
+    try {
+      const res = await axios.post(`${BASE_URL}/assign_load_plan`, data);
+      return res.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  }
+);
+
 const initialState = {
   loading: false,
   updateDone: false,
+  loadplanCreated: false,
   errorData: {
     message: "",
     type: "",
@@ -143,6 +156,7 @@ const initialState = {
     getSkuCodeNameThunk: IDLE,
     createLoadplanThunk: IDLE,
     getLoaderThunk: IDLE,
+    assignLoadplanThunk: IDLE,
   },
 };
 
@@ -394,7 +408,9 @@ const plannerSlice = createSlice({
           case SUCCESS:
             state.loading = false;
             state.successMsg = payload[SUCCESS]?.message;
+            state.data.loadplanId = payload[SUCCESS]?.result;
             state.updateDone = !state.updateDone;
+            state.loadplanCreated = true;
             break;
           case ERROR:
             state.loading = false;
@@ -433,6 +449,31 @@ const plannerSlice = createSlice({
       })
       .addCase(getLoaderThunk.rejected, (state, action) => {
         state.status.getLoaderThunk = ERROR;
+        state.loading = false;
+        state.errorData.message = action.error.message;
+      })
+      //assignLoadplanThunk===========================================================================================
+      .addCase(assignLoadplanThunk.pending, (state, { payload }) => {
+        state.loading = true;
+      })
+      .addCase(assignLoadplanThunk.fulfilled, (state, { payload }) => {
+        switch (Object.keys(payload)[0]) {
+          case SUCCESS:
+            state.loading = false;
+            state.successMsg = payload[SUCCESS]?.message;
+            state.updateDone = !state.updateDone;
+            break;
+          case ERROR:
+            state.loading = false;
+            state.isError = true;
+            state.errorData.message = payload[ERROR];
+            break;
+          default:
+            break;
+        }
+      })
+      .addCase(assignLoadplanThunk.rejected, (state, action) => {
+        state.status.assignLoadplanThunk = ERROR;
         state.loading = false;
         state.errorData.message = action.error.message;
       });

@@ -89,7 +89,7 @@ const SkuSetting = () => {
     sku?.map((ele) => {
       if (ele.sku_code == data.sku_code) {
         exist = true;
-        toast.error("SKU already exist", {
+        toast.error("SKU code already exist", {
           style: {
             border: "1px solid #713200",
             padding: "16px",
