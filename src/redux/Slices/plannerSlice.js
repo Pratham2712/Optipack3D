@@ -93,9 +93,43 @@ export const getSkuCodeNameThunk = createAsyncThunk(
   }
 );
 
+export const createLoadplanThunk = createAsyncThunk(
+  "/create_load_plan",
+  async (data) => {
+    try {
+      const res = await axios.post(`${BASE_URL}/create_load_plan`, data);
+      return res.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  }
+);
+
+export const getLoaderThunk = createAsyncThunk("/get_loaderUser", async () => {
+  try {
+    const res = await axios.get(`${BASE_URL}/get_loaderUser`);
+    return res.data;
+  } catch (error) {
+    return error.response.data;
+  }
+});
+
+export const assignLoadplanThunk = createAsyncThunk(
+  "/assign_load_plan",
+  async (data) => {
+    try {
+      const res = await axios.post(`${BASE_URL}/assign_load_plan`, data);
+      return res.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  }
+);
+
 const initialState = {
   loading: false,
   updateDone: false,
+  loadplanCreated: false,
   errorData: {
     message: "",
     type: "",
@@ -109,6 +143,7 @@ const initialState = {
     containerData: [],
     orderData: [],
     skuCodeName: [],
+    loaderUser: [],
   },
   status: {
     addOrderThunk: IDLE,
@@ -119,6 +154,9 @@ const initialState = {
     saveSkuThunk: IDLE,
     getSkuByOrderThunk: IDLE,
     getSkuCodeNameThunk: IDLE,
+    createLoadplanThunk: IDLE,
+    getLoaderThunk: IDLE,
+    assignLoadplanThunk: IDLE,
   },
 };
 
@@ -147,6 +185,15 @@ const plannerSlice = createSlice({
       state.data.orderData = state.data.orderData.filter(
         (ele) => ele.order_number !== orderToDelete
       );
+    },
+    clearOrderData: (state) => {
+      state.data.orderData = []; // Empty the orderData array
+    },
+    clearContainerData: (state) => {
+      state.data.containerData = []; // Empty the orderData array
+    },
+    clearSkuData: (state) => {
+      state.data.skuData = []; // Empty the orderData array
     },
   },
   extraReducers: (builders) => {
@@ -351,10 +398,95 @@ const plannerSlice = createSlice({
         state.status.getSkuCodeNameThunk = ERROR;
         state.loading = false;
         state.errorData.message = action.error.message;
+      })
+      //createLoadplanThunk===========================================================================================
+      .addCase(createLoadplanThunk.pending, (state, { payload }) => {
+        state.loading = false;
+      })
+      .addCase(createLoadplanThunk.fulfilled, (state, { payload }) => {
+        switch (Object.keys(payload)[0]) {
+          case SUCCESS:
+            state.loading = false;
+            state.successMsg = payload[SUCCESS]?.message;
+            state.data.loadplanId = payload[SUCCESS]?.result;
+            state.updateDone = !state.updateDone;
+            state.loadplanCreated = true;
+            break;
+          case ERROR:
+            state.loading = false;
+            state.isError = true;
+            state.errorData.message = payload[ERROR];
+            break;
+          default:
+            break;
+        }
+      })
+      .addCase(createLoadplanThunk.rejected, (state, action) => {
+        state.status.createLoadplanThunk = ERROR;
+        state.loading = false;
+        state.errorData.message = action.error.message;
+      })
+      //getLoaderThunk===========================================================================================
+      .addCase(getLoaderThunk.pending, (state, { payload }) => {
+        state.loading = true;
+      })
+      .addCase(getLoaderThunk.fulfilled, (state, { payload }) => {
+        switch (Object.keys(payload)[0]) {
+          case SUCCESS:
+            state.loading = false;
+            state.successMsg = payload[SUCCESS]?.message;
+            state.data.loaderUser = payload[SUCCESS]?.result;
+            state.updateDone = !state.updateDone;
+            break;
+          case ERROR:
+            state.loading = false;
+            state.isError = true;
+            state.errorData.message = payload[ERROR];
+            break;
+          default:
+            break;
+        }
+      })
+      .addCase(getLoaderThunk.rejected, (state, action) => {
+        state.status.getLoaderThunk = ERROR;
+        state.loading = false;
+        state.errorData.message = action.error.message;
+      })
+      //assignLoadplanThunk===========================================================================================
+      .addCase(assignLoadplanThunk.pending, (state, { payload }) => {
+        state.loading = true;
+      })
+      .addCase(assignLoadplanThunk.fulfilled, (state, { payload }) => {
+        switch (Object.keys(payload)[0]) {
+          case SUCCESS:
+            state.loading = false;
+            state.successMsg = payload[SUCCESS]?.message;
+            state.updateDone = !state.updateDone;
+            break;
+          case ERROR:
+            state.loading = false;
+            state.isError = true;
+            state.errorData.message = payload[ERROR];
+            break;
+          default:
+            break;
+        }
+      })
+      .addCase(assignLoadplanThunk.rejected, (state, action) => {
+        state.status.assignLoadplanThunk = ERROR;
+        state.loading = false;
+        state.errorData.message = action.error.message;
       });
   },
 });
 
 export default plannerSlice.reducer;
-export const { clearErrorSlice, deleteSku, deleteContainer, deleteOrder } =
-  plannerSlice.actions;
+export const {
+  clearErrorSlice,
+  deleteSku,
+  deleteContainer,
+  deleteOrder,
+  clearContainerData,
+  clearOrderData,
+  clearSkuData,
+} = plannerSlice.actions;

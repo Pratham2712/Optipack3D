@@ -7,6 +7,7 @@ import {
   free_trail,
   join,
   loginurl,
+  new_user,
   planner_contSelection,
   planner_order,
   planner_skuSelection,
@@ -25,6 +26,7 @@ import PlannerOrder from "./pages/planner/order/PlannerOrder";
 import SkuSelect from "./pages/planner/SkuSelect/SkuSelect";
 import NextOrder from "./pages/planner/NextOrder/NextOrder";
 import { useSelector } from "react-redux";
+import NoneUser from "./pages/NoneUser/NoneUser";
 
 export const UnAuthRoutes = ({ skuData, setSkuData, inputs, setInputs }) => {
   return (
@@ -50,7 +52,14 @@ export const UnAuthRoutes = ({ skuData, setSkuData, inputs, setInputs }) => {
   );
 };
 
-export const AuthRoutes = ({ skuData, setSkuData, inputs, setInputs }) => {
+export const AuthRoutes = ({
+  skuData,
+  setSkuData,
+  inputs,
+  setInputs,
+  containerQuan,
+  setContainerQuan,
+}) => {
   //useSelector=================================================================================================================
   const userType = useSelector(
     (state) => state.rootReducer.authSlice.data.user.userType
@@ -69,10 +78,14 @@ export const AuthRoutes = ({ skuData, setSkuData, inputs, setInputs }) => {
           />
         }
       ></Route>
-      <Route path={free_output} element={<FreeOutput />}></Route>
+      <Route
+        path={free_output}
+        element={<FreeOutput containerQuan={containerQuan} />}
+      ></Route>
       <Route path={join} element={<Join />}></Route>
       <Route path={loginurl} element={<Login />}></Route>
       <Route path={signupurl} element={<Signup />}></Route>
+      <Route path={new_user} element={<NoneUser />}></Route>
       {/* admin ====================================================================================================== */}
       {userType == "Company_Admin" ? (
         <>
@@ -88,7 +101,15 @@ export const AuthRoutes = ({ skuData, setSkuData, inputs, setInputs }) => {
         <>
           <Route path={planner_order} element={<PlannerOrder />}></Route>
           <Route path={planner_skuSelection} element={<SkuSelect />}></Route>
-          <Route path={planner_contSelection} element={<NextOrder />}></Route>
+          <Route
+            path={planner_contSelection}
+            element={
+              <NextOrder
+                setContainerQuan={setContainerQuan}
+                containerQuan={containerQuan}
+              />
+            }
+          ></Route>
         </>
       ) : (
         <Route path="*" element={<Navigate to={User_root} replace />} />

@@ -105,7 +105,6 @@ const InputPopup = ({ loadData, setLoadData, inputPop, setInputPop }) => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      console.log(event.target);
       if (event.target.tagName.toLowerCase() === "li") {
         return; // Do nothing if <li> is clicked
       }

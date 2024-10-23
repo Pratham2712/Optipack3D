@@ -20,6 +20,7 @@ import axios from "axios";
 import {
   admin_setting,
   loginurl,
+  new_user,
   planner_order,
   User_root,
 } from "../../constants/links";
@@ -183,6 +184,8 @@ const Signup = () => {
           navigate(admin_setting);
         } else if (data.payload["SUCCESS"]?.userType == "Company_planner") {
           navigate(planner_order);
+        } else {
+          navigate(new_user);
         }
       }
     });
