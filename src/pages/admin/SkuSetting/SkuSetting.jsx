@@ -160,7 +160,7 @@ const SkuSetting = () => {
     setSearchParams(createSearchParams(params));
   }, []);
   return (
-    <section>
+    <section className="sku-container">
       <div style={{ margin: "2rem 0rem" }}>
         <h2>SKU settings</h2>
         <div className="input-admin-row">

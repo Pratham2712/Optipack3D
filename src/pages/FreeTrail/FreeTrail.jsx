@@ -147,7 +147,7 @@ const FreeTrail = ({ skuData, setSkuData, inputs, setInputs }) => {
           <Toaster />
 
           <Breadcrumb />
-          {!is700 ? <Sidebar className="hide-sidebar" /> : <></>}
+          {/* {!is700 ? <Sidebar className="hide-sidebar" /> : <></>} */}
           <div className="container-form">
             <h1>Container Builder (Trial Version)</h1>
             <form>

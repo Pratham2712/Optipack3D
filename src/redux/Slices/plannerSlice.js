@@ -126,6 +126,18 @@ export const assignLoadplanThunk = createAsyncThunk(
   }
 );
 
+export const getOrderDataThunk = createAsyncThunk(
+  "/get_order_data",
+  async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/get_order_data`);
+      return res.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  }
+);
+
 const initialState = {
   loading: false,
   updateDone: false,
@@ -144,6 +156,7 @@ const initialState = {
     orderData: [],
     skuCodeName: [],
     loaderUser: [],
+    allOrders: [],
   },
   status: {
     addOrderThunk: IDLE,
@@ -157,6 +170,7 @@ const initialState = {
     createLoadplanThunk: IDLE,
     getLoaderThunk: IDLE,
     assignLoadplanThunk: IDLE,
+    getOrderDataThunk: IDLE,
   },
 };
 
@@ -474,6 +488,32 @@ const plannerSlice = createSlice({
       })
       .addCase(assignLoadplanThunk.rejected, (state, action) => {
         state.status.assignLoadplanThunk = ERROR;
+        state.loading = false;
+        state.errorData.message = action.error.message;
+      })
+      //getOrderDataThunk===========================================================================================
+      .addCase(getOrderDataThunk.pending, (state, { payload }) => {
+        state.loading = true;
+      })
+      .addCase(getOrderDataThunk.fulfilled, (state, { payload }) => {
+        switch (Object.keys(payload)[0]) {
+          case SUCCESS:
+            state.loading = false;
+            state.successMsg = payload[SUCCESS]?.message;
+            state.data.allOrders = payload[SUCCESS]?.result;
+            state.updateDone = !state.updateDone;
+            break;
+          case ERROR:
+            state.loading = false;
+            state.isError = true;
+            state.errorData.message = payload[ERROR];
+            break;
+          default:
+            break;
+        }
+      })
+      .addCase(getOrderDataThunk.rejected, (state, action) => {
+        state.status.getOrderDataThunk = ERROR;
         state.loading = false;
         state.errorData.message = action.error.message;
       });

@@ -8,11 +8,11 @@ import editIcon from "../../../assests/edit.png";
 import toast from "react-hot-toast";
 
 import {
-  clearContainerData,
   deleteContainer,
   deleteOrder,
   getContainerByNameThunk,
   getOrderByNumberThunk,
+  getOrderDataThunk,
   getSkuByOrderThunk,
 } from "../../../redux/Slices/plannerSlice";
 import { useForm } from "react-hook-form";
@@ -60,6 +60,9 @@ const NextOrder = ({ containerQuan, setContainerQuan }) => {
 
   const containerList = useSelector(
     (state) => state.rootReducer.companyAdminSlice.data.containerList
+  );
+  const allOrderNumber = useSelector(
+    (state) => state.rootReducer.plannerSlice.data.allOrders
   );
   const {
     control,
@@ -207,24 +210,39 @@ const NextOrder = ({ containerQuan, setContainerQuan }) => {
     setOrderNumber("");
   };
   const FinishAddOrder = () => {
-    setShowOrder(!showOrder);
     if (orderData.length > 0) {
+      setShowOrder(!showOrder);
       setAddOrderFinish(true);
     } else {
+      toast.error("Order can't be empty", {
+        style: {
+          border: "1px solid #713200",
+          padding: "16px",
+          color: "#713200",
+        },
+      });
       setAddOrderFinish(false);
     }
   };
   const FinishAddCont = () => {
-    setShowCont(!showCont);
     if (containerData.length > 0) {
+      setShowCont(!showCont);
       setAddContFinish(true);
     } else {
+      toast.error("Container can't be empty", {
+        style: {
+          border: "1px solid #713200",
+          padding: "16px",
+          color: "#713200",
+        },
+      });
       setAddContFinish(false);
     }
   };
   //useEffect=-================================================================================================
   useEffect(() => {
     dispatch(getContainerThunk());
+    dispatch(getOrderDataThunk());
   }, []);
 
   return (
@@ -267,13 +285,27 @@ const NextOrder = ({ containerQuan, setContainerQuan }) => {
                     >
                       <div className="settings-group">
                         <label>Order Number</label>
-                        <input
+                        {/* <input
                           type="number"
                           style={{ marginTop: "0.5rem", width: "100%" }}
                           placeholder="Type here"
                           value={orderNumber}
                           onChange={(e) => setOrderNumber(e.target.value)}
-                        />
+                        /> */}
+                        <select
+                          onChange={(e) => setOrderNumber(e.target.value)}
+                          style={{ width: "400px", display: "block" }}
+                        >
+                          <option value="" selected>
+                            Select order
+                          </option>
+
+                          {allOrderNumber?.map((ele) => (
+                            <option value={ele?.order_number}>
+                              #{ele?.order_number}
+                            </option>
+                          ))}
+                        </select>
                       </div>
                     </div>
                     <div className="order-two-buttons">

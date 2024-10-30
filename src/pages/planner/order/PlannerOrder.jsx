@@ -162,7 +162,11 @@ const PlannerOrder = () => {
                         name="source_location"
                         control={control}
                         render={({ field }) => (
-                          <select {...field} className="styled-select">
+                          <select
+                            {...field}
+                            className="styled-select"
+                            style={{ width: "100%" }}
+                          >
                             <option value="">Select From Dropdown</option>
                             {loadplanData?.["shipping_location"]?.map((ele) => (
                               <option key={ele} value={ele}>
@@ -184,7 +188,11 @@ const PlannerOrder = () => {
                         name="destination_location"
                         control={control}
                         render={({ field }) => (
-                          <select {...field} className="styled-select">
+                          <select
+                            {...field}
+                            className="styled-select"
+                            style={{ width: "100%" }}
+                          >
                             <option value="">Select From Dropdown</option>
                             {loadplanData?.["destination_location"]?.map(
                               (ele) => (

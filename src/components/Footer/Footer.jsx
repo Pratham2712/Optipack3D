@@ -12,7 +12,7 @@ const Footer = () => {
           <a href="#">Settings</a>
           <a href="#">Contact</a>
           <a href="#">Blog</a>
-          <a href="#">Features</a>
+          <a href="#feature-tab">Features</a>
           <a href="#">Privacy Policy</a>
           <a href="#">Terms of Service</a>
         </div>
@@ -24,9 +24,9 @@ const Footer = () => {
           <a href="#">
             <i class="fa-brands fa-linkedin"></i>
           </a>
-          <a href="#">
+          {/* <a href="#">
             <i class="fa-brands fa-square-x-twitter"></i>
-          </a>
+          </a> */}
           <a href="#">
             <i class="fa-solid fa-envelope"></i>{" "}
           </a>

@@ -7,11 +7,19 @@ import reload from "../../assests/reload.png";
 const Breadcrumb = () => {
   const location = useLocation();
   const pathnames = location.pathname.split("/").filter((x) => x);
+
   const handleRefresh = () => {
     window.location.reload();
   };
   return (
-    <div aria-label="breadcrumb" className="header">
+    <div
+      aria-label="breadcrumb"
+      className="header"
+      style={{
+        marginLeft: pathnames.includes("freeTrial") ? 0 : "",
+        width: pathnames.includes("freeTrial") ? "95%" : "",
+      }}
+    >
       <ol className="breadcrumb">
         <li className="breadcrumb-item">
           <Link to="/">Home</Link>
@@ -33,18 +41,22 @@ const Breadcrumb = () => {
           );
         })}
       </ol>
-      <div className="user-info">
-        <button
-          type="button"
-          id="reloadButton"
-          className="reload-button"
-          onClick={handleRefresh}
-        >
-          <img src={reload} alt="Reload" className="user-others" />
-        </button>
-        <img src={notification} alt="Notifications" />
-        <img src={author} alt="User Image" className="user-image" />
-      </div>
+      {pathnames.includes("freeTrial") == true ? (
+        <></>
+      ) : (
+        <div className="user-info">
+          <button
+            type="button"
+            id="reloadButton"
+            className="reload-button"
+            onClick={handleRefresh}
+          >
+            <img src={reload} alt="Reload" className="user-others" />
+          </button>
+          <img src={notification} alt="Notifications" />
+          <img src={author} alt="User Image" className="user-image" />
+        </div>
+      )}
     </div>
   );
 };
