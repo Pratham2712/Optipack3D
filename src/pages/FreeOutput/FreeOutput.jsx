@@ -49,12 +49,6 @@ const FreeOutput = ({ containerQuan }) => {
   const volume = useSelector(
     (state) => state.rootReducer.mainSlice.data.data.vol_occ_curr
   );
-  const threedPaths = useSelector(
-    (state) => state.rootReducer.mainSlice.data.data.threed_paths
-  );
-  const containerInf = useSelector(
-    (state) => state.rootReducer.mainSlice.data.data.container_inf
-  );
   const isLogin = useSelector((state) => state.rootReducer.authSlice.isLogin);
   const orderData = useSelector(
     (state) => state.rootReducer.plannerSlice.data.orderData
@@ -62,9 +56,10 @@ const FreeOutput = ({ containerQuan }) => {
   const loadplanCreated = useSelector(
     (state) => state.rootReducer.plannerSlice.loadplanCreated
   );
+  const user = useSelector((state) => state.rootReducer.authSlice.data.user);
 
-  localStorage.setItem("threed_paths", JSON.stringify(threedPaths));
-  localStorage.setItem("container_inf", JSON.stringify(containerInf));
+  // localStorage.setItem("threed_paths", JSON.stringify(threedPaths));
+  // localStorage.setItem("container_inf", JSON.stringify(containerInf));
 
   const iframeSrc = `three_render.html?container=${encodeURIComponent(
     contIndex
@@ -204,7 +199,6 @@ const FreeOutput = ({ containerQuan }) => {
 
   const url = `${window.location.origin}${location.pathname}${location.search}`;
   const title = "Check out this amazing website!";
-  console.log(url);
 
   return (
     <>
@@ -220,10 +214,9 @@ const FreeOutput = ({ containerQuan }) => {
               <span className="info-icon">
                 <img src={infoIcon} alt="Info Icon" />
                 <span className="tooltip">
-                  Our algorithm elegantly mirrors real-world constraints by
-                  prioritizing the loading of homogeneous strips first,
-                  seamlessly followed by the non-homogeneous strips, ensuring an
-                  efficient and harmonious process.
+                  Our algorithm elegantly mirrors real-world constraints
+                  ensuring an efficient and harmonious process to achieve
+                  maximum container utilization basis the parameters provided.
                 </span>
               </span>
             </div>
@@ -359,29 +352,36 @@ const FreeOutput = ({ containerQuan }) => {
                 </div>
               </div>
             </div>
-            <div
-              className="two-button"
-              style={{
-                display: "flex",
-                justifyContent: "space-evenly",
-                marginTop: "4rem",
-              }}
-            >
-              <button
-                className="btn-apply"
-                style={{ padding: "15px 28px" }}
-                onClick={createLoadplan}
-              >
-                Assign to loader
-              </button>
-              <button
-                className="btn-cancel"
-                style={{ padding: "15px 28px" }}
-                onClick={() => navigate(planner_contSelection)}
-              >
-                Edit loadplan
-              </button>
-            </div>
+            {user?.userType == "Company_admin" ||
+            user?.userType == "Company_planner" ? (
+              <>
+                <div
+                  className="two-button"
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-evenly",
+                    marginTop: "4rem",
+                  }}
+                >
+                  <button
+                    className="btn-apply"
+                    style={{ padding: "15px 28px" }}
+                    onClick={createLoadplan}
+                  >
+                    Assign to loader
+                  </button>
+                  <button
+                    className="btn-cancel"
+                    style={{ padding: "15px 28px" }}
+                    onClick={() => navigate(planner_contSelection)}
+                  >
+                    Edit loadplan
+                  </button>
+                </div>
+              </>
+            ) : (
+              <></>
+            )}
           </div>
           {premium && <Popup premium={premium} setPremium={setPremium} />}
           {shareit && (

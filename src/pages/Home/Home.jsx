@@ -48,6 +48,7 @@ const Home = () => {
 
         <section
           className="features"
+          id="feature-tab"
           style={{
             backgroundColor: "#CC9C87",
             backgroundColor: "rgb(204 156 135 / 14%)",

@@ -16,12 +16,38 @@ import { admin_manageuser } from "../../../constants/links";
 import { useNavigate } from "react-router-dom";
 import SkuSetting from "../SkuSetting/SkuSetting";
 import toast from "react-hot-toast";
+import Joyride from "react-joyride";
 
 const Setting = () => {
   const [is700, setIs700] = useState(window.innerWidth < 700);
   const dispatch = useDispatch();
   const [user, setUser] = useState(false);
   const navigate = useNavigate();
+  const [tour, setTour] = useState({
+    run: true,
+    steps: [
+      {
+        target: ".actions-head",
+        content: "Manage user like add, delete and change role of user",
+        placement: "top",
+      },
+      {
+        target: ".settings-section",
+        content: "Add data for order and load plan",
+        placement: "right",
+      },
+      {
+        target: ".permission-container",
+        content: "Update dashboard premission of user.",
+        placement: "left",
+      },
+      {
+        target: ".sku-container",
+        content: "Add SKU data.",
+        placement: "top",
+      },
+    ],
+  });
 
   const permission = [
     "CFR",
@@ -58,7 +84,7 @@ const Setting = () => {
   const company = useSelector(
     (state) => state.rootReducer.authSlice.data.user.company
   );
-
+  //function ==================================================================================================================================
   const handleChange = (dash, userType, value) => {
     const info = {
       company: company,
@@ -112,7 +138,13 @@ const Setting = () => {
 
     return found ? found.allowed : null;
   };
-
+  const handleTourCallback = (data) => {
+    const { status } = data;
+    if (status === "finished" || status === "skipped") {
+      setTour((prevTour) => ({ ...prevTour, run: false }));
+    }
+  };
+  //useEffect===========================================================================================================================
   useEffect(() => {
     const handleResize = () => {
       setIs700(window.innerWidth < 700);
@@ -135,7 +167,18 @@ const Setting = () => {
         <div>
           <Breadcrumb />
           {!is700 ? <Sidebar className="hide-sidebar" /> : <></>}
-
+          <Joyride
+            steps={tour.steps}
+            // run={tour.run}
+            continuous={true} // Auto-continues to the next step
+            // scrollToFirstStep={false}
+            // scrollTo={false}
+            showSkipButton={true}
+            showProgress={true}
+            // scrollOffset={0}
+            // spotlightPadding={0}
+            callback={handleTourCallback}
+          />
           <div>
             {inputPop.action ? (
               <InputPopup
@@ -269,11 +312,11 @@ const Setting = () => {
                     className="styled-select"
                   >
                     <option>Select From Dropdown</option>
-                    <option>60 %</option>
-                    <option>70 %</option>
-                    <option>80 %</option>
-                    <option>90 %</option>
-                    <option>95 %</option>
+                    <option>60%</option>
+                    <option>70%</option>
+                    <option>80%</option>
+                    <option>90%</option>
+                    <option>95%</option>
                   </select>
                 </div>
                 <div className="settings-group">
@@ -303,6 +346,7 @@ const Setting = () => {
                   display: "flex",
                   width: "100%",
                 }}
+                className="permission-container"
               >
                 <div className="dashboards">
                   <h4>CFR</h4>

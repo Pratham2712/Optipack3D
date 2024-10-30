@@ -255,77 +255,90 @@ const SkuSelect = () => {
                       Edit details
                     </button>
                   </div>
-                  <div className="order-two-buttons">
-                    <input
-                      className="custom-file-input"
-                      type="file"
-                      accept=".xlsx, .xls"
-                      onChange={handleFileUpload}
-                    />
-                    <button
-                      className="btn-apply"
-                      onClick={() => setManual(!manual)}
-                    >
-                      Enter SKU manually
-                    </button>
-                  </div>
-                  {manual && (
-                    <div>
-                      <div className="order-inputs">
-                        <div className="settings-group">
-                          <label>SKU code</label>
-                          {/* <input
+                  <section
+                    style={{
+                      background: "#F7F9FD",
+                      padding: "1rem",
+                      marginTop: "2rem",
+                      borderRadius: "1rem",
+                    }}
+                  >
+                    <div className="order-two-buttons">
+                      <input
+                        className="custom-file-input"
+                        type="file"
+                        accept=".xlsx, .xls"
+                        onChange={handleFileUpload}
+                      />
+                      <button
+                        className="btn-apply"
+                        onClick={() => setManual(!manual)}
+                      >
+                        Enter SKU manually
+                      </button>
+                    </div>
+                    {manual && (
+                      <div>
+                        <div className="order-inputs">
+                          <div className="settings-group">
+                            <label>SKU code</label>
+                            {/* <input
                             type="text"
                             style={{ marginTop: "0.5rem" }}
                             placeholder="Type here"
                             {...register("sku_code")}
                           /> */}
-                          <select {...register("sku_code")}>
-                            <option selected disabled>
-                              Select SKU
-                            </option>
-                            {skuCodeName?.map((ele) => (
-                              <option value={ele?.sku_code}>
-                                {ele?.sku_code} / {ele?.sku_name}
+                            <select {...register("sku_code")}>
+                              <option selected disabled>
+                                Select SKU
                               </option>
-                            ))}
-                          </select>
-                          {errors.sku_code && (
-                            <p className="error-order">
-                              {errors.sku_code.message}
-                            </p>
-                          )}
+                              {skuCodeName?.map((ele) => (
+                                <option value={ele?.sku_code}>
+                                  {ele?.sku_code} / {ele?.sku_name}
+                                </option>
+                              ))}
+                            </select>
+                            {errors.sku_code && (
+                              <p className="error-order">
+                                {errors.sku_code.message}
+                              </p>
+                            )}
+                          </div>
+                          <div className="settings-group">
+                            <label>Quantity</label>
+                            <input
+                              type="text"
+                              style={{ marginTop: "0.5rem" }}
+                              placeholder="Type here"
+                              {...register("quantity")}
+                            />
+                            {errors.quantity && (
+                              <p className="error-order">
+                                {errors.quantity.message}
+                              </p>
+                            )}
+                          </div>
                         </div>
-                        <div className="settings-group">
-                          <label>Quantity</label>
-                          <input
-                            type="text"
-                            style={{ marginTop: "0.5rem" }}
-                            placeholder="Type here"
-                            {...register("quantity")}
-                          />
-                          {errors.quantity && (
-                            <p className="error-order">
-                              {errors.quantity.message}
-                            </p>
-                          )}
+                        <div className="order-two-buttons">
+                          <button
+                            className="btn-apply"
+                            onClick={handleSubmit(getSku)}
+                          >
+                            Add SKU
+                          </button>
                         </div>
                       </div>
-                      <div className="order-two-buttons">
-                        <button
-                          className="btn-apply"
-                          onClick={handleSubmit(getSku)}
-                        >
-                          Add SKU
-                        </button>
-                      </div>
+                    )}
+                    <div style={{ textAlign: "center" }}>
+                      <button
+                        className="btn-cancel"
+                        onClick={saveSku}
+                        style={{ border: "2px solid black" }}
+                      >
+                        Save all SKUs
+                      </button>
                     </div>
-                  )}
-                  <div style={{ textAlign: "center" }}>
-                    <button className="btn-cancel" onClick={saveSku}>
-                      Save all SKUs
-                    </button>
-                  </div>
+                  </section>
                 </div>
               </div>
               <div
