@@ -145,6 +145,29 @@ export const deleteSkuThunk = createAsyncThunk("/delete_sku", async (data) => {
     return error.response.data;
   }
 });
+export const defaultSettingThunk = createAsyncThunk(
+  "/add_defaultSetting",
+  async (data) => {
+    try {
+      const res = await axios.post(`${BASE_URL}/add_defaultSetting`, data);
+      return res.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  }
+);
+
+export const getDefaultSettingThunk = createAsyncThunk(
+  "/get_defaultSetting",
+  async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/get_defaultSetting`);
+      return res.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  }
+);
 
 const initialState = {
   loading: false,
@@ -164,6 +187,7 @@ const initialState = {
     userType: [],
     sku: [],
     total_sku: 0,
+    default: {},
   },
   status: {
     permissionThunk: IDLE,
@@ -180,6 +204,7 @@ const initialState = {
     addSkuThunk: IDLE,
     getSkuThunk: IDLE,
     deleteSkuThunk: IDLE,
+    getDefaultSettingThunk: IDLE,
   },
 };
 
@@ -551,6 +576,57 @@ const companyAdminSlice = createSlice({
       })
       .addCase(deleteSkuThunk.rejected, (state, action) => {
         state.status.deleteSkuThunk = ERROR;
+        state.loading = false;
+        state.errorData.message = action.error.message;
+      })
+      //defaultSettingThunk=====================================================================================================
+      .addCase(defaultSettingThunk.pending, (state, { payload }) => {
+        state.loading = true;
+      })
+      .addCase(defaultSettingThunk.fulfilled, (state, { payload }) => {
+        switch (Object.keys(payload)[0]) {
+          case SUCCESS:
+            state.loading = false;
+            state.successMsg = payload[SUCCESS]?.message;
+            state.updateDone = !state.updateDone;
+            break;
+          case ERROR:
+            state.loading = false;
+            state.isError = true;
+            state.errorData.message = payload[ERROR];
+            break;
+          default:
+            break;
+        }
+      })
+      .addCase(defaultSettingThunk.rejected, (state, action) => {
+        state.status.defaultSettingThunk = ERROR;
+        state.loading = false;
+        state.errorData.message = action.error.message;
+      })
+      //getDefaultSettingThunk==========================================================================================================
+      .addCase(getDefaultSettingThunk.pending, (state, { payload }) => {
+        state.loading = false;
+      })
+      .addCase(getDefaultSettingThunk.fulfilled, (state, { payload }) => {
+        switch (Object.keys(payload)[0]) {
+          case SUCCESS:
+            state.loading = false;
+            state.successMsg = payload[SUCCESS]?.message;
+            state.data.default = payload[SUCCESS]?.result;
+            state.updateDone = !state.updateDone;
+            break;
+          case ERROR:
+            state.loading = false;
+            state.isError = true;
+            state.errorData.message = payload[ERROR];
+            break;
+          default:
+            break;
+        }
+      })
+      .addCase(getDefaultSettingThunk.rejected, (state, action) => {
+        state.status.getDefaultSettingThunk = ERROR;
         state.loading = false;
         state.errorData.message = action.error.message;
       });

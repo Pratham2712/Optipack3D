@@ -3,7 +3,9 @@ import Breadcrumb from "../../../components/Breadcrumb/Breadcrumb";
 import Sidebar from "../../../components/Sidebar/Sidebar";
 import "./Setting.css";
 import {
+  defaultSettingThunk,
   getContainerThunk,
+  getDefaultSettingThunk,
   getLoadPlanThunk,
   getPermissionThunk,
   permissionThunk,
@@ -30,16 +32,18 @@ const Setting = () => {
         target: ".actions-head",
         content: "Manage user like add, delete and change role of user",
         placement: "top",
+        disableScrolling: true,
       },
       {
         target: ".settings-section",
         content: "Add data for order and load plan",
-        placement: "right",
+        placement: "top",
+        disableScrolling: true,
       },
       {
         target: ".permission-container",
         content: "Update dashboard premission of user.",
-        placement: "left",
+        placement: "top",
       },
       {
         target: ".sku-container",
@@ -68,6 +72,13 @@ const Setting = () => {
     destination_location: [],
     container_type: "",
   });
+  const [defaultSetting, setDefaultSetting] = useState({
+    standard_container_type: "",
+    standard_source: "",
+    standard_destination: "",
+    standard_utilization: "",
+    standard_delivery_horizon: "",
+  });
   //useSelector====================================================================================================================
   const permissionData = useSelector(
     (state) => state.rootReducer.companyAdminSlice.data.permission
@@ -80,6 +91,9 @@ const Setting = () => {
   );
   const containerList = useSelector(
     (state) => state.rootReducer.companyAdminSlice.data.containerList
+  );
+  const defSetting = useSelector(
+    (state) => state.rootReducer.companyAdminSlice.data.default
   );
   const company = useSelector(
     (state) => state.rootReducer.authSlice.data.user.company
@@ -112,7 +126,6 @@ const Setting = () => {
 
   const submitPermission = () => {
     if (permissionData.length == 0) {
-      console.log(permData.length);
       if (permData.length == 20) {
         dispatch(permissionThunk(permData));
       } else {
@@ -144,6 +157,28 @@ const Setting = () => {
       setTour((prevTour) => ({ ...prevTour, run: false }));
     }
   };
+  const addDefaultSetting = () => {
+    dispatch(defaultSettingThunk(defaultSetting)).then((data) => {
+      if (data.payload["ERROR"]) {
+        toast.error(data.payload["ERROR"], {
+          style: {
+            border: "1px solid #713200",
+            padding: "16px",
+            color: "#713200",
+          },
+        });
+      }
+      if (data.payload["SUCCESS"]?.message) {
+        toast.success(data.payload["SUCCESS"]?.message, {
+          style: {
+            border: "1px solid #713200",
+            padding: "16px",
+            color: "#713200",
+          },
+        });
+      }
+    });
+  };
   //useEffect===========================================================================================================================
   useEffect(() => {
     const handleResize = () => {
@@ -152,6 +187,7 @@ const Setting = () => {
     dispatch(getPermissionThunk());
     dispatch(getLoadPlanThunk());
     dispatch(getContainerThunk());
+    dispatch(getDefaultSettingThunk());
     window.addEventListener("resize", handleResize);
 
     return () => {
@@ -169,15 +205,26 @@ const Setting = () => {
           {!is700 ? <Sidebar className="hide-sidebar" /> : <></>}
           <Joyride
             steps={tour.steps}
-            // run={tour.run}
-            continuous={true} // Auto-continues to the next step
-            // scrollToFirstStep={false}
-            // scrollTo={false}
+            continuous={true}
             showSkipButton={true}
             showProgress={true}
-            // scrollOffset={0}
-            // spotlightPadding={0}
             callback={handleTourCallback}
+            styles={{
+              options: {
+                zIndex: 10000, // Ensure the tour is above other elements
+              },
+              buttonNext: {
+                backgroundColor: "#cc9c87", // Change to your desired color
+                color: "white", // Text color
+                border: "none", // Remove border
+                padding: "10px 20px", // Add padding
+                borderRadius: "5px", // Rounded corners
+                cursor: "pointer", // Pointer cursor
+              },
+              buttonBack: {
+                color: "#cc9c87",
+              },
+            }}
           />
           <div>
             {inputPop.action ? (
@@ -224,6 +271,7 @@ const Setting = () => {
                   <select
                     id="standard-container-types"
                     className="styled-select"
+                    value={defSetting["standard_container_type"]}
                     onChange={(e) => {
                       if (e.target.value === "add-new-container") {
                         setInputPop((prev) => ({
@@ -231,6 +279,11 @@ const Setting = () => {
                           action: true,
                           name: "container_type",
                           head: "Add Container Type",
+                        }));
+                      } else {
+                        setDefaultSetting((prev) => ({
+                          ...prev,
+                          standard_container_type: e.target.value,
                         }));
                       }
                     }}
@@ -256,6 +309,7 @@ const Setting = () => {
                   <select
                     id="standard-shipping-location"
                     className="styled-select"
+                    value={defSetting["standard_source"]}
                     onChange={(e) => {
                       if (e.target.value === "add-new-location") {
                         setInputPop((prev) => ({
@@ -263,6 +317,11 @@ const Setting = () => {
                           action: true,
                           name: "shipping_location",
                           head: "Add shipping location",
+                        }));
+                      } else {
+                        setDefaultSetting((prev) => ({
+                          ...prev,
+                          standard_source: e.target.value,
                         }));
                       }
                     }}
@@ -283,6 +342,7 @@ const Setting = () => {
                   <select
                     id="standard-destination-location"
                     className="styled-select"
+                    value={defSetting["standard_destination"]}
                     onChange={(e) => {
                       if (e.target.value === "add-new-destination") {
                         setInputPop((prev) => ({
@@ -290,6 +350,11 @@ const Setting = () => {
                           action: true,
                           name: "destination_location",
                           head: "Add destination location",
+                        }));
+                      } else {
+                        setDefaultSetting((prev) => ({
+                          ...prev,
+                          standard_destination: e.target.value,
                         }));
                       }
                     }}
@@ -310,6 +375,13 @@ const Setting = () => {
                   <select
                     id="minimum-utilization-details"
                     className="styled-select"
+                    value={defSetting["standard_utilization"]}
+                    onChange={(e) => {
+                      setDefaultSetting((prev) => ({
+                        ...prev,
+                        standard_utilization: e.target.value,
+                      }));
+                    }}
                   >
                     <option>Select From Dropdown</option>
                     <option>60%</option>
@@ -326,6 +398,13 @@ const Setting = () => {
                   <select
                     id="maximum-delivery-horizon"
                     className="styled-select"
+                    value={defSetting["standard_delivery_horizon"]}
+                    onChange={(e) => {
+                      setDefaultSetting((prev) => ({
+                        ...prev,
+                        standard_delivery_horizon: e.target.value,
+                      }));
+                    }}
                   >
                     <option>Select From Dropdown</option>
                     {[...Array(30)].map((_, index) => (
@@ -336,7 +415,9 @@ const Setting = () => {
               </section>
               <div className="actions">
                 <button className="btn-cancel">Cancel</button>
-                <button className="btn-apply">Apply</button>
+                <button className="btn-apply" onClick={addDefaultSetting}>
+                  Apply
+                </button>
               </div>
               <div style={{ margin: "2rem 0rem" }}>
                 <h2>Dashboard permission settings</h2>
