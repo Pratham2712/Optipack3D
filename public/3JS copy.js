@@ -15,7 +15,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const threedPath = JSON.parse(localStorage.getItem("threed_paths"));
   const speedButton = document.getElementById("speeds");
   const speedButtons = speedButton.querySelectorAll("button");
-
+  let colorChange = "";
+  let indexShot = -1;
   let currentSpeed = 20;
   let animationQueue = [];
   let lastAnimationTime = 0;
@@ -237,7 +238,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let textMesh; // Declare textMesh globally
     let yPosition; // Store original y position
-
     // Function to create and place small boxes using coordinates from JSON
     const createSmallBoxesFromCoordinates = (boxes) => {
       boxes.forEach((box) => {
@@ -279,6 +279,37 @@ document.addEventListener("DOMContentLoaded", () => {
           centerY * aspectHeight,
           centerZ * aspectDepth
         );
+        const boxKey = `${startX}_${startY}_${startZ}_${smallBoxWidth}_${smallBoxHeight}_${smallBoxDepth}`;
+
+        const previousData = JSON.parse(localStorage.getItem("boxData")) || {};
+        console.log(previousData);
+
+        // Only take a screenshot if the color has changed
+        if (colorChange !== colorName) {
+          indexShot++;
+          previousData[indexShot] = { color: colorName };
+          colorChange = colorName;
+          // Take a screenshot
+          const originalWidth = window.innerWidth;
+          const originalHeight = window.innerHeight;
+          const screenshotWidth = originalWidth * window.devicePixelRatio; // High resolution
+          const screenshotHeight = originalHeight * window.devicePixelRatio; // High resolution
+
+          renderer.setSize(screenshotWidth, screenshotHeight);
+          renderer.render(scene, camera); // Render the scene at the new resolution
+
+          const screenshotDataURL = renderer.domElement.toDataURL("image/png");
+          console.log("inside", colorName);
+
+          previousData[indexShot].screenshot = screenshotDataURL; // Store the screenshot in the object
+
+          // Store the updated object in local storage
+          localStorage.setItem("boxData", JSON.stringify(previousData));
+
+          // Reset the renderer size back to original
+          renderer.setSize(originalWidth, originalHeight);
+          renderer.render(scene, camera);
+        }
         scene.add(smallBox);
         const smallBoxEdges = new THREE.EdgesGeometry(smallBoxGeometry);
         const smallBoxEdgesMaterial = new THREE.LineBasicMaterial({
@@ -589,6 +620,8 @@ document.addEventListener("DOMContentLoaded", () => {
         );
 
         if (boxes.length > 0) {
+          colorChange = boxes[0].color;
+          // localStorage.setItem("boxData", {});
           createSmallBoxesFromCoordinates(boxes);
 
           const originalWidth = window.innerWidth;

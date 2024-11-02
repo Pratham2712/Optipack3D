@@ -176,6 +176,7 @@ const Setting = () => {
             color: "#713200",
           },
         });
+        dispatch(getDefaultSettingThunk());
       }
     });
   };
@@ -271,7 +272,7 @@ const Setting = () => {
                   <select
                     id="standard-container-types"
                     className="styled-select"
-                    value={defSetting["standard_container_type"]}
+                    defaultValue={defSetting["standard_container_type"]}
                     onChange={(e) => {
                       if (e.target.value === "add-new-container") {
                         setInputPop((prev) => ({
@@ -291,11 +292,9 @@ const Setting = () => {
                     <option value="" selected>
                       Select From Dropdown
                     </option>
-                    <option value="">General Purpose container 20'</option>
-                    <option value="">General Purpose container 40'</option>
-                    <option value="">
-                      High - Cube General Purpose container 40'
-                    </option>
+                    <option>General Purpose container 20'</option>
+                    <option>General Purpose container 40'</option>
+                    <option>High - Cube General Purpose container 40'</option>
                     {containerList?.map((ele) => (
                       <option value={ele}>{ele}</option>
                     ))}
@@ -309,7 +308,7 @@ const Setting = () => {
                   <select
                     id="standard-shipping-location"
                     className="styled-select"
-                    value={defSetting["standard_source"]}
+                    defaultValue={defSetting["standard_source"]}
                     onChange={(e) => {
                       if (e.target.value === "add-new-location") {
                         setInputPop((prev) => ({
@@ -342,7 +341,7 @@ const Setting = () => {
                   <select
                     id="standard-destination-location"
                     className="styled-select"
-                    value={defSetting["standard_destination"]}
+                    defaultValue={defSetting["standard_destination"]}
                     onChange={(e) => {
                       if (e.target.value === "add-new-destination") {
                         setInputPop((prev) => ({
@@ -375,7 +374,7 @@ const Setting = () => {
                   <select
                     id="minimum-utilization-details"
                     className="styled-select"
-                    value={defSetting["standard_utilization"]}
+                    defaultValue={defSetting["standard_utilization"]}
                     onChange={(e) => {
                       setDefaultSetting((prev) => ({
                         ...prev,
@@ -398,7 +397,7 @@ const Setting = () => {
                   <select
                     id="maximum-delivery-horizon"
                     className="styled-select"
-                    value={defSetting["standard_delivery_horizon"]}
+                    defaultValue={defSetting["standard_delivery_horizon"]}
                     onChange={(e) => {
                       setDefaultSetting((prev) => ({
                         ...prev,
