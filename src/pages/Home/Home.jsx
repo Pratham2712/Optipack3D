@@ -10,7 +10,12 @@ import AboutnRoles from "../../components/AboutnRoles/AboutnRoles";
 import Footer from "../../components/Footer/Footer";
 import KeyFeat from "../../components/KeyFeatures2/KeyFeat";
 import Tabs from "../../components/Tabs/Tabs";
+import { useScroll } from "../../Util/ScrollContext";
+import { useNavigate } from "react-router-dom";
+import { free_trail } from "../../constants/links";
 const Home = () => {
+  const { featureSectionRef } = useScroll();
+  const navigate = useNavigate();
   return (
     <div>
       <Navbar />
@@ -29,7 +34,9 @@ const Home = () => {
                   <button className="enquire">Enquire Now</button>
                 </div>
                 <div className="hero-buttons">
-                  <a className="free">Start Free Trial</a>
+                  <a className="free" onClick={() => navigate(free_trail)}>
+                    Start Free Trial
+                  </a>
                 </div>
               </div>
             </div>
@@ -45,16 +52,17 @@ const Home = () => {
         >
           <KeyFeat />
         </section>
-
+        <div></div>
         <section
           className="features"
-          id="feature-tab"
           style={{
             backgroundColor: "#CC9C87",
             backgroundColor: "rgb(204 156 135 / 14%)",
             paddingBottom: "70px",
             paddingTop: "50px",
           }}
+          id="feature-tab"
+          ref={featureSectionRef}
         >
           <Tabs />
         </section>

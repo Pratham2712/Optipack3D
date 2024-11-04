@@ -3,13 +3,16 @@ import logo from "../../assests/logo.png";
 import "./Navbar.css";
 import { NavLink } from "react-router-dom";
 import { free_trail, join } from "../../constants/links";
+import { useScroll } from "../../Util/ScrollContext";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { scrollToFeatures } = useScroll();
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
+
   return (
     <>
       <nav>
@@ -31,7 +34,7 @@ const Navbar = () => {
             <li>
               <a href="#">Blog</a>
             </li>
-            <li>
+            <li onClick={scrollToFeatures}>
               <a href="#feature-tab">Features</a>
             </li>
             {/* <li>

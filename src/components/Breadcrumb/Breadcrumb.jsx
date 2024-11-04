@@ -4,9 +4,12 @@ import "./Breadcrumb.css";
 import notification from "../../assests/Notification.png";
 import author from "../../assests/author-photo.png";
 import reload from "../../assests/reload.png";
+import { useSelector } from "react-redux";
 const Breadcrumb = () => {
   const location = useLocation();
   const pathnames = location.pathname.split("/").filter((x) => x);
+
+  const isLogin = useSelector((state) => state.rootReducer.authSlice.isLogin);
 
   const handleRefresh = () => {
     window.location.reload();
@@ -16,8 +19,16 @@ const Breadcrumb = () => {
       aria-label="breadcrumb"
       className="header"
       style={{
-        marginLeft: pathnames.includes("freeTrial") ? 0 : "",
-        width: pathnames.includes("freeTrial") ? "95%" : "",
+        marginLeft:
+          pathnames.includes("freeTrial") ||
+          (pathnames.includes("freeOutput") && !isLogin)
+            ? 0
+            : "",
+        width:
+          pathnames.includes("freeTrial") ||
+          (pathnames.includes("freeOutput") && !isLogin)
+            ? "100%"
+            : "",
       }}
     >
       <ol className="breadcrumb">
@@ -41,7 +52,8 @@ const Breadcrumb = () => {
           );
         })}
       </ol>
-      {pathnames.includes("freeTrial") == true ? (
+      {pathnames.includes("freeTrial") == true ||
+      (pathnames.includes("freeOutput") && !isLogin) ? (
         <></>
       ) : (
         <div className="user-info">

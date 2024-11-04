@@ -9,7 +9,7 @@ const Footer = () => {
         <div className="footer-cta">
           <a href="#">Home</a>
           <a href="#">About</a>
-          <a href="#">Settings</a>
+          {/* <a href="#">Settings</a> */}
           <a href="#">Contact</a>
           <a href="#">Blog</a>
           <a href="#feature-tab">Features</a>

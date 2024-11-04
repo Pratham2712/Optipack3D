@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import Breadcrumb from "../../../components/Breadcrumb/Breadcrumb";
 import Sidebar from "../../../components/Sidebar/Sidebar";
 import "./Setting.css";
@@ -25,30 +25,58 @@ const Setting = () => {
   const dispatch = useDispatch();
   const [user, setUser] = useState(false);
   const navigate = useNavigate();
+  const joyrideRef = useRef(null);
+  //useSelector====================================================================================================================
+  const permissionData = useSelector(
+    (state) => state.rootReducer.companyAdminSlice.data.permission
+  );
+  const loading = useSelector(
+    (state) => state.rootReducer.companyAdminSlice.loading
+  );
+  const loadplanData = useSelector(
+    (state) => state.rootReducer.companyAdminSlice.data.loadplan
+  );
+  const containerList = useSelector(
+    (state) => state.rootReducer.companyAdminSlice.data.containerList
+  );
+  const defSetting = useSelector(
+    (state) => state.rootReducer.companyAdminSlice.data.default
+  );
+  const company = useSelector(
+    (state) => state.rootReducer.authSlice.data.user.company
+  );
+  const showTour = useSelector((state) => state.rootReducer.authSlice.showTour);
+  console.log(showTour);
+
   const [tour, setTour] = useState({
-    run: true,
+    run: showTour,
     steps: [
       {
         target: ".actions-head",
-        content: "Manage user like add, delete and change role of user",
+        content: "Manage Active Directory of users.",
         placement: "top",
         disableScrolling: true,
+        disableBeacon: true,
       },
       {
         target: ".settings-section",
-        content: "Add data for order and load plan",
+        content:
+          "Set Default Settings for creating order and load plan and adding Shipping Source and Destination.",
         placement: "top",
         disableScrolling: true,
+        disableBeacon: true,
       },
       {
         target: ".permission-container",
-        content: "Update dashboard premission of user.",
+        content: "Control Access to different Dashboards for the users.",
         placement: "top",
+        disableBeacon: true,
       },
       {
         target: ".sku-container",
-        content: "Add SKU data.",
+        content: "Add SKU level information.",
         placement: "top",
+        disableBeacon: true,
       },
     ],
   });
@@ -79,25 +107,6 @@ const Setting = () => {
     standard_utilization: "",
     standard_delivery_horizon: "",
   });
-  //useSelector====================================================================================================================
-  const permissionData = useSelector(
-    (state) => state.rootReducer.companyAdminSlice.data.permission
-  );
-  const loading = useSelector(
-    (state) => state.rootReducer.companyAdminSlice.loading
-  );
-  const loadplanData = useSelector(
-    (state) => state.rootReducer.companyAdminSlice.data.loadplan
-  );
-  const containerList = useSelector(
-    (state) => state.rootReducer.companyAdminSlice.data.containerList
-  );
-  const defSetting = useSelector(
-    (state) => state.rootReducer.companyAdminSlice.data.default
-  );
-  const company = useSelector(
-    (state) => state.rootReducer.authSlice.data.user.company
-  );
   //function ==================================================================================================================================
   const handleChange = (dash, userType, value) => {
     const info = {
@@ -196,6 +205,10 @@ const Setting = () => {
     };
   }, []);
 
+  useEffect(() => {
+    setTour((prevTour) => ({ ...prevTour, run: showTour }));
+  }, [showTour]);
+
   return (
     <>
       {loading ? (
@@ -204,29 +217,36 @@ const Setting = () => {
         <div>
           <Breadcrumb />
           {!is700 ? <Sidebar className="hide-sidebar" /> : <></>}
-          <Joyride
-            steps={tour.steps}
-            continuous={true}
-            showSkipButton={true}
-            showProgress={true}
-            callback={handleTourCallback}
-            styles={{
-              options: {
-                zIndex: 10000, // Ensure the tour is above other elements
-              },
-              buttonNext: {
-                backgroundColor: "#cc9c87", // Change to your desired color
-                color: "white", // Text color
-                border: "none", // Remove border
-                padding: "10px 20px", // Add padding
-                borderRadius: "5px", // Rounded corners
-                cursor: "pointer", // Pointer cursor
-              },
-              buttonBack: {
-                color: "#cc9c87",
-              },
-            }}
-          />
+          {showTour && (
+            <Joyride
+              ref={joyrideRef}
+              steps={tour.steps}
+              continuous={true}
+              showSkipButton={true}
+              showProgress={true}
+              callback={handleTourCallback}
+              styles={{
+                options: {
+                  zIndex: 10000, // Ensure the tour is above other elements
+                },
+                buttonNext: {
+                  backgroundColor: "#cc9c87", // Change to your desired color
+                  color: "white", // Text color
+                  border: "none", // Remove border
+                  padding: "10px 20px", // Add padding
+                  borderRadius: "5px", // Rounded corners
+                  cursor: "pointer", // Pointer cursor
+                },
+                buttonBack: {
+                  color: "#cc9c87",
+                },
+              }}
+              locale={{
+                last: "Finish", // Change the text of the next button to "Last"
+                // You can also customize other button texts here if needed
+              }}
+            />
+          )}
           <div>
             {inputPop.action ? (
               <InputPopup
@@ -289,12 +309,16 @@ const Setting = () => {
                       }
                     }}
                   >
-                    <option value="" selected>
-                      Select From Dropdown
+                    <option value="">Select From Dropdown</option>
+                    <option value="General Purpose container 20">
+                      General Purpose container 20'
                     </option>
-                    <option>General Purpose container 20'</option>
-                    <option>General Purpose container 40'</option>
-                    <option>High - Cube General Purpose container 40'</option>
+                    <option value="General Purpose container 40'">
+                      General Purpose container 40'
+                    </option>
+                    <option value="High - Cube General Purpose container 40'">
+                      High - Cube General Purpose container 40'
+                    </option>
                     {containerList?.map((ele) => (
                       <option value={ele}>{ele}</option>
                     ))}

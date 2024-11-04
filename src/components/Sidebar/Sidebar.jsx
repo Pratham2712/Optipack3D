@@ -69,7 +69,7 @@ const Sidebar = () => {
                   : "",
             }}
           />
-          <span class="tooltip" style={{ width: "max-content" }}>
+          <span class="tooltip" style={{ width: "fit-content" }}>
             Home
           </span>
         </a>
@@ -91,7 +91,7 @@ const Sidebar = () => {
                   : "",
             }}
           />
-          <span class="tooltip" style={{ width: "max-content" }}>
+          <span class="tooltip" style={{ width: "fit-content" }}>
             Create load plan
           </span>
         </a>
@@ -112,13 +112,13 @@ const Sidebar = () => {
                   : "",
             }}
           />
-          <span class="tooltip" style={{ width: "max-content" }}>
+          <span class="tooltip" style={{ width: "fit-content" }}>
             Go to orders
           </span>
         </a>
         <a href="#" onClick={() => setPremium(!premium)}>
           <img src={support} class="cta" />
-          <span class="tooltip" style={{ width: "max-content" }}>
+          <span class="tooltip" style={{ width: "fit-content" }}>
             Support
           </span>
         </a>

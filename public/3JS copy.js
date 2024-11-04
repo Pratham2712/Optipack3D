@@ -282,7 +282,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const boxKey = `${startX}_${startY}_${startZ}_${smallBoxWidth}_${smallBoxHeight}_${smallBoxDepth}`;
 
         const previousData = JSON.parse(localStorage.getItem("boxData")) || {};
-        console.log(previousData);
 
         // Only take a screenshot if the color has changed
         if (colorChange !== colorName) {

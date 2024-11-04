@@ -111,6 +111,7 @@ export const checkLoginThunk = createAsyncThunk("/check_login", async () => {
 
 const initialState = {
   loading: false,
+  showTour: false,
   initialLoad: true,
   updateDone: false,
   isLogin: false,
@@ -237,6 +238,7 @@ const authSlice = createSlice({
           case SUCCESS:
             state.successMsg = "";
             state.loading = false;
+            state.showTour = true;
             state.successMsg = payload[SUCCESS]?.message;
             state.errorData.message = "";
             state.isLogin = true;
@@ -244,6 +246,7 @@ const authSlice = createSlice({
             break;
           case ERROR:
             state.errorData.message = "";
+            state.showTour = false;
             state.loading = false;
             state.isError = true;
             state.errorData.message = payload[ERROR];
