@@ -2,8 +2,13 @@ import React, { useEffect, useRef } from "react";
 import proVersion from "../../assests/proVersion.png";
 import cross from "../../assests/cross.png";
 import "./Popup.css";
+import { useNavigate } from "react-router-dom";
+import { User_root } from "../../constants/links";
+import { useScroll } from "../../Util/ScrollContext";
 const Popup = ({ premium, setPremium }) => {
   const popupRef = useRef(null);
+  const navigate = useNavigate();
+  const { scrollToFeatures } = useScroll();
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (popupRef.current && !popupRef.current.contains(event.target)) {
@@ -38,6 +43,7 @@ const Popup = ({ premium, setPremium }) => {
               href=""
               className="btn-cancel"
               style={{ textDecoration: "none" }}
+              onClick={scrollToFeatures}
             >
               Learn More
             </a>

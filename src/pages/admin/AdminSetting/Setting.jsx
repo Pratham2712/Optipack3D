@@ -46,7 +46,6 @@ const Setting = () => {
     (state) => state.rootReducer.authSlice.data.user.company
   );
   const showTour = useSelector((state) => state.rootReducer.authSlice.showTour);
-  console.log(showTour);
 
   const [tour, setTour] = useState({
     run: showTour,
@@ -101,12 +100,13 @@ const Setting = () => {
     container_type: "",
   });
   const [defaultSetting, setDefaultSetting] = useState({
-    standard_container_type: "",
+    standard_container_type: defSetting["standard_container_type"] || "",
     standard_source: "",
     standard_destination: "",
     standard_utilization: "",
     standard_delivery_horizon: "",
   });
+
   //function ==================================================================================================================================
   const handleChange = (dash, userType, value) => {
     const info = {
@@ -209,6 +209,16 @@ const Setting = () => {
     setTour((prevTour) => ({ ...prevTour, run: showTour }));
   }, [showTour]);
 
+  useEffect(() => {
+    setDefaultSetting({
+      standard_container_type: defSetting["standard_container_type"] || "",
+      standard_source: defSetting["standard_source"] || "",
+      standard_destination: defSetting["standard_destination"] || "",
+      standard_utilization: defSetting["standard_utilization"] || "",
+      standard_delivery_horizon: defSetting["standard_delivery_horizon"] || "",
+    });
+  }, [defSetting]);
+
   return (
     <>
       {loading ? (
@@ -292,7 +302,7 @@ const Setting = () => {
                   <select
                     id="standard-container-types"
                     className="styled-select"
-                    defaultValue={defSetting["standard_container_type"]}
+                    value={defaultSetting["standard_container_type"]}
                     onChange={(e) => {
                       if (e.target.value === "add-new-container") {
                         setInputPop((prev) => ({
@@ -332,7 +342,7 @@ const Setting = () => {
                   <select
                     id="standard-shipping-location"
                     className="styled-select"
-                    defaultValue={defSetting["standard_source"]}
+                    value={defaultSetting["standard_source"]}
                     onChange={(e) => {
                       if (e.target.value === "add-new-location") {
                         setInputPop((prev) => ({
@@ -365,7 +375,7 @@ const Setting = () => {
                   <select
                     id="standard-destination-location"
                     className="styled-select"
-                    defaultValue={defSetting["standard_destination"]}
+                    value={defaultSetting["standard_destination"]}
                     onChange={(e) => {
                       if (e.target.value === "add-new-destination") {
                         setInputPop((prev) => ({
@@ -398,7 +408,7 @@ const Setting = () => {
                   <select
                     id="minimum-utilization-details"
                     className="styled-select"
-                    defaultValue={defSetting["standard_utilization"]}
+                    value={defaultSetting["standard_utilization"]}
                     onChange={(e) => {
                       setDefaultSetting((prev) => ({
                         ...prev,
@@ -421,7 +431,7 @@ const Setting = () => {
                   <select
                     id="maximum-delivery-horizon"
                     className="styled-select"
-                    defaultValue={defSetting["standard_delivery_horizon"]}
+                    value={defaultSetting["standard_delivery_horizon"]}
                     onChange={(e) => {
                       setDefaultSetting((prev) => ({
                         ...prev,

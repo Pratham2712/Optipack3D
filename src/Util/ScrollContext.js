@@ -1,12 +1,18 @@
 import React, { createContext, useContext, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { feature, User_root } from "../constants/links";
 
 const ScrollContext = createContext();
 
 export const ScrollProvider = ({ children }) => {
   const featureSectionRef = useRef(null);
+  const navigate = useNavigate();
 
-  const scrollToFeatures = () => {
-    const scrollAmount = 2350; // Pixels to scroll by, adjust as needed
+  const scrollToFeatures = (e) => {
+    e.preventDefault();
+    navigate(feature);
+    const scrollAmount =
+      window.innerWidth < 500 ? 2300 : window.innerWidth < 800 ? 3000 : 2350; // Pixels to scroll by, adjust as needed
     const startPosition = window.pageYOffset;
     const targetPosition = startPosition + scrollAmount;
     const duration = 300; // Short duration for a quick scroll
@@ -22,7 +28,10 @@ export const ScrollProvider = ({ children }) => {
         duration
       );
 
-      window.scrollTo(0, run);
+      window.scrollTo({
+        top: scrollAmount,
+        behavior: "smooth",
+      });
 
       if (timeElapsed < duration) requestAnimationFrame(animation);
     };

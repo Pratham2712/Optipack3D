@@ -11,7 +11,9 @@ import {
   planner_contSelection,
   planner_order,
   planner_skuSelection,
+  privacy_policy,
   signupurl,
+  term_condition,
   User_root,
 } from "./constants/links";
 import FreeTrail from "./pages/FreeTrail/FreeTrail";
@@ -27,6 +29,8 @@ import SkuSelect from "./pages/planner/SkuSelect/SkuSelect";
 import NextOrder from "./pages/planner/NextOrder/NextOrder";
 import { useSelector } from "react-redux";
 import NoneUser from "./pages/NoneUser/NoneUser";
+import TermsNConditon from "./pages/TermsNCondition/TermsNConditon";
+import Privacy from "./pages/Privacy/Privacy";
 
 export const UnAuthRoutes = ({ skuData, setSkuData, inputs, setInputs }) => {
   return (
@@ -47,6 +51,8 @@ export const UnAuthRoutes = ({ skuData, setSkuData, inputs, setInputs }) => {
       <Route path={join} element={<Join />}></Route>
       <Route path={loginurl} element={<Login />}></Route>
       <Route path={signupurl} element={<Signup />}></Route>
+      <Route path={term_condition} element={<TermsNConditon />}></Route>
+      <Route path={privacy_policy} element={<Privacy />}></Route>
       <Route path={"*"} element={<Navigate to="/" />}></Route>
     </Routes>
   );

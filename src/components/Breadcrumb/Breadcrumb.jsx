@@ -1,18 +1,45 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./Breadcrumb.css";
 import notification from "../../assests/Notification.png";
-import author from "../../assests/author-photo.png";
+import author from "../../assests/user-circle.png";
 import reload from "../../assests/reload.png";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutThunk } from "../../redux/Slices/authSlice";
+import toast from "react-hot-toast";
 const Breadcrumb = () => {
   const location = useLocation();
   const pathnames = location.pathname.split("/").filter((x) => x);
+  const [showPop, setShowPop] = useState(false);
+  const dispatch = useDispatch();
 
   const isLogin = useSelector((state) => state.rootReducer.authSlice.isLogin);
 
   const handleRefresh = () => {
     window.location.reload();
+  };
+  const logout = () => {
+    setShowPop(false);
+    dispatch(logoutThunk({})).then((data) => {
+      if (data.payload["ERROR"]) {
+        toast.error(data.payload["ERROR"], {
+          style: {
+            border: "1px solid #713200",
+            padding: "16px",
+            color: "#713200",
+          },
+        });
+      }
+      if (data.payload["SUCCESS"]?.message) {
+        toast.success(data.payload["SUCCESS"]?.message, {
+          style: {
+            border: "1px solid #713200",
+            padding: "16px",
+            color: "#713200",
+          },
+        });
+      }
+    });
   };
   return (
     <div
@@ -66,7 +93,23 @@ const Breadcrumb = () => {
             <img src={reload} alt="Reload" className="user-others" />
           </button>
           <img src={notification} alt="Notifications" />
-          <img src={author} alt="User Image" className="user-image" />
+          <div style={{ position: "relative" }}>
+            <img
+              src={author}
+              alt="User Image"
+              className="user-image"
+              style={{ cursor: "pointer" }}
+              onClick={() => setShowPop(!showPop)}
+            />
+            {showPop && (
+              <div
+                style={{ position: "absolute", cursor: "pointer" }}
+                className="show"
+              >
+                <div onClick={logout}>Logout</div>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>
