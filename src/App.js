@@ -7,6 +7,7 @@ import { checkLoginThunk } from "./redux/Slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "./components/Loader/Loader";
 import toast, { Toaster } from "react-hot-toast";
+import { ScrollProvider } from "./Util/ScrollContext";
 
 function App() {
   const isAuthenticated = useSelector(
@@ -73,25 +74,27 @@ function App() {
   return (
     <BrowserRouter>
       <Toaster />
-      <div className="App">
-        {isAuthenticated ? (
-          <AuthRoutes
-            skuData={skuData}
-            setSkuData={setSkuData}
-            inputs={inputs}
-            setInputs={setInputs}
-            containerQuan={containerQuan}
-            setContainerQuan={setContainerQuan}
-          />
-        ) : (
-          <UnAuthRoutes
-            skuData={skuData}
-            setSkuData={setSkuData}
-            inputs={inputs}
-            setInputs={setInputs}
-          />
-        )}
-      </div>
+      <ScrollProvider>
+        <div className="App">
+          {isAuthenticated ? (
+            <AuthRoutes
+              skuData={skuData}
+              setSkuData={setSkuData}
+              inputs={inputs}
+              setInputs={setInputs}
+              containerQuan={containerQuan}
+              setContainerQuan={setContainerQuan}
+            />
+          ) : (
+            <UnAuthRoutes
+              skuData={skuData}
+              setSkuData={setSkuData}
+              inputs={inputs}
+              setInputs={setInputs}
+            />
+          )}
+        </div>
+      </ScrollProvider>
     </BrowserRouter>
   );
 }

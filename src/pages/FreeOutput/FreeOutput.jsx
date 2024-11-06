@@ -10,10 +10,22 @@ import Loader from "../../components/Loader/Loader";
 import Popup from "../../components/Popup/Popup";
 import ShareContent from "../../components/ShareContent/ShareContent";
 import { planner_contSelection } from "../../constants/links";
+import { stagewise_loading } from "../../constants/links";
 import { createLoadplanThunk } from "../../redux/Slices/plannerSlice";
 import AssignPopup from "../../PlannerComponents/AssignPopup/AssignPopup";
 import toast from "react-hot-toast";
+import { rgbaToHex } from "../../Util/util";
 
+const heading = [
+  " ",
+  "Name",
+  "Length",
+  "Width",
+  "Height",
+  "Number of boxes per strip",
+  "Total cases",
+  "Filled cases",
+];
 const FreeOutput = ({ containerQuan }) => {
   const modelRef = useRef(null);
   const location = useLocation();
@@ -28,6 +40,9 @@ const FreeOutput = ({ containerQuan }) => {
   const [animate, setAnimate] = useState(false);
   const [shareit, setShareit] = useState(false);
   const [assignPopup, setAssignPopup] = useState(false);
+  const [skuData, setSkuData] = useState([]);
+  const [numCases, setNumCases] = useState([]);
+  const [mobileView, setMobileView] = useState(false);
   //useSelector=========================================================================================================================
   const loading = useSelector((state) => state.rootReducer.mainSlice.loading);
   const tableData = useSelector(
@@ -40,6 +55,15 @@ const FreeOutput = ({ containerQuan }) => {
   const container = useSelector(
     (state) => state.rootReducer.mainSlice.data.data.container_indices
   );
+  const dimension = useSelector(
+    (state) => state.rootReducer.mainSlice.data.data.container_inf
+  );
+  const num_skus = useSelector(
+    (state) => state.rootReducer.mainSlice.data.data.num_skus
+  );
+  const sku_info = useSelector(
+    (state) => state.rootReducer.mainSlice.data.data.sku_info
+  );
   const containerType = useSelector(
     (state) => state.rootReducer.mainSlice.data.data.container_type
   );
@@ -49,6 +73,9 @@ const FreeOutput = ({ containerQuan }) => {
   const volume = useSelector(
     (state) => state.rootReducer.mainSlice.data.data.vol_occ_curr
   );
+  const colorsData = useSelector(
+    (state) => state.rootReducer.mainSlice.data.data.colors
+  );
   const isLogin = useSelector((state) => state.rootReducer.authSlice.isLogin);
   const orderData = useSelector(
     (state) => state.rootReducer.plannerSlice.data.orderData
@@ -57,9 +84,6 @@ const FreeOutput = ({ containerQuan }) => {
     (state) => state.rootReducer.plannerSlice.loadplanCreated
   );
   const user = useSelector((state) => state.rootReducer.authSlice.data.user);
-
-  // localStorage.setItem("threed_paths", JSON.stringify(threedPaths));
-  // localStorage.setItem("container_inf", JSON.stringify(containerInf));
 
   const iframeSrc = `three_render.html?container=${encodeURIComponent(
     contIndex
@@ -101,7 +125,6 @@ const FreeOutput = ({ containerQuan }) => {
       orderData?.forEach((ele) => {
         data.order_numbers.push(ele.order_number);
       });
-      console.log(data);
       if (!loadplanCreated) {
         dispatch(createLoadplanThunk(data)).then((data) => {
           if (data.payload["ERROR"]) {
@@ -175,6 +198,32 @@ const FreeOutput = ({ containerQuan }) => {
       data[key] = value;
     });
 
+    if (data.numTypes) {
+      const numType = parseInt(data.numTypes);
+      const skuArray = [];
+      for (let i = 0; i < numType; i++) {
+        const skuKey = `sku${i}`;
+        const colorKey = `color${i}`;
+        const numberOfCases = `numberOfCases${i}`;
+
+        if (data[skuKey] && data[colorKey]) {
+          skuArray.push({
+            color: data[colorKey],
+            sku: data[skuKey],
+          });
+        }
+        if (data[numberOfCases]) {
+          numCases.push(data[numberOfCases]);
+        }
+      }
+
+      setSkuData(skuArray);
+    }
+
+    if (data.mobileView) {
+      setMobileView(true);
+    }
+
     if (queryParams) {
       postData(data);
     }
@@ -206,8 +255,12 @@ const FreeOutput = ({ containerQuan }) => {
         <Loader />
       ) : (
         <div>
-          <Breadcrumb />
-          {!is700 ? <Sidebar className="hide-sidebar" /> : <></>}{" "}
+          <Breadcrumb className="bread-nav" />
+          {!is700 && isLogin ? (
+            <Sidebar className="hide-sidebar" />
+          ) : (
+            <></>
+          )}{" "}
           <div className="order-details">
             <div className="head">
               <h1>Loading Pattern</h1>
@@ -220,7 +273,10 @@ const FreeOutput = ({ containerQuan }) => {
                 </span>
               </span>
             </div>
-            <div className="table" style={{ display: "flex" }}>
+            <div style={{ fontSize: "1.2rem", marginTop: "1rem" }}>
+              Order Information :{" "}
+            </div>
+            {/* <div className="table" style={{ display: "flex" }}>
               <div
                 className="table-info"
                 dangerouslySetInnerHTML={{ __html: tableData }}
@@ -234,6 +290,62 @@ const FreeOutput = ({ containerQuan }) => {
                     <tr style={{ padding: "11.7px" }}>{ele}</tr>
                   ))}
                   <tbody></tbody>
+                </table>
+              </div>
+              <div>
+                <table className="table-info filled_table">
+                  <tr>
+                    <th>Info Cases</th>
+                  </tr>
+                  {colorsData?.map((ele, index) => {
+                    const matchingSku = skuData.find(
+                      (item) => rgbaToHex(item.color) == ele
+                    );
+                    return (
+                      <tr
+                        style={{
+                          padding: "11.7px",
+                          background: ele,
+                        }}
+                      >
+                        {matchingSku ? (
+                          <>{matchingSku.sku}</>
+                        ) : (
+                          <>No match found</>
+                        )}
+                      </tr>
+                    );
+                  })}
+                </table>
+              </div>
+            </div> */}
+            <div className="table" style={{ display: "flex" }}>
+              <div className="table-info">
+                <table>
+                  <tr>
+                    {heading.map((ele) => (
+                      <th>{ele}</th>
+                    ))}
+                  </tr>
+                  {num_skus?.map((_, index) => {
+                    const matchingSku = skuData.find(
+                      (item) => rgbaToHex(item.color) == colorsData[index]
+                    );
+                    return (
+                      <tr>
+                        <td>{index + 1}</td>
+                        <td style={{ background: colorsData[index] }}>
+                          {matchingSku?.sku}
+                        </td>
+                        <td>{sku_info?.[index]?.[1]}</td>
+                        <td>{sku_info?.[index]?.[2]}</td>
+                        <td>{sku_info?.[index]?.[3]}</td>
+                        <td>{sku_info?.[index]?.[4]}</td>
+                        <td>{numCases[index]}</td>
+                        <td>{filled?.[index]}</td>
+                      </tr>
+                    );
+                  })}
                 </table>
               </div>
             </div>
@@ -266,6 +378,14 @@ const FreeOutput = ({ containerQuan }) => {
             <div className="container-info">
               <p>
                 Container type: <span id="container-type">{containerType}</span>
+              </p>
+              <p>
+                Dimension :{" "}
+                <span id="Dimension">
+                  {dimension?.[contIndex]?.containerLength} x{" "}
+                  {dimension?.[contIndex]?.containerWidth} x{" "}
+                  {dimension?.[contIndex]?.containerHeight}
+                </span>
               </p>
               <p>
                 Container fill rate:{" "}
@@ -336,12 +456,11 @@ const FreeOutput = ({ containerQuan }) => {
                     {/* <img className="premium-icon" src={premiumIcon} /> */}
                     {/* <i class="fa-solid fa-lock premium-icon"></i> */}
                   </h3>
-                  <input
+                  {/* <input
                     type="email"
                     className="features-input"
                     placeholder="Enter your email"
-                  />
-                  <br />
+                  /> */}
                   <button
                     className="btn-apply"
                     id="share-loading"
@@ -351,8 +470,21 @@ const FreeOutput = ({ containerQuan }) => {
                   </button>
                 </div>
               </div>
+              {mobileView && (
+                <>
+                  <div style={{ display: "flex", justifyContent: "center" }}>
+                    <button
+                      className="btn-apply"
+                      style={{ backgroundColor: "#cc9c87" }}
+                      onClick={() => navigate(stagewise_loading)}
+                    >
+                      Stage wise loading
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
-            {user?.userType == "Company_admin" ||
+            {user?.userType == "Company_Admin" ||
             user?.userType == "Company_planner" ? (
               <>
                 <div

@@ -41,8 +41,8 @@
 
 .user-info .user-image {
   border-radius: 50%;
-  width: 35px;
-  height: 35px;
+  width: 33px;
+  height: 33px;
 }
 .user-info img {
   margin-right: 1.3rem;
@@ -52,6 +52,15 @@
   background: inherit;
   border: none;
   cursor: pointer;
+}
+.show {
+  position: absolute;
+  left: -60px;
+  top: 40px;
+  padding: 1rem;
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 8px 64px #c6c5c480;
 }
 @media (max-width: 700px) {
   .header {

@@ -71,7 +71,7 @@ const ContainerDetails = ({
         <label for="numContainers" class="num">
           Number of Containers:
         </label>
-        <input
+        {/* <input
           type="number"
           id="numContainers"
           name="numContainers"
@@ -84,18 +84,24 @@ const ContainerDetails = ({
                 ...prev,
                 numContainers0: e.target.value,
               }));
-            } else {
-              toast("Upgrade to premium version for more container", {
-                style: {
-                  border: "1px solid #713200",
-                  padding: "16px",
-                  color: "#713200",
-                },
-              });
             }
           }}
           className="num-containers-input"
-        />
+        /> */}
+        <select
+          name="numContainers"
+          id="numContainers"
+          onChange={(e) => {
+            setSkuData((prev) => ({
+              ...prev,
+              numContainers0: e.target.value,
+            }));
+          }}
+          style={{ width: "100%" }}
+        >
+          <option value="1">1</option>
+          <option value="2">2</option>
+        </select>
         <div id="typeInputs" class="container-types">
           {Array.from({ length: totalContainers }).map((_, index) => (
             <div key={index} className="container-row">

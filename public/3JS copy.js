@@ -282,7 +282,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const boxKey = `${startX}_${startY}_${startZ}_${smallBoxWidth}_${smallBoxHeight}_${smallBoxDepth}`;
 
         const previousData = JSON.parse(localStorage.getItem("boxData")) || {};
-        console.log(previousData);
 
         // Only take a screenshot if the color has changed
         if (colorChange !== colorName) {
@@ -621,7 +620,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (boxes.length > 0) {
           colorChange = boxes[0].color;
-          // localStorage.setItem("boxData", {});
+          localStorage.setItem("boxData", JSON.stringify({}));
           createSmallBoxesFromCoordinates(boxes);
 
           const originalWidth = window.innerWidth;

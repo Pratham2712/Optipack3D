@@ -1,0 +1,37 @@
+.term-main {
+  padding-top: 12rem;
+  max-width: 50%;
+  margin: 0 auto;
+  padding-bottom: 5rem;
+}
+.term-head {
+  font-size: 2rem;
+  color: var(--primary);
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 1.2rem;
+}
+
+.term-content {
+  font-size: 1rem;
+  letter-spacing: 0.2px;
+  line-height: 1.5;
+}
+
+@media (max-width: 1200px) {
+  .term-main {
+    max-width: 60%;
+  }
+}
+@media (max-width: 1000px) {
+  .term-main {
+    padding-top: 5rem;
+    max-width: 70%;
+  }
+}
+@media (max-width: 1000px) {
+  .term-main {
+    padding-top: 5rem;
+    max-width: 90%;
+  }
+}

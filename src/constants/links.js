@@ -1,9 +1,13 @@
 export const User_root = "/";
+export const feature = "/#feature-tab";
 export const free_trail = "/freeTrial";
 export const join = "/join";
 export const loginurl = "/login";
 export const signupurl = "/additionalInformation";
 export const free_output = "/freeOutput";
+export const term_condition = "/term-conditions";
+export const privacy_policy = "/privacy-policy";
+export const stagewise_loading = "/stagewise-loading";
 export const admin_setting = "/admin/setting";
 export const admin_manageuser = "/admin/manage-user";
 export const planner_order = "/planner/order";
