@@ -13,6 +13,7 @@ import {
   planner_skuSelection,
   privacy_policy,
   signupurl,
+  stagewise_loading,
   term_condition,
   User_root,
 } from "./constants/links";
@@ -31,6 +32,7 @@ import { useSelector } from "react-redux";
 import NoneUser from "./pages/NoneUser/NoneUser";
 import TermsNConditon from "./pages/TermsNCondition/TermsNConditon";
 import Privacy from "./pages/Privacy/Privacy";
+import StageLoading from "./pages/StageLoading/StageLoading";
 
 export const UnAuthRoutes = ({ skuData, setSkuData, inputs, setInputs }) => {
   return (
@@ -53,6 +55,7 @@ export const UnAuthRoutes = ({ skuData, setSkuData, inputs, setInputs }) => {
       <Route path={signupurl} element={<Signup />}></Route>
       <Route path={term_condition} element={<TermsNConditon />}></Route>
       <Route path={privacy_policy} element={<Privacy />}></Route>
+      <Route path={stagewise_loading} element={<StageLoading />}></Route>
       <Route path={"*"} element={<Navigate to="/" />}></Route>
     </Routes>
   );
@@ -92,6 +95,9 @@ export const AuthRoutes = ({
       <Route path={loginurl} element={<Login />}></Route>
       <Route path={signupurl} element={<Signup />}></Route>
       <Route path={new_user} element={<NoneUser />}></Route>
+      <Route path={term_condition} element={<TermsNConditon />}></Route>
+      <Route path={privacy_policy} element={<Privacy />}></Route>
+      <Route path={stagewise_loading} element={<StageLoading />}></Route>
       {/* admin ====================================================================================================== */}
       {userType == "Company_Admin" ? (
         <>

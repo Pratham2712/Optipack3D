@@ -25,6 +25,7 @@
     "react-router-dom": "^6.12.1",
     "react-scripts": "5.0.1",
     "react-share": "^5.1.0",
+    "swiper": "^11.1.14",
     "web-vitals": "^2.1.4",
     "xlsx": "^0.18.5",
     "yup": "^1.2.0"

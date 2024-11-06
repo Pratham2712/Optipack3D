@@ -10,6 +10,7 @@ import Loader from "../../components/Loader/Loader";
 import Popup from "../../components/Popup/Popup";
 import ShareContent from "../../components/ShareContent/ShareContent";
 import { planner_contSelection } from "../../constants/links";
+import { stagewise_loading } from "../../constants/links";
 import { createLoadplanThunk } from "../../redux/Slices/plannerSlice";
 import AssignPopup from "../../PlannerComponents/AssignPopup/AssignPopup";
 import toast from "react-hot-toast";
@@ -254,7 +255,7 @@ const FreeOutput = ({ containerQuan }) => {
         <Loader />
       ) : (
         <div>
-          <Breadcrumb />
+          <Breadcrumb className="bread-nav" />
           {!is700 && isLogin ? (
             <Sidebar className="hide-sidebar" />
           ) : (
@@ -469,8 +470,21 @@ const FreeOutput = ({ containerQuan }) => {
                   </button>
                 </div>
               </div>
+              {mobileView && (
+                <>
+                  <div style={{ display: "flex", justifyContent: "center" }}>
+                    <button
+                      className="btn-apply"
+                      style={{ backgroundColor: "#cc9c87" }}
+                      onClick={() => navigate(stagewise_loading)}
+                    >
+                      Stage wise loading
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
-            {user?.userType == "Company_admin" ||
+            {user?.userType == "Company_Admin" ||
             user?.userType == "Company_planner" ? (
               <>
                 <div
@@ -514,13 +528,6 @@ const FreeOutput = ({ containerQuan }) => {
             <AssignPopup assignPopup={true} setAssignPopup={setAssignPopup} />
           ) : (
             <></>
-          )}
-          {mobileView && (
-            <>
-              <div>
-                <button>Stage wise loading</button>
-              </div>
-            </>
           )}
         </div>
       )}

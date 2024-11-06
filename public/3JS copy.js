@@ -620,7 +620,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (boxes.length > 0) {
           colorChange = boxes[0].color;
-          // localStorage.setItem("boxData", {});
+          localStorage.setItem("boxData", JSON.stringify({}));
           createSmallBoxesFromCoordinates(boxes);
 
           const originalWidth = window.innerWidth;
