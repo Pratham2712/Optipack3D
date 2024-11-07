@@ -42,7 +42,7 @@ const FreeOutput = ({ containerQuan }) => {
   const [assignPopup, setAssignPopup] = useState(false);
   const [skuData, setSkuData] = useState([]);
   const [numCases, setNumCases] = useState([]);
-  const [mobileView, setMobileView] = useState(false);
+  const [mobileView, setMobileView] = useState(true);
   //useSelector=========================================================================================================================
   const loading = useSelector((state) => state.rootReducer.mainSlice.loading);
   const tableData = useSelector(
@@ -99,22 +99,22 @@ const FreeOutput = ({ containerQuan }) => {
   };
 
   const postData = (data) => {
-    const formData = new FormData();
-    Object.keys(data)?.forEach((key) => {
-      formData.append(key, data[key]);
-    });
-    dispatch(getDataThunk(formData)).then((data) => {
-      if (data.payload) {
-        localStorage.setItem(
-          "threed_paths",
-          JSON.stringify(data?.payload?.threed_paths)
-        );
-        localStorage.setItem(
-          "container_inf",
-          JSON.stringify(data?.payload?.container_inf)
-        );
-      }
-    });
+    // const formData = new FormData();
+    // Object.keys(data)?.forEach((key) => {
+    //   formData.append(key, data[key]);
+    // });
+    // dispatch(getDataThunk(formData)).then((data) => {
+    //   if (data.payload) {
+    //     localStorage.setItem(
+    //       "threed_paths",
+    //       JSON.stringify(data?.payload?.threed_paths)
+    //     );
+    //     localStorage.setItem(
+    //       "container_inf",
+    //       JSON.stringify(data?.payload?.container_inf)
+    //     );
+    //   }
+    // });
   };
   const createLoadplan = () => {
     if (orderData.length > 0 && containerQuan) {
@@ -255,26 +255,32 @@ const FreeOutput = ({ containerQuan }) => {
         <Loader />
       ) : (
         <div>
-          <Breadcrumb className="bread-nav" />
+          {!mobileView && <Breadcrumb className="bread-nav" />}
           {!is700 && isLogin ? (
             <Sidebar className="hide-sidebar" />
           ) : (
             <></>
           )}{" "}
-          <div className="order-details">
-            <div className="head">
-              <h1>Loading Pattern</h1>
-              <span className="info-icon">
-                <img src={infoIcon} alt="Info Icon" />
-                <span className="tooltip">
-                  Our algorithm elegantly mirrors real-world constraints
-                  ensuring an efficient and harmonious process to achieve
-                  maximum container utilization basis the parameters provided.
+          <div
+            className="order-details"
+            style={{ paddingTop: mobileView ? "3rem" : "" }}
+          >
+            {!mobileView && (
+              <div className="head">
+                <h1>Loading Pattern</h1>
+                <span className="info-icon">
+                  <img src={infoIcon} alt="Info Icon" />
+                  <span className="tooltip">
+                    Our algorithm elegantly mirrors real-world constraints
+                    ensuring an efficient and harmonious process to achieve
+                    maximum container utilization basis the parameters provided.
+                  </span>
                 </span>
-              </span>
-            </div>
+              </div>
+            )}
+
             <div style={{ fontSize: "1.2rem", marginTop: "1rem" }}>
-              Order Information :{" "}
+              {mobileView ? "Order Visualization :" : "Order Information :"}{" "}
             </div>
             {/* <div className="table" style={{ display: "flex" }}>
               <div
@@ -319,46 +325,54 @@ const FreeOutput = ({ containerQuan }) => {
                 </table>
               </div>
             </div> */}
-            <div className="table" style={{ display: "flex" }}>
-              <div className="table-info">
-                <table>
-                  <tr>
-                    {heading.map((ele) => (
-                      <th>{ele}</th>
-                    ))}
-                  </tr>
-                  {num_skus?.map((_, index) => {
-                    const matchingSku = skuData.find(
-                      (item) => rgbaToHex(item.color) == colorsData[index]
-                    );
-                    return (
-                      <tr>
-                        <td>{index + 1}</td>
-                        <td style={{ background: colorsData[index] }}>
-                          {matchingSku?.sku}
-                        </td>
-                        <td>{sku_info?.[index]?.[1]}</td>
-                        <td>{sku_info?.[index]?.[2]}</td>
-                        <td>{sku_info?.[index]?.[3]}</td>
-                        <td>{sku_info?.[index]?.[4]}</td>
-                        <td>{numCases[index]}</td>
-                        <td>{filled?.[index]}</td>
-                      </tr>
-                    );
-                  })}
-                </table>
+            {!mobileView && (
+              <div className="table" style={{ display: "flex" }}>
+                <div className="table-info">
+                  <table>
+                    <tr>
+                      {heading.map((ele) => (
+                        <th>{ele}</th>
+                      ))}
+                    </tr>
+                    {num_skus?.map((_, index) => {
+                      const matchingSku = skuData.find(
+                        (item) => rgbaToHex(item.color) == colorsData[index]
+                      );
+                      return (
+                        <tr>
+                          <td>{index + 1}</td>
+                          <td style={{ background: colorsData[index] }}>
+                            {matchingSku?.sku}
+                          </td>
+                          <td>{sku_info?.[index]?.[1]}</td>
+                          <td>{sku_info?.[index]?.[2]}</td>
+                          <td>{sku_info?.[index]?.[3]}</td>
+                          <td>{sku_info?.[index]?.[4]}</td>
+                          <td>{numCases[index]}</td>
+                          <td>{filled?.[index]}</td>
+                        </tr>
+                      );
+                    })}
+                  </table>
+                </div>
               </div>
-            </div>
+            )}
+            {!mobileView && (
+              <div
+                className="note"
+                style={{
+                  display: totalFilled < totalCasesSum ? "block" : "none",
+                }}
+              >
+                There are still boxes that need to be filled in the container.
+                Recommend you to go back and change the number of container.
+              </div>
+            )}
+
             <div
-              className="note"
-              style={{
-                display: totalFilled < totalCasesSum ? "block" : "none",
-              }}
+              className="container-tabs"
+              style={{ marginBottom: mobileView ? "1rem" : "" }}
             >
-              There are still boxes that need to be filled in the container.
-              Recommend you to go back and change the number of container.
-            </div>
-            <div className="container-tabs">
               {container?.map((ele, index) => (
                 <button
                   className="cont_btn"
@@ -366,6 +380,8 @@ const FreeOutput = ({ containerQuan }) => {
                     marginTop: "2rem",
                     backgroundColor: index == contIndex ? "black" : "#F0F0F0",
                     color: index == contIndex ? "white" : "black",
+                    padding: mobileView ? "5px 7px" : "",
+                    fontSize: mobileView ? "0.7rem" : "",
                   }}
                   onClick={() => {
                     setContIndex(index);
@@ -375,29 +391,33 @@ const FreeOutput = ({ containerQuan }) => {
                 </button>
               ))}
             </div>
-            <div className="container-info">
-              <p>
-                Container type: <span id="container-type">{containerType}</span>
-              </p>
-              <p>
-                Dimension :{" "}
-                <span id="Dimension">
-                  {dimension?.[contIndex]?.containerLength} x{" "}
-                  {dimension?.[contIndex]?.containerWidth} x{" "}
-                  {dimension?.[contIndex]?.containerHeight}
-                </span>
-              </p>
-              <p>
-                Container fill rate:{" "}
-                <span id="vol-occ-curr">{volume?.[contIndex]}%</span>
-              </p>
-              <p>
-                Packaging Density:
-                <span id="packaging-density">
-                  {packaging_density?.[contIndex]}%
-                </span>
-              </p>
-            </div>
+            {!mobileView && (
+              <div className="container-info">
+                <p>
+                  Container type:{" "}
+                  <span id="container-type">{containerType}</span>
+                </p>
+                <p>
+                  Dimension :{" "}
+                  <span id="Dimension">
+                    {dimension?.[contIndex]?.containerLength} x{" "}
+                    {dimension?.[contIndex]?.containerWidth} x{" "}
+                    {dimension?.[contIndex]?.containerHeight}
+                  </span>
+                </p>
+                <p>
+                  Container fill rate:{" "}
+                  <span id="vol-occ-curr">{volume?.[contIndex]}%</span>
+                </p>
+                <p>
+                  Packaging Density:
+                  <span id="packaging-density">
+                    {packaging_density?.[contIndex]}%
+                  </span>
+                </p>
+              </div>
+            )}
+
             <div className="content-wrapper">
               <div
                 className={`contenter-view ${fullscreen ? "full_view" : ""}`}
@@ -419,63 +439,69 @@ const FreeOutput = ({ containerQuan }) => {
                   }}
                 ></iframe>
               </div>
-              <div className="block-elements">
-                <div className="sku-heading"></div>
-                <div className="sku-details"></div>
-                <div className="features">
-                  <h3>
-                    3d Loading Animation
-                    {/* <img className="premium-icon" src={premiumIcon} /> */}
-                    {/* <i class="fa-solid fa-lock premium-icon"></i> */}
-                  </h3>
-                  <button
-                    className="btn-apply"
-                    id="Loading-Animation"
-                    onClick={setAnimation}
-                  >
-                    See Loading Animation
-                  </button>
-                </div>
-                <div className="features">
-                  <h3 onClick={() => setPremium(!premium)}>
-                    Edit Loading Pattern
-                    {/* <img className="premium-icon" src={premiumIcon} /> */}
-                    <i class="fa-solid fa-lock premium-icon"></i>
-                  </h3>
-                  <button
-                    className="btn-apply"
-                    id="edit-pattern"
-                    onClick={() => setPremium(!premium)}
-                  >
-                    Edit Pattern
-                  </button>
-                </div>
-                <div className="features">
-                  <h3>
-                    Share/Export Loading
-                    {/* <img className="premium-icon" src={premiumIcon} /> */}
-                    {/* <i class="fa-solid fa-lock premium-icon"></i> */}
-                  </h3>
-                  {/* <input
+              {!mobileView && (
+                <div className="block-elements">
+                  <div className="sku-heading"></div>
+                  <div className="sku-details"></div>
+                  <div className="features">
+                    <h3>
+                      3d Loading Animation
+                      {/* <img className="premium-icon" src={premiumIcon} /> */}
+                      {/* <i class="fa-solid fa-lock premium-icon"></i> */}
+                    </h3>
+                    <button
+                      className="btn-apply"
+                      id="Loading-Animation"
+                      onClick={setAnimation}
+                    >
+                      See Loading Animation
+                    </button>
+                  </div>
+                  <div className="features">
+                    <h3 onClick={() => setPremium(!premium)}>
+                      Edit Loading Pattern
+                      {/* <img className="premium-icon" src={premiumIcon} /> */}
+                      <i class="fa-solid fa-lock premium-icon"></i>
+                    </h3>
+                    <button
+                      className="btn-apply"
+                      id="edit-pattern"
+                      onClick={() => setPremium(!premium)}
+                    >
+                      Edit Pattern
+                    </button>
+                  </div>
+                  <div className="features">
+                    <h3>
+                      Share/Export Loading
+                      {/* <img className="premium-icon" src={premiumIcon} /> */}
+                      {/* <i class="fa-solid fa-lock premium-icon"></i> */}
+                    </h3>
+                    {/* <input
                     type="email"
                     className="features-input"
                     placeholder="Enter your email"
                   /> */}
-                  <button
-                    className="btn-apply"
-                    id="share-loading"
-                    onClick={share}
-                  >
-                    Share
-                  </button>
+                    <button
+                      className="btn-apply"
+                      id="share-loading"
+                      onClick={share}
+                    >
+                      Share
+                    </button>
+                  </div>
                 </div>
-              </div>
+              )}
+
               {mobileView && (
                 <>
                   <div style={{ display: "flex", justifyContent: "center" }}>
                     <button
                       className="btn-apply"
-                      style={{ backgroundColor: "#cc9c87" }}
+                      style={{
+                        backgroundColor: "#cc9c87",
+                        marginTop: mobileView ? "1.5rem" : "",
+                      }}
                       onClick={() => navigate(stagewise_loading)}
                     >
                       Stage wise loading
