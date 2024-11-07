@@ -42,7 +42,9 @@ const FreeOutput = ({ containerQuan }) => {
   const [assignPopup, setAssignPopup] = useState(false);
   const [skuData, setSkuData] = useState([]);
   const [numCases, setNumCases] = useState([]);
-  const [mobileView, setMobileView] = useState(true);
+  const [inputData, setInputData] = useState({});
+  const [mobileView, setMobileView] = useState(false);
+  const [stagewiseData, setStagewiseData] = useState({});
   //useSelector=========================================================================================================================
   const loading = useSelector((state) => state.rootReducer.mainSlice.loading);
   const tableData = useSelector(
@@ -99,22 +101,22 @@ const FreeOutput = ({ containerQuan }) => {
   };
 
   const postData = (data) => {
-    // const formData = new FormData();
-    // Object.keys(data)?.forEach((key) => {
-    //   formData.append(key, data[key]);
-    // });
-    // dispatch(getDataThunk(formData)).then((data) => {
-    //   if (data.payload) {
-    //     localStorage.setItem(
-    //       "threed_paths",
-    //       JSON.stringify(data?.payload?.threed_paths)
-    //     );
-    //     localStorage.setItem(
-    //       "container_inf",
-    //       JSON.stringify(data?.payload?.container_inf)
-    //     );
-    //   }
-    // });
+    const formData = new FormData();
+    Object.keys(data)?.forEach((key) => {
+      formData.append(key, data[key]);
+    });
+    dispatch(getDataThunk(formData)).then((data) => {
+      if (data.payload) {
+        localStorage.setItem(
+          "threed_paths",
+          JSON.stringify(data?.payload?.threed_paths)
+        );
+        localStorage.setItem(
+          "container_inf",
+          JSON.stringify(data?.payload?.container_inf)
+        );
+      }
+    });
   };
   const createLoadplan = () => {
     if (orderData.length > 0 && containerQuan) {
@@ -216,9 +218,9 @@ const FreeOutput = ({ containerQuan }) => {
           numCases.push(data[numberOfCases]);
         }
       }
-
       setSkuData(skuArray);
     }
+    setStagewiseData((prev) => ({ ...prev, skuLength: data.numTypes }));
 
     if (data.mobileView) {
       setMobileView(true);
@@ -227,6 +229,7 @@ const FreeOutput = ({ containerQuan }) => {
     if (queryParams) {
       postData(data);
     }
+    setInputData(data);
   }, [location.search]);
 
   useEffect(() => {
@@ -242,7 +245,6 @@ const FreeOutput = ({ containerQuan }) => {
       const value = parseFloat(td.textContent);
       return sum + (isNaN(value) ? 0 : value);
     }, 0);
-
     setTotalCasesSum(totalSum);
   }, [boxInfo, tableData]);
 
@@ -284,47 +286,47 @@ const FreeOutput = ({ containerQuan }) => {
             </div>
             {/* <div className="table" style={{ display: "flex" }}>
               <div
-                className="table-info"
-                dangerouslySetInnerHTML={{ __html: tableData }}
+              className="table-info"
+              dangerouslySetInnerHTML={{ __html: tableData }}
               ></div>
               <div>
                 <table className="table-info filled_table">
-                  <tr>
-                    <th>Filled cases</th>
-                  </tr>
-                  {filled?.map((ele) => (
+                <tr>
+                <th>Filled cases</th>
+                </tr>
+                {filled?.map((ele) => (
                     <tr style={{ padding: "11.7px" }}>{ele}</tr>
-                  ))}
-                  <tbody></tbody>
-                </table>
-              </div>
-              <div>
+                    ))}
+                    <tbody></tbody>
+                    </table>
+                    </div>
+                    <div>
                 <table className="table-info filled_table">
-                  <tr>
-                    <th>Info Cases</th>
-                  </tr>
-                  {colorsData?.map((ele, index) => {
-                    const matchingSku = skuData.find(
-                      (item) => rgbaToHex(item.color) == ele
+                <tr>
+                <th>Info Cases</th>
+                </tr>
+                {colorsData?.map((ele, index) => {
+                  const matchingSku = skuData.find(
+                    (item) => rgbaToHex(item.color) == ele
                     );
                     return (
                       <tr
-                        style={{
-                          padding: "11.7px",
-                          background: ele,
+                      style={{
+                        padding: "11.7px",
+                        background: ele,
                         }}
                       >
                         {matchingSku ? (
                           <>{matchingSku.sku}</>
-                        ) : (
-                          <>No match found</>
-                        )}
-                      </tr>
-                    );
-                  })}
-                </table>
-              </div>
-            </div> */}
+                          ) : (
+                            <>No match found</>
+                            )}
+                            </tr>
+                            );
+                            })}
+                            </table>
+                            </div>
+                            </div> */}
             {!mobileView && (
               <div className="table" style={{ display: "flex" }}>
                 <div className="table-info">
@@ -502,7 +504,12 @@ const FreeOutput = ({ containerQuan }) => {
                         backgroundColor: "#cc9c87",
                         marginTop: mobileView ? "1.5rem" : "",
                       }}
-                      onClick={() => navigate(stagewise_loading)}
+                      onClick={() => {
+                        const boxData = boxInfo?.[contIndex];
+                        navigate(stagewise_loading, {
+                          state: { inputData, filled, boxData },
+                        });
+                      }}
                     >
                       Stage wise loading
                     </button>
@@ -510,8 +517,8 @@ const FreeOutput = ({ containerQuan }) => {
                 </>
               )}
             </div>
-            {user?.userType == "Company_Admin" ||
-            user?.userType == "Company_planner" ? (
+            {(user?.userType == "Company_Admin" && orderData.length > 0) ||
+            (user?.userType == "Company_planner" && orderData.length > 0) ? (
               <>
                 <div
                   className="two-button"
@@ -588,3 +595,22 @@ export default FreeOutput;
 //   console.log(modify, sums);
 //   setUpdatedTableData(modify);
 // }, [tableData, boxInfo]);
+
+// if (inputData.numTypes) {
+//   const numType = parseInt(inputData.numTypes);
+//   for (let i = 0; i < numType; i++) {
+//     const colorKey = `color${i}`;
+//     setStagewiseData((prev) => ({
+//       ...prev,
+//       colorKey: {
+//         filled: filled[i],
+//         totalCases: `numberOfCases${i}`,
+//         name: `sku${i}`,
+//         length: `length${i}`,
+//         width: `width${i}`,
+//         height: `height${i}`,
+//         rotationAllowed: `rotationAllowed${i}`,
+//       },
+//     }));
+//   }
+// }

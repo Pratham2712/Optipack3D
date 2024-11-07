@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const speedButton = document.getElementById("speeds");
   const speedButtons = speedButton.querySelectorAll("button");
   let colorChange = "";
-  let indexShot = -1;
+  let indexShot = 0;
   let currentSpeed = 20;
   let animationQueue = [];
   let lastAnimationTime = 0;
@@ -286,7 +286,10 @@ document.addEventListener("DOMContentLoaded", () => {
         // Only take a screenshot if the color has changed
         if (colorChange !== colorName) {
           indexShot++;
-          previousData[indexShot] = { color: colorName };
+
+          previousData[indexShot] = {
+            color: [...previousData[indexShot - 1].color, colorName],
+          };
           colorChange = colorName;
           // Take a screenshot
           const originalWidth = window.innerWidth;
@@ -298,7 +301,6 @@ document.addEventListener("DOMContentLoaded", () => {
           renderer.render(scene, camera); // Render the scene at the new resolution
 
           const screenshotDataURL = renderer.domElement.toDataURL("image/png");
-          console.log("inside", colorName);
 
           previousData[indexShot].screenshot = screenshotDataURL; // Store the screenshot in the object
 
@@ -621,6 +623,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (boxes.length > 0) {
           colorChange = boxes[0].color;
           localStorage.setItem("boxData", JSON.stringify({}));
+          const initialData = {};
+          initialData[indexShot] = { color: [colorChange] };
+          localStorage.setItem("boxData", JSON.stringify(initialData));
           createSmallBoxesFromCoordinates(boxes);
 
           const originalWidth = window.innerWidth;
