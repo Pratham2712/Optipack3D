@@ -11,7 +11,7 @@ import "swiper/css/thumbs";
 import "./StageLoading.css";
 
 import { FreeMode, Navigation, Thumbs, Pagination, Zoom } from "swiper/modules";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { rgbaToHex } from "../../Util/util";
 
 const heading = ["Name", "Length", "Width", "Height", "Filled", "Total"];
@@ -23,8 +23,7 @@ const StageLoading = () => {
   const [imgColors, setImgColors] = useState([]);
   const location = useLocation();
   const { inputData, filled, boxData } = location.state || {};
-
-  console.log(inputData, filled);
+  const navigate = useNavigate();
 
   const replaceHex = (colorCode) => {
     colorCode = colorCode.replace("0x", "#");
@@ -32,7 +31,6 @@ const StageLoading = () => {
   };
 
   const generateData = (imgData) => {
-    console.log(imgData);
     Object.keys(imgData).forEach((ele) => {
       if (ele > 0) {
         for (let i = 0; i < imgData?.[ele]?.color?.length - 1; i++) {
@@ -64,14 +62,16 @@ const StageLoading = () => {
       }
     });
   };
-  console.log(showSku);
+
+  const goBack = () => {
+    navigate(-1);
+  };
 
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem("boxData")) || {};
     const lastImg = localStorage.getItem("screenshot");
     setImgData(data);
     const color = [];
-    console.log(data);
     color.push(...data?.[Object.keys(data)?.length - 1]?.color);
     color.push(data?.[Object.keys(data)?.length - 1]?.color?.[0]);
     console.log("color", color);
@@ -81,8 +81,6 @@ const StageLoading = () => {
       [Object.keys(prev).length]: { screenshot: lastImg, color: color },
     }));
   }, []);
-
-  console.log(imgData);
 
   useEffect(() => {
     if (Object.keys(imgData).length > 0) {
@@ -185,6 +183,19 @@ const StageLoading = () => {
             }
           })}
         </table>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <button
+            className="btn-apply"
+            style={{
+              background: "white",
+              border: "2px solid #cc9c87",
+              color: "black",
+            }}
+            onClick={goBack}
+          >
+            Go Back
+          </button>
+        </div>
       </div>
     </>
   );
