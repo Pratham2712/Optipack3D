@@ -19,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 import SkuSetting from "../SkuSetting/SkuSetting";
 import toast from "react-hot-toast";
 import Joyride from "react-joyride";
+import { toggleShowTour } from "../../../redux/Slices/authSlice";
 
 const Setting = () => {
   const [is700, setIs700] = useState(window.innerWidth < 700);
@@ -48,7 +49,7 @@ const Setting = () => {
   const showTour = useSelector((state) => state.rootReducer.authSlice.showTour);
 
   const [tour, setTour] = useState({
-    run: showTour,
+    run: showTour === true,
     steps: [
       {
         target: ".actions-head",
@@ -162,8 +163,11 @@ const Setting = () => {
   };
   const handleTourCallback = (data) => {
     const { status } = data;
+    console.log(status);
+
     if (status === "finished" || status === "skipped") {
       setTour((prevTour) => ({ ...prevTour, run: false }));
+      dispatch(toggleShowTour());
     }
   };
   const addDefaultSetting = () => {
@@ -206,7 +210,11 @@ const Setting = () => {
   }, []);
 
   useEffect(() => {
-    setTour((prevTour) => ({ ...prevTour, run: showTour }));
+    console.log("showTour", showTour);
+
+    if (showTour == true) {
+      setTour((prevTour) => ({ ...prevTour, run: showTour === true }));
+    }
   }, [showTour]);
 
   useEffect(() => {
@@ -320,15 +328,6 @@ const Setting = () => {
                     }}
                   >
                     <option value="">Select From Dropdown</option>
-                    <option value="General Purpose container 20">
-                      General Purpose container 20'
-                    </option>
-                    <option value="General Purpose container 40'">
-                      General Purpose container 40'
-                    </option>
-                    <option value="High - Cube General Purpose container 40'">
-                      High - Cube General Purpose container 40'
-                    </option>
                     {containerList?.map((ele) => (
                       <option value={ele}>{ele}</option>
                     ))}

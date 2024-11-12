@@ -190,6 +190,8 @@ const StageLoading = () => {
               background: "white",
               border: "2px solid #cc9c87",
               color: "black",
+              fontSize: "1rem",
+              padding: "10px 19px",
             }}
             onClick={goBack}
           >

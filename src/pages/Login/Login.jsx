@@ -20,13 +20,15 @@ import {
   admin_setting,
   new_user,
   planner_order,
+  privacy_policy,
+  set_password,
   signupurl,
   User_root,
 } from "../../constants/links";
-import axios from "axios";
-import { BASE_URL } from "../../constants/constants";
+
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [password, setPassword] = useState(false);
   const [isResendDisabled, setIsResendDisabled] = useState(true);
   const [minuteLeft, setMinuteLeft] = useState("00");
   const [secondLeft, setSecondLeft] = useState("00");
@@ -46,6 +48,9 @@ const Login = () => {
   const dispatch = useDispatch();
   //useSelector
   const otpSend = useSelector((state) => state.rootReducer.authSlice.otpSend);
+  const isPassword = useSelector(
+    (state) => state.rootReducer.authSlice.data.user.isPassword
+  );
 
   const loading = useSelector((state) => state.rootReducer.authSlice.loading);
   const errorMsg = useSelector(
@@ -184,8 +189,9 @@ const Login = () => {
             color: "#713200",
           },
         });
-        // const res = axios.get(`${BASE_URL}/dashboard_admin`);
-        if (data.payload["SUCCESS"]?.userType == "Company_Admin") {
+        if (isPassword == false) {
+          navigate(set_password);
+        } else if (data.payload["SUCCESS"]?.userType == "Company_Admin") {
           navigate(admin_setting);
         } else if (data.payload["SUCCESS"]?.userType == "Company_planner") {
           navigate(planner_order);
@@ -241,13 +247,6 @@ const Login = () => {
     },
   });
 
-  const onSubmit = (data) => {
-    const formData = new FormData();
-    Object.keys(data).forEach((key) => {
-      formData.append(key, data[key]);
-    });
-    dispatch(loginThunk(formData));
-  };
   const schema = yup.object().shape({
     password: yup
       .string()
@@ -258,20 +257,59 @@ const Login = () => {
       .required("Email is required")
       .email("Email must be a valid email address"),
   });
-
   const {
     handleSubmit,
     setError,
     trigger,
     register,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
       password: "",
       email: "",
+      company_name: "",
     },
   });
+
+  const onSubmit = (data) => {
+    console.log(data);
+    const extractedDomain = extractDomain(data.email);
+    setValue("company_name", extractedDomain);
+    const formData = new FormData();
+    Object.keys(data).forEach((key) => {
+      formData.append(key, data[key]);
+    });
+    dispatch(loginThunk(formData)).then((data) => {
+      if (data.payload["ERROR"]) {
+        toast.error(data.payload["ERROR"], {
+          style: {
+            border: "1px solid #713200",
+            padding: "16px",
+            color: "#713200",
+          },
+        });
+      }
+      if (data.payload["SUCCESS"]) {
+        toast.success(data.payload["SUCCESS"]?.message, {
+          style: {
+            border: "1px solid #713200",
+            padding: "16px",
+            color: "#713200",
+          },
+        });
+        if (data.payload["SUCCESS"]?.userType == "Company_Admin") {
+          navigate(admin_setting);
+        } else if (data.payload["SUCCESS"]?.userType == "Company_planner") {
+          navigate(planner_order);
+        } else {
+          navigate(new_user);
+        }
+      }
+    });
+  };
+
   //useEffect=====================================================================================================================
   useEffect(() => {
     const checkTimer = () => {
@@ -371,26 +409,71 @@ const Login = () => {
               </form>
             ) : (
               <>
-                <div className="input-group">
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    placeholder="Email address"
-                    {...register2("email")}
-                    onBlur={handleBlur}
-                  />
-                  {errors2?.email && (
-                    <div className="error">{errors2?.email?.message}</div>
-                  )}
+                {password ? (
+                  <form onSubmit={handleSubmit(onSubmit)}>
+                    <div className="input-group">
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Email address"
+                        {...register("email")}
+                        onBlur={handleBlur}
+                      />
+                      {errors?.email && (
+                        <div className="error">{errors?.email?.message}</div>
+                      )}
+                    </div>
+                    <div className="input-group">
+                      <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter password"
+                        {...register("password")}
+                      />
+                      {errors?.password && (
+                        <div className="error">{errors?.password?.message}</div>
+                      )}
+                    </div>
+                    <button type="submit" className="login-button">
+                      Login
+                    </button>
+                  </form>
+                ) : (
+                  <>
+                    <div className="input-group">
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Email address"
+                        {...register2("email")}
+                        onBlur={handleBlur}
+                      />
+                      {errors2?.email && (
+                        <div className="error">{errors2?.email?.message}</div>
+                      )}
+                    </div>
+                    <button
+                      type="submit"
+                      className="login-button"
+                      onClick={handleSubmit2(sendOtp)}
+                    >
+                      Send OTP
+                    </button>
+                  </>
+                )}
+
+                <div className="blue-text">
+                  <Link
+                    className="blue-text"
+                    onClick={() => setPassword(!password)}
+                  >
+                    {password ? "OTP login" : "Password login"}
+                  </Link>
                 </div>
-                <button
-                  type="submit"
-                  className="login-button"
-                  onClick={handleSubmit2(sendOtp)}
-                >
-                  Send OTP
-                </button>
+
                 <div className="blue-text">
                   <Link to={signupurl} className="blue-text">
                     Don't have account? Register
@@ -470,7 +553,10 @@ const Login = () => {
 
         <footer>
           <p>
-            ©2024 Container Builder · <a href="#">Privacy & terms</a>
+            ©2024 Container Builder ·{" "}
+            <a href="#" onClick={() => navigate(privacy_policy)}>
+              Privacy & terms
+            </a>
           </p>
         </footer>
       </div>

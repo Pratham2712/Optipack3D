@@ -22,6 +22,8 @@ import {
   loginurl,
   new_user,
   planner_order,
+  privacy_policy,
+  set_password,
   User_root,
 } from "../../constants/links";
 import { Link, useNavigate } from "react-router-dom";
@@ -180,13 +182,14 @@ const Signup = () => {
             color: "#713200",
           },
         });
-        if (data.payload["SUCCESS"]?.userType == "Company_Admin") {
-          navigate(admin_setting);
-        } else if (data.payload["SUCCESS"]?.userType == "Company_planner") {
-          navigate(planner_order);
-        } else {
-          navigate(new_user);
-        }
+        // if (data.payload["SUCCESS"]?.userType == "Company_Admin") {
+        //   navigate(admin_setting);
+        // } else if (data.payload["SUCCESS"]?.userType == "Company_planner") {
+        //   navigate(planner_order);
+        // } else {
+        //   navigate(new_user);
+        // }
+        navigate(set_password);
       }
     });
   };
@@ -454,7 +457,10 @@ const Signup = () => {
 
         <footer>
           <p>
-            ©2024 Container Builder · <a href="#">Privacy & terms</a>
+            ©2024 Container Builder ·{" "}
+            <a href="#" onClick={() => navigate(privacy_policy)}>
+              Privacy & terms
+            </a>
           </p>
         </footer>
       </div>

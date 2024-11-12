@@ -3,6 +3,7 @@ export const feature = "/#feature-tab";
 export const free_trail = "/freeTrial";
 export const join = "/join";
 export const loginurl = "/login";
+export const set_password = "/set-password";
 export const signupurl = "/additionalInformation";
 export const free_output = "/freeOutput";
 export const term_condition = "/term-conditions";

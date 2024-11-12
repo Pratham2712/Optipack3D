@@ -281,7 +281,7 @@ const FreeOutput = ({ containerQuan }) => {
               </div>
             )}
 
-            <div style={{ fontSize: "1.2rem", marginTop: "1rem" }}>
+            <div style={{ fontSize: "1.5rem", marginTop: "1rem" }}>
               {mobileView ? "Order Visualization :" : "Order Information :"}{" "}
             </div>
             {/* <div className="table" style={{ display: "flex" }}>
@@ -382,8 +382,8 @@ const FreeOutput = ({ containerQuan }) => {
                     marginTop: "2rem",
                     backgroundColor: index == contIndex ? "black" : "#F0F0F0",
                     color: index == contIndex ? "white" : "black",
-                    padding: mobileView ? "5px 7px" : "",
-                    fontSize: mobileView ? "0.7rem" : "",
+                    padding: mobileView ? "9px 13px" : "",
+                    fontSize: mobileView ? "0.8rem" : "",
                   }}
                   onClick={() => {
                     setContIndex(index);
@@ -502,7 +502,8 @@ const FreeOutput = ({ containerQuan }) => {
                       className="btn-apply"
                       style={{
                         backgroundColor: "#cc9c87",
-                        marginTop: mobileView ? "1.5rem" : "",
+                        marginTop: mobileView ? "2.5rem" : "",
+                        padding: "10px 15px",
                       }}
                       onClick={() => {
                         const boxData = boxInfo?.[contIndex];
