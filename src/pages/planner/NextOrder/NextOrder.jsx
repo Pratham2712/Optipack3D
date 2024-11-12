@@ -344,15 +344,7 @@ const NextOrder = ({ containerQuan, setContainerQuan }) => {
                           <option value="" selected>
                             Select From Dropdown
                           </option>
-                          <option value="General Purpose container 20">
-                            General Purpose container 20'
-                          </option>
-                          <option value="General Purpose container 40'">
-                            General Purpose container 40'
-                          </option>
-                          <option value="High - Cube General Purpose container 40'">
-                            High - Cube General Purpose container 40'
-                          </option>
+
                           {containerList?.map((ele) => (
                             <option value={ele}>{ele}</option>
                           ))}

@@ -23,9 +23,9 @@ export const signupThunk = createAsyncThunk(
     }
   }
 );
-export const loginThunk = createAsyncThunk("/loginJson", async (data) => {
+export const loginThunk = createAsyncThunk("/login_viewJson", async (data) => {
   try {
-    const res = await axios.post(`${BASE_URL}/loginJson`, data, {
+    const res = await axios.post(`${BASE_URL}/login_viewJson`, data, {
       headers: {
         "Content-Type": "application/form-data",
       },
@@ -116,15 +116,27 @@ export const logoutThunk = createAsyncThunk("/logout_user", async (data) => {
         "Content-Type": "application/form-data",
       },
     });
-    res.clearCookie("jwt_token", {
-      sameSite: "None",
-      secure: true,
-    });
     return res.data;
   } catch (error) {
     return error.response.data;
   }
 });
+export const setPasswordThunk = createAsyncThunk(
+  "/set_password",
+  async (data) => {
+    try {
+      const res = await axios.post(`${BASE_URL}/set_password`, data, {
+        headers: {
+          "Content-Type": "application/form-data",
+        },
+      });
+
+      return res.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  }
+);
 
 const initialState = {
   loading: false,
@@ -152,6 +164,7 @@ const initialState = {
     checkEmailThunk: IDLE,
     checkLoginThunk: IDLE,
     logoutThunk: IDLE,
+    setPasswordThunk: IDLE,
   },
 };
 
@@ -162,6 +175,9 @@ const authSlice = createSlice({
     clearErrorSlice: (state, action) => {
       state.isError = false;
       state.errorData = {};
+    },
+    toggleShowTour: (state) => {
+      state.showTour = false;
     },
   },
   extraReducers: (builders) => {
@@ -200,7 +216,8 @@ const authSlice = createSlice({
           case SUCCESS:
             state.isLogin = true;
             state.loading = false;
-            state.successMsg = payload[SUCCESS];
+            state.successMsg = payload[SUCCESS]?.message;
+            state.data.user = payload[SUCCESS];
             break;
           case ERROR:
             state.isLogin = false;
@@ -277,6 +294,7 @@ const authSlice = createSlice({
       .addCase(verifyOtpThunk.rejected, (state, action) => {
         state.status.verifyOtpThunk = ERROR;
         state.loading = false;
+        state.showTour = false;
         state.errorData.message = action.error.message;
       })
       //verifyLoginThunk==============================================================================================================
@@ -401,9 +419,37 @@ const authSlice = createSlice({
         state.loading = false;
         state.initialLoad = false;
         state.errorData.message = action.error.message;
+      })
+      //setPasswordThunk==============================================================================================================
+      .addCase(setPasswordThunk.pending, (state, { payload }) => {
+        state.loading = true;
+      })
+      .addCase(setPasswordThunk.fulfilled, (state, { payload }) => {
+        switch (Object.keys(payload)[0]) {
+          case SUCCESS:
+            state.successMsg = "";
+            state.loading = false;
+            state.successMsg = payload[SUCCESS]?.message;
+            state.errorData.message = "";
+            break;
+          case ERROR:
+            state.errorData.message = "";
+            state.loading = false;
+            state.isError = true;
+            state.errorData.message = payload[ERROR];
+            state.successMsg = "";
+            break;
+          default:
+            break;
+        }
+      })
+      .addCase(setPasswordThunk.rejected, (state, action) => {
+        state.status.setPasswordThunk = ERROR;
+        state.loading = false;
+        state.errorData.message = action.error.message;
       });
   },
 });
 
 export default authSlice.reducer;
-export const { clearErrorSlice } = authSlice.actions;
+export const { clearErrorSlice, toggleShowTour } = authSlice.actions;

@@ -21,7 +21,9 @@ const Breadcrumb = () => {
   const logout = () => {
     setShowPop(false);
     dispatch(logoutThunk({})).then((data) => {
-      if (data.payload["ERROR"]) {
+      console.log(data);
+
+      if (data?.payload["ERROR"]) {
         toast.error(data.payload["ERROR"], {
           style: {
             border: "1px solid #713200",

@@ -12,6 +12,7 @@ import {
   planner_order,
   planner_skuSelection,
   privacy_policy,
+  set_password,
   signupurl,
   stagewise_loading,
   term_condition,
@@ -33,6 +34,7 @@ import NoneUser from "./pages/NoneUser/NoneUser";
 import TermsNConditon from "./pages/TermsNCondition/TermsNConditon";
 import Privacy from "./pages/Privacy/Privacy";
 import StageLoading from "./pages/StageLoading/StageLoading";
+import SetPassword from "./pages/SetPassword/SetPassword";
 
 export const UnAuthRoutes = ({ skuData, setSkuData, inputs, setInputs }) => {
   return (
@@ -53,6 +55,7 @@ export const UnAuthRoutes = ({ skuData, setSkuData, inputs, setInputs }) => {
       <Route path={join} element={<Join />}></Route>
       <Route path={loginurl} element={<Login />}></Route>
       <Route path={signupurl} element={<Signup />}></Route>
+      <Route path={set_password} element={<SetPassword />}></Route>
       <Route path={term_condition} element={<TermsNConditon />}></Route>
       <Route path={privacy_policy} element={<Privacy />}></Route>
       <Route path={stagewise_loading} element={<StageLoading />}></Route>
@@ -72,6 +75,9 @@ export const AuthRoutes = ({
   //useSelector=================================================================================================================
   const userType = useSelector(
     (state) => state.rootReducer.authSlice.data.user.userType
+  );
+  const isPassword = useSelector(
+    (state) => state.rootReducer.authSlice.data.user.isPassword
   );
   return (
     <Routes>
@@ -94,6 +100,15 @@ export const AuthRoutes = ({
       <Route path={join} element={<Join />}></Route>
       <Route path={loginurl} element={<Login />}></Route>
       <Route path={signupurl} element={<Signup />}></Route>
+
+      {isPassword == false ? (
+        <>
+          <Route path={set_password} element={<SetPassword />}></Route>
+        </>
+      ) : (
+        <Route path="*" element={<Navigate to={User_root} replace />} />
+      )}
+
       <Route path={new_user} element={<NoneUser />}></Route>
       <Route path={term_condition} element={<TermsNConditon />}></Route>
       <Route path={privacy_policy} element={<Privacy />}></Route>

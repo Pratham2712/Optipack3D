@@ -3,7 +3,12 @@ import logo from "../../assests/logo.png";
 import dashboard from "../../assests/dashboard.png";
 import "./Join.css";
 import { useNavigate } from "react-router-dom";
-import { loginurl, signupurl, User_root } from "../../constants/links";
+import {
+  loginurl,
+  privacy_policy,
+  signupurl,
+  User_root,
+} from "../../constants/links";
 const Join = () => {
   const navigate = useNavigate();
   return (
@@ -37,7 +42,10 @@ const Join = () => {
 
         <footer>
           <p>
-            ©2024 Container Builder · <a href="#">Privacy & terms</a>
+            ©2024 Container Builder ·{" "}
+            <a href="#" onClick={() => navigate(privacy_policy)}>
+              Privacy & terms
+            </a>
           </p>
         </footer>
       </div>
