@@ -138,6 +138,21 @@ export const getOrderDataThunk = createAsyncThunk(
   }
 );
 
+export const uploadImageThunk = createAsyncThunk(
+  "/upload_user_image",
+  async (data) => {
+    try {
+      const res = await axios.post(`${BASE_URL}/upload_user_image`, data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      return res.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  }
+);
 const initialState = {
   loading: false,
   updateDone: false,
@@ -171,6 +186,7 @@ const initialState = {
     getLoaderThunk: IDLE,
     assignLoadplanThunk: IDLE,
     getOrderDataThunk: IDLE,
+    uploadImageThunk: IDLE,
   },
 };
 
@@ -514,6 +530,31 @@ const plannerSlice = createSlice({
       })
       .addCase(getOrderDataThunk.rejected, (state, action) => {
         state.status.getOrderDataThunk = ERROR;
+        state.loading = false;
+        state.errorData.message = action.error.message;
+      })
+      //uploadImageThunk===========================================================================================
+      .addCase(uploadImageThunk.pending, (state, { payload }) => {
+        state.loading = true;
+      })
+      .addCase(uploadImageThunk.fulfilled, (state, { payload }) => {
+        switch (Object.keys(payload)[0]) {
+          case SUCCESS:
+            state.loading = false;
+            state.successMsg = payload[SUCCESS]?.message;
+            state.updateDone = !state.updateDone;
+            break;
+          case ERROR:
+            state.loading = false;
+            state.isError = true;
+            state.errorData.message = payload[ERROR];
+            break;
+          default:
+            break;
+        }
+      })
+      .addCase(uploadImageThunk.rejected, (state, action) => {
+        state.status.uploadImageThunk = ERROR;
         state.loading = false;
         state.errorData.message = action.error.message;
       });

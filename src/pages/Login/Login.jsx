@@ -28,7 +28,7 @@ import {
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [password, setPassword] = useState(false);
+  const [password, setPassword] = useState(true);
   const [isResendDisabled, setIsResendDisabled] = useState(true);
   const [minuteLeft, setMinuteLeft] = useState("00");
   const [secondLeft, setSecondLeft] = useState("00");
@@ -274,7 +274,6 @@ const Login = () => {
   });
 
   const onSubmit = (data) => {
-    console.log(data);
     const extractedDomain = extractDomain(data.email);
     setValue("company_name", extractedDomain);
     const formData = new FormData();

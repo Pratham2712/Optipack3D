@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./Breadcrumb.css";
 import notification from "../../assests/Notification.png";
@@ -7,13 +7,19 @@ import reload from "../../assests/reload.png";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutThunk } from "../../redux/Slices/authSlice";
 import toast from "react-hot-toast";
+import UploadImagePop from "../../AdminComponents/UploadImagePop/UploadImagePop";
 const Breadcrumb = () => {
   const location = useLocation();
   const pathnames = location.pathname.split("/").filter((x) => x);
   const [showPop, setShowPop] = useState(false);
+  const [uploadPop, setUploadPop] = useState(false);
   const dispatch = useDispatch();
+  const divRef = useRef(null);
 
   const isLogin = useSelector((state) => state.rootReducer.authSlice.isLogin);
+  const imageUrl = useSelector(
+    (state) => state.rootReducer.authSlice.data.user.image_url
+  );
 
   const handleRefresh = () => {
     window.location.reload();
@@ -21,8 +27,6 @@ const Breadcrumb = () => {
   const logout = () => {
     setShowPop(false);
     dispatch(logoutThunk({})).then((data) => {
-      console.log(data);
-
       if (data?.payload["ERROR"]) {
         toast.error(data.payload["ERROR"], {
           style: {
@@ -43,6 +47,18 @@ const Breadcrumb = () => {
       }
     });
   };
+  const handleClickOutside = (event) => {
+    if (divRef.current && !divRef.current.contains(event.target)) {
+      setShowPop(false); // Set state to false if clicking outside
+    }
+  };
+  //useEffect ===================================================================================================================
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   return (
     <div
       aria-label="breadcrumb"
@@ -97,22 +113,36 @@ const Breadcrumb = () => {
           <img src={notification} alt="Notifications" />
           <div style={{ position: "relative" }}>
             <img
-              src={author}
+              src={imageUrl || author}
               alt="User Image"
               className="user-image"
               style={{ cursor: "pointer" }}
-              onClick={() => setShowPop(!showPop)}
+              onClick={(e) => {
+                setShowPop(!showPop);
+              }}
             />
             {showPop && (
               <div
                 style={{ position: "absolute", cursor: "pointer" }}
                 className="show"
+                ref={divRef}
               >
-                <div onClick={logout}>Logout</div>
+                <div onClick={logout}>
+                  {" "}
+                  <i class="fa-solid fa-arrow-right-from-bracket"></i>Logout
+                </div>
+                <div onClick={() => setUploadPop(!uploadPop)}>
+                  {" "}
+                  <i class="fa-solid fa-upload"></i>
+                  {imageUrl ? "Update image" : "Upload image"}
+                </div>
               </div>
             )}
           </div>
         </div>
+      )}
+      {uploadPop && (
+        <UploadImagePop uploadPop={uploadPop} setUploadPop={setUploadPop} />
       )}
     </div>
   );
