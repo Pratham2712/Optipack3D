@@ -26,6 +26,22 @@ export const getDataThunk = createAsyncThunk(
   }
 );
 
+export const contactEmailThunk = createAsyncThunk(
+  "/contact_email",
+  async (data) => {
+    try {
+      const res = await axios.post(`${BASE_URL}/contact_email`, data, {
+        headers: {
+          "Content-Type": "application/form-data",
+        },
+      });
+      return res.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  }
+);
+
 const initialState = {
   loading: false,
   updateDone: false,
@@ -40,6 +56,7 @@ const initialState = {
   },
   status: {
     getDataThunk: IDLE,
+    contactEmailThunk: IDLE,
   },
 };
 
@@ -76,6 +93,23 @@ const mainSlice = createSlice({
       })
       .addCase(getDataThunk.rejected, (state, action) => {
         state.status.getDataThunk = ERROR;
+        state.loading = false;
+        state.errorData.message = action.error.message;
+      })
+      //contactEmailThunk=====================================================================================================================
+      .addCase(contactEmailThunk.pending, (state, { payload }) => {
+        state.loading = true;
+      })
+      .addCase(contactEmailThunk.fulfilled, (state, { payload }) => {
+        if (payload) {
+          state.loading = false;
+          state.status.contactEmailThunk = FULFILLED;
+        } else {
+          state.loading = false;
+        }
+      })
+      .addCase(contactEmailThunk.rejected, (state, action) => {
+        state.status.contactEmailThunk = ERROR;
         state.loading = false;
         state.errorData.message = action.error.message;
       });

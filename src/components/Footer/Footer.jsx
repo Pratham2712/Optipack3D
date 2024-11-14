@@ -1,8 +1,9 @@
 import React from "react";
 import logo from "../../assests/logo-removebg-preview.png";
 import "./Footer.css";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
+  contact_us,
   privacy_policy,
   term_condition,
   User_root,
@@ -19,15 +20,11 @@ const Footer = () => {
           </a>
           <a href="#">About</a>
           {/* <a href="#">Settings</a> */}
-          <a href="#">Contact</a>
+          <Link to={contact_us}>Contact</Link>
           <a href="#">Blog</a>
           <a href="#feature-tab">Features</a>
-          <a href="#" onClick={() => navigate(privacy_policy)}>
-            Privacy Policy
-          </a>
-          <a href="#" onClick={() => navigate(term_condition)}>
-            Terms of Service
-          </a>
+          <Link to={privacy_policy}>Privacy Policy</Link>
+          <Link to={term_condition}>Terms of Service</Link>
         </div>
         <div className="logo-footer">
           <img src={logo} alt="" />
@@ -40,7 +37,7 @@ const Footer = () => {
           {/* <a href="#">
             <i class="fa-brands fa-square-x-twitter"></i>
           </a> */}
-          <a href="#">
+          <a href="mailto:shahrukh@optipack3d.com">
             <i class="fa-solid fa-envelope"></i>{" "}
           </a>
         </div>

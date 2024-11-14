@@ -11,7 +11,7 @@ import Footer from "../../components/Footer/Footer";
 import KeyFeat from "../../components/KeyFeatures2/KeyFeat";
 import Tabs from "../../components/Tabs/Tabs";
 import { useScroll } from "../../Util/ScrollContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { free_trail } from "../../constants/links";
 const Home = () => {
   const { featureSectionRef } = useScroll();
@@ -34,9 +34,9 @@ const Home = () => {
                   <button className="enquire">Enquire Now</button>
                 </div>
                 <div className="hero-buttons">
-                  <a className="free" onClick={() => navigate(free_trail)}>
+                  <Link className="free" to={free_trail}>
                     Start Free Trial
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
