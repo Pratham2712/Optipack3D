@@ -9,6 +9,7 @@
   --primary: #cc9c87;
   --mainText: #101010;
   --green: "#CFFBBF";
+  --lightBlack: "#4D4D4D";
 }
 html {
   &::-webkit-scrollbar {

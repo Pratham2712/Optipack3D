@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import logo from "../../assests/logo.png";
 import "./Navbar.css";
 import { NavLink } from "react-router-dom";
-import { free_trail, join } from "../../constants/links";
+import { contact_us, free_trail, join } from "../../constants/links";
 import { useScroll } from "../../Util/ScrollContext";
 
 const Navbar = () => {
@@ -41,7 +41,7 @@ const Navbar = () => {
               <a href="#">Settings</a>
             </li> */}
             <li>
-              <a href="#">Contact</a>
+              <NavLink to={contact_us}>Contact</NavLink>
             </li>
           </ul>
         </div>

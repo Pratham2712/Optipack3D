@@ -40,6 +40,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+  user-select: none;
 }
 
 .logo-footer img {
@@ -51,6 +53,7 @@
   width: 40px;
   margin-right: 10px;
   vertical-align: middle;
+  cursor: pointer;
 }
 
 .logo span {

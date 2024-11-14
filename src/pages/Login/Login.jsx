@@ -48,17 +48,9 @@ const Login = () => {
   const dispatch = useDispatch();
   //useSelector
   const otpSend = useSelector((state) => state.rootReducer.authSlice.otpSend);
-  const isPassword = useSelector(
-    (state) => state.rootReducer.authSlice.data.user.isPassword
-  );
 
   const loading = useSelector((state) => state.rootReducer.authSlice.loading);
-  const errorMsg = useSelector(
-    (state) => state.rootReducer.authSlice.errorData.message
-  );
-  const userType = useSelector(
-    (state) => state.rootReducer.authSlice.data.user.userType
-  );
+
   // Toggle password visibility
   const handleToggle = () => {
     setShowPassword(!showPassword);
@@ -189,7 +181,8 @@ const Login = () => {
             color: "#713200",
           },
         });
-        if (isPassword == false) {
+
+        if (data.payload["SUCCESS"]?.isPassword == false) {
           navigate(set_password);
         } else if (data.payload["SUCCESS"]?.userType == "Company_Admin") {
           navigate(admin_setting);
@@ -425,12 +418,32 @@ const Login = () => {
                     </div>
                     <div className="input-group">
                       <input
-                        type="password"
+                        type={showPassword ? "text" : "password"}
                         id="password"
                         name="password"
                         placeholder="Enter password"
                         {...register("password")}
+                        style={{ position: "relative" }}
                       />
+                      <button
+                        type="button"
+                        onClick={handleToggle}
+                        style={{
+                          position: "absolute",
+                          right: "13%",
+                          top: "0",
+                          height: "100%",
+                          border: "none",
+                          background: "none",
+                          cursor: "pointer",
+                        }}
+                      >
+                        {showPassword ? (
+                          <img src={eye} />
+                        ) : (
+                          <img src={eye_hide} alt="password" />
+                        )}
+                      </button>
                       {errors?.password && (
                         <div className="error">{errors?.password?.message}</div>
                       )}
@@ -553,9 +566,7 @@ const Login = () => {
         <footer>
           <p>
             ©2024 Container Builder ·{" "}
-            <a href="#" onClick={() => navigate(privacy_policy)}>
-              Privacy & terms
-            </a>
+            <Link to={privacy_policy}>Privacy & terms</Link>
           </p>
         </footer>
       </div>

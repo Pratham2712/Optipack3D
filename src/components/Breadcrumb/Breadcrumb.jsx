@@ -142,7 +142,11 @@ const Breadcrumb = () => {
         </div>
       )}
       {uploadPop && (
-        <UploadImagePop uploadPop={uploadPop} setUploadPop={setUploadPop} />
+        <UploadImagePop
+          uploadPop={uploadPop}
+          setUploadPop={setUploadPop}
+          imageUrl={imageUrl}
+        />
       )}
     </div>
   );

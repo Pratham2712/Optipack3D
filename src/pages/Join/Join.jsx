@@ -2,7 +2,7 @@ import React from "react";
 import logo from "../../assests/logo.png";
 import dashboard from "../../assests/dashboard.png";
 import "./Join.css";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   loginurl,
   privacy_policy,
@@ -17,7 +17,12 @@ const Join = () => {
         <div class="logo" onClick={() => navigate(User_root)}>
           <img src={logo} alt="ShelfLyf Logo" />
           <span
-            style={{ fontWeight: "600", fontSize: "22px", lineHeight: "24px" }}
+            style={{
+              fontWeight: "600",
+              fontSize: "22px",
+              lineHeight: "24px",
+              cursor: "pointer",
+            }}
           >
             Optipack
           </span>
@@ -43,9 +48,7 @@ const Join = () => {
         <footer>
           <p>
             ©2024 Container Builder ·{" "}
-            <a href="#" onClick={() => navigate(privacy_policy)}>
-              Privacy & terms
-            </a>
+            <Link to={privacy_policy}>Privacy & terms</Link>
           </p>
         </footer>
       </div>

@@ -8,6 +8,7 @@ export const signupurl = "/additionalInformation";
 export const free_output = "/freeOutput";
 export const term_condition = "/term-conditions";
 export const privacy_policy = "/privacy-policy";
+export const contact_us = "/contact-us";
 export const stagewise_loading = "/stagewise-loading";
 export const admin_setting = "/admin/setting";
 export const admin_manageuser = "/admin/manage-user";

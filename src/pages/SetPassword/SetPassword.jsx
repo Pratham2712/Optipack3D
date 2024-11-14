@@ -190,9 +190,7 @@ const SetPassword = () => {
         <footer>
           <p>
             ©2024 Container Builder ·{" "}
-            <a href="#" onClick={() => navigate(privacy_policy)}>
-              Privacy & terms
-            </a>
+            <Link to={privacy_policy}>Privacy & terms</Link>
           </p>
         </footer>
       </div>

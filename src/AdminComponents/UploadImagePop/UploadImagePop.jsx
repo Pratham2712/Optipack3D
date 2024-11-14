@@ -24,7 +24,7 @@ const schema = yup.object().shape({
     }),
 });
 
-const UploadImagePop = ({ uploadPop, setUploadPop }) => {
+const UploadImagePop = ({ uploadPop, setUploadPop, imageUrl }) => {
   const popupRef = useRef(null);
   const [filePreview, setFilePreview] = useState(null);
   const dispatch = useDispatch();
@@ -98,7 +98,7 @@ const UploadImagePop = ({ uploadPop, setUploadPop }) => {
             }}
           >
             <img
-              src={filePreview || dummy}
+              src={filePreview || imageUrl || dummy}
               alt="your image"
               style={{ width: "100%", height: "100%" }}
             />
