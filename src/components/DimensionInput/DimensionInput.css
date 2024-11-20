@@ -7,7 +7,7 @@
 
 input[type="number"],
 input[type="text"] {
-  width: 100%;
+  width: 68%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 6px;
@@ -18,6 +18,7 @@ input[type="text"] {
 .input-row .input {
   padding: 5px;
   margin: 5px;
+  width: 100%;
 }
 
 .input-row {
@@ -60,6 +61,12 @@ input[type="checkbox"] {
 button.pcr-button {
   height: 3em;
   width: 14em;
+}
+.pickr {
+  position: relative;
+  overflow: visible;
+  transform: translateY(0);
+  margin-top: 1.3rem;
 }
 @media (max-width: 1000px) {
   .input-row {

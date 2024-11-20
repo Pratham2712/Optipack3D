@@ -69,7 +69,7 @@ const ContainerDetails = ({
       <Toaster />
       <div id="containerDetails" class="container-details-container">
         <label for="numContainers" class="num">
-          Number of Containers:
+          Number of Containers:{"   "}
         </label>
         {/* <input
           type="number"
@@ -97,7 +97,7 @@ const ContainerDetails = ({
               numContainers0: e.target.value,
             }));
           }}
-          style={{ width: "100%" }}
+          style={{ width: "10%" }}
         >
           <option value="1">1</option>
           <option value="2">2</option>

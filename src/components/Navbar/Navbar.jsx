@@ -1,13 +1,20 @@
 import React, { useState } from "react";
 import logo from "../../assests/logo.png";
 import "./Navbar.css";
-import { NavLink } from "react-router-dom";
-import { contact_us, free_trail, join } from "../../constants/links";
+import { NavLink, useNavigate } from "react-router-dom";
+import {
+  blog,
+  contact_us,
+  free_trail,
+  join,
+  User_root,
+} from "../../constants/links";
 import { useScroll } from "../../Util/ScrollContext";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { scrollToFeatures } = useScroll();
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -16,10 +23,18 @@ const Navbar = () => {
   return (
     <>
       <nav>
-        <div style={{ display: "flex", alignItems: "center" }}>
+        <div
+          style={{ display: "flex", alignItems: "center" }}
+          onClick={() => navigate(User_root)}
+        >
           <img
             src={logo}
-            style={{ height: "40px", width: "55px", margin: "10px" }}
+            style={{
+              height: "40px",
+              width: "55px",
+              margin: "10px",
+              cursor: "pointer",
+            }}
           />
           <div class="logo">OptiPack3D</div>
         </div>
@@ -32,7 +47,7 @@ const Navbar = () => {
               <a href="#">About</a>
             </li>
             <li>
-              <a href="#">Blog</a>
+              <NavLink to={blog}>Blog</NavLink>
             </li>
             <li onClick={scrollToFeatures}>
               <a href="#feature-tab">Features</a>

@@ -43,7 +43,7 @@ const FreeOutput = ({ containerQuan }) => {
   const [skuData, setSkuData] = useState([]);
   const [numCases, setNumCases] = useState([]);
   const [inputData, setInputData] = useState({});
-  const [mobileView, setMobileView] = useState(true);
+  const [mobileView, setMobileView] = useState(false);
   const [stagewiseData, setStagewiseData] = useState({});
   //useSelector=========================================================================================================================
   const loading = useSelector((state) => state.rootReducer.mainSlice.loading);

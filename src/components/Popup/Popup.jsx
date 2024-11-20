@@ -3,7 +3,7 @@ import proVersion from "../../assests/proVersion.png";
 import cross from "../../assests/cross.png";
 import "./Popup.css";
 import { useNavigate } from "react-router-dom";
-import { User_root } from "../../constants/links";
+import { contact_us, User_root } from "../../constants/links";
 import { useScroll } from "../../Util/ScrollContext";
 const Popup = ({ premium, setPremium }) => {
   const popupRef = useRef(null);
@@ -36,7 +36,12 @@ const Popup = ({ premium, setPremium }) => {
             productivity.
           </p>
           <div className="popup-buttons">
-            <a href="" className="btn-apply" style={{ textDecoration: "none" }}>
+            <a
+              href=""
+              className="btn-apply"
+              style={{ textDecoration: "none" }}
+              onClick={() => navigate(contact_us)}
+            >
               Upgrade Now
             </a>
             <a

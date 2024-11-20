@@ -89,12 +89,16 @@
   font-size: 1rem;
 }
 .indi_feat {
+  width: 20rem;
 }
 .all_feat {
-  display: grid;
+  /* display: grid;
   grid-template-columns: 1fr 1fr;
   grid-row-gap: 0.7rem;
-  grid-column-gap: 5rem;
+  grid-column-gap: 5rem; */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
 }
 .role_content {
   display: flex;
