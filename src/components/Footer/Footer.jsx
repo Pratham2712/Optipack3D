@@ -3,6 +3,7 @@ import logo from "../../assests/logo-removebg-preview.png";
 import "./Footer.css";
 import { Link, useNavigate } from "react-router-dom";
 import {
+  blog,
   contact_us,
   privacy_policy,
   term_condition,
@@ -21,7 +22,7 @@ const Footer = () => {
           <a href="#">About</a>
           {/* <a href="#">Settings</a> */}
           <Link to={contact_us}>Contact</Link>
-          <a href="#">Blog</a>
+          <Link to={blog}>Blog</Link>
           <a href="#feature-tab">Features</a>
           <Link to={privacy_policy}>Privacy Policy</Link>
           <Link to={term_condition}>Terms of Service</Link>

@@ -18,6 +18,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import {
   admin_setting,
+  change_password,
   new_user,
   planner_order,
   privacy_policy,
@@ -35,6 +36,7 @@ const Login = () => {
   const [otpTime, setOtpTime] = useState("");
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const [email, setEmail] = useState("");
+  const [forgot, setForgot] = useState(false);
   const inputsRef = useRef([]);
   const navigate = useNavigate(); // Get the navigate function
 
@@ -181,8 +183,11 @@ const Login = () => {
             color: "#713200",
           },
         });
+        console.log(forgot);
 
-        if (data.payload["SUCCESS"]?.isPassword == false) {
+        if (forgot) {
+          navigate(change_password, { state: { forgot: true } });
+        } else if (data.payload["SUCCESS"]?.isPassword == false) {
           navigate(set_password);
         } else if (data.payload["SUCCESS"]?.userType == "Company_Admin") {
           navigate(admin_setting);
@@ -328,7 +333,7 @@ const Login = () => {
         </div>
         <div style={{ position: "relative" }}>
           <h1>Welcome to our platform</h1>
-          <h1>Login to your account</h1>
+          <h1>{forgot ? "Verify account" : "Login to your account"}</h1>
           <p className="subtitle">Design your optimized load plan</p>
           {/* <div className="all-errors2">{errorMsg}</div> */}
 
@@ -401,7 +406,7 @@ const Login = () => {
               </form>
             ) : (
               <>
-                {password ? (
+                {password && !forgot ? (
                   <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="input-group">
                       <input
@@ -447,6 +452,14 @@ const Login = () => {
                       {errors?.password && (
                         <div className="error">{errors?.password?.message}</div>
                       )}
+                      {
+                        <p
+                          className="forgot-password"
+                          onClick={() => setForgot(true)}
+                        >
+                          Forgot password?
+                        </p>
+                      }
                     </div>
                     <button type="submit" className="login-button">
                       Login

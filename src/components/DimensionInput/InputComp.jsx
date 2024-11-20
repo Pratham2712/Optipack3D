@@ -128,7 +128,7 @@ const InputComp = ({
             onChange={(e) => handleInputChange(input, "color", e.target.value)}
           />
           <div className="input">
-            <label>Product {input + 1}:</label>
+            <label>SKU {input + 1}:</label>
             <input
               type="text"
               name={`sku${input}`}

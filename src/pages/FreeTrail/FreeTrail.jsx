@@ -149,7 +149,7 @@ const FreeTrail = ({ skuData, setSkuData, inputs, setInputs }) => {
           <Breadcrumb />
           {/* {!is700 ? <Sidebar className="hide-sidebar" /> : <></>} */}
           <div className="container-form">
-            <h1>Container Builder (Trial Version)</h1>
+            <h1>Load Builder (Trial Version)</h1>
             <form>
               <button
                 type="button"

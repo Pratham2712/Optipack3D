@@ -17,13 +17,17 @@ import {
   privacy_policy,
   User_root,
 } from "../../constants/links";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { setPasswordThunk } from "../../redux/Slices/authSlice";
 
 const SetPassword = () => {
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { forgot } = location.state || {};
+  console.log(forgot, "location");
+
   //useSelector
 
   const userId = useSelector(
@@ -64,6 +68,8 @@ const SetPassword = () => {
     Object.keys(info).forEach((key) => {
       formData.append(key, info[key]);
     });
+    if (!forgot) return;
+    if (forgot && !user.isPassword) return;
     dispatch(setPasswordThunk(formData)).then((data) => {
       if (data.payload["ERROR"]) {
         toast.error(data.payload["ERROR"], {
@@ -102,6 +108,7 @@ const SetPassword = () => {
       navigate(new_user);
     }
   };
+
   //useEffect=====================================================================================================================
 
   return (
@@ -116,8 +123,8 @@ const SetPassword = () => {
           </span>
         </div>
         <div style={{ position: "relative" }}>
-          <h1>Set Password</h1>
-          <p className="subtitle">Set password for quick access</p>
+          <h1>{forgot ? "Change Password" : "Set Password"}</h1>
+          {!forgot && <p className="subtitle">Set password for quick access</p>}
 
           <>
             {true && (

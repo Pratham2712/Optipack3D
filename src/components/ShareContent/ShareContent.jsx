@@ -43,14 +43,14 @@ const ShareContent = ({ url, title, setShareit, shareit }) => {
   return (
     <div className="share-overlay">
       <div className="share-container" ref={popupRef}>
-        <h3>Share</h3>
+        <h3>Share loading pattern</h3>
         <div className="preview">
           <div className="share-image">
             <img src={image} alt="share-image" />
           </div>
         </div>
         <div className="share-content">
-          <FacebookShareButton url={url} title={title}>
+          {/* <FacebookShareButton url={url} title={title}>
             <FacebookIcon size={36} round />
           </FacebookShareButton>
           <TwitterShareButton url={url} title={title}>
@@ -58,7 +58,7 @@ const ShareContent = ({ url, title, setShareit, shareit }) => {
           </TwitterShareButton>
           <LinkedinShareButton url={url} title={title}>
             <LinkedinIcon size={36} round />
-          </LinkedinShareButton>
+          </LinkedinShareButton> */}
           <WhatsappShareButton
             url={url}
             title={title}
@@ -69,12 +69,12 @@ const ShareContent = ({ url, title, setShareit, shareit }) => {
           <EmailShareButton url={url} title={title}>
             <EmailIcon size={36} round />
           </EmailShareButton>
-          <TelegramShareButton url={url} title={title}>
+          {/* <TelegramShareButton url={url} title={title}>
             <TelegramIcon size={36} round />
           </TelegramShareButton>
           <RedditShareButton url={url} title={title}>
             <RedditIcon size={36} round />
-          </RedditShareButton>
+          </RedditShareButton> */}
           <img
             src={cross}
             alt="Close"

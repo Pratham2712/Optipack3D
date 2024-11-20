@@ -3,6 +3,8 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import {
   admin_manageuser,
   admin_setting,
+  blog,
+  change_password,
   contact_us,
   free_output,
   free_trail,
@@ -37,6 +39,7 @@ import Privacy from "./pages/Privacy/Privacy";
 import StageLoading from "./pages/StageLoading/StageLoading";
 import SetPassword from "./pages/SetPassword/SetPassword";
 import Contact from "./pages/Contact/Contact";
+import Blog from "./pages/Blog/Blog";
 
 export const UnAuthRoutes = ({ skuData, setSkuData, inputs, setInputs }) => {
   return (
@@ -62,6 +65,7 @@ export const UnAuthRoutes = ({ skuData, setSkuData, inputs, setInputs }) => {
       <Route path={privacy_policy} element={<Privacy />}></Route>
       <Route path={contact_us} element={<Contact />}></Route>
       <Route path={stagewise_loading} element={<StageLoading />}></Route>
+      <Route path={blog} element={<Blog />}></Route>
       <Route path={"*"} element={<Navigate to="/" />}></Route>
     </Routes>
   );
@@ -112,10 +116,12 @@ export const AuthRoutes = ({
         <Route path="*" element={<Navigate to={User_root} replace />} />
       )}
 
+      <Route path={change_password} element={<SetPassword />}></Route>
       <Route path={new_user} element={<NoneUser />}></Route>
       <Route path={term_condition} element={<TermsNConditon />}></Route>
       <Route path={privacy_policy} element={<Privacy />}></Route>
       <Route path={stagewise_loading} element={<StageLoading />}></Route>
+      <Route path={blog} element={<Blog />}></Route>
       <Route path={contact_us} element={<Contact />}></Route>
       {/* admin ====================================================================================================== */}
       {userType == "Company_Admin" ? (
