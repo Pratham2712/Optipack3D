@@ -140,6 +140,7 @@ const InputComp = ({
                   errField[`sku${input}`] == input
                     ? "1px solid red"
                     : "1px solid #ccc",
+                width: "68%",
               }}
             />
           </div>
@@ -158,6 +159,7 @@ const InputComp = ({
                   errField[`grossWeight${input}`] == input
                     ? "1px solid red"
                     : "1px solid #ccc",
+                width: "68%",
               }}
             />
           </div>
@@ -176,6 +178,7 @@ const InputComp = ({
                   errField[`length${input}`] == input
                     ? "1px solid red"
                     : "1px solid #ccc",
+                width: "68%",
               }}
             />
           </div>
@@ -194,6 +197,7 @@ const InputComp = ({
                   errField[`width${input}`] == input
                     ? "1px solid red"
                     : "1px solid #ccc",
+                width: "68%",
               }}
             />
           </div>
@@ -212,6 +216,7 @@ const InputComp = ({
                   errField[`height${input}`] == input
                     ? "1px solid red"
                     : "1px solid #ccc",
+                width: "68%",
               }}
             />
           </div>
@@ -230,6 +235,7 @@ const InputComp = ({
                   errField[`numberOfCases${input}`] == input
                     ? "1px solid red"
                     : "1px solid #ccc",
+                width: "68%",
               }}
             />
           </div>

@@ -150,6 +150,28 @@ const FreeTrail = ({ skuData, setSkuData, inputs, setInputs }) => {
           {/* {!is700 ? <Sidebar className="hide-sidebar" /> : <></>} */}
           <div className="container-form">
             <h1>Load Builder (Trial Version)</h1>
+            <div style={{ margin: "2rem 0", textAlign: "left" }}>
+              <div
+                style={{
+                  background: "#f8f9fa",
+                  borderLeft: "4px solid black",
+                  padding: "1rem",
+                  borderRadius: "5px",
+                  fontSize: "1rem",
+                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                }}
+              >
+                <strong>Note:</strong>
+                <ol style={{ paddingLeft: "1.5rem" }}>
+                  <li>Step 1: Add SKU dimensions detail.</li>
+                  <li>Step 2: Select container and their quantity.</li>
+                  <li>
+                    Step 3: Click the "Optimize" button to optimize your load
+                    plan.
+                  </li>
+                </ol>
+              </div>
+            </div>
             <form>
               <button
                 type="button"
