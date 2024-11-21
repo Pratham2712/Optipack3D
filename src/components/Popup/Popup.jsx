@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
-import proVersion from "../../assests/proVersion.png";
+// import proVersion from "../../assests/proVersion.png";
+import proVersion from "../../assests/premium_2.png";
 import cross from "../../assests/cross.png";
 import "./Popup.css";
 import { useNavigate } from "react-router-dom";
