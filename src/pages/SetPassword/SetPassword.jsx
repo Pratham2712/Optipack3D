@@ -68,7 +68,8 @@ const SetPassword = () => {
     Object.keys(info).forEach((key) => {
       formData.append(key, info[key]);
     });
-    if (!forgot) return;
+
+    // if (!forgot) return;
     if (forgot && !user.isPassword) return;
     dispatch(setPasswordThunk(formData)).then((data) => {
       if (data.payload["ERROR"]) {
