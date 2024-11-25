@@ -152,6 +152,7 @@ const NextOrder = ({ containerQuan, setContainerQuan }) => {
           Object.keys(final).forEach((key) => {
             queryParams.append(key, final[key]);
           });
+          queryParams.append("admin", true);
           const url = `/freeOutput?${queryParams.toString()}`;
           navigate(url);
         }
