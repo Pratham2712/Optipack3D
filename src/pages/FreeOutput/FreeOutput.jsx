@@ -45,6 +45,7 @@ const FreeOutput = ({ containerQuan }) => {
   const [inputData, setInputData] = useState({});
   const [mobileView, setMobileView] = useState(false);
   const [stagewiseData, setStagewiseData] = useState({});
+  const [admin, setAdmin] = useState(false);
   //useSelector=========================================================================================================================
   const loading = useSelector((state) => state.rootReducer.mainSlice.loading);
   const tableData = useSelector(
@@ -224,6 +225,9 @@ const FreeOutput = ({ containerQuan }) => {
 
     if (data.mobileView) {
       setMobileView(true);
+    }
+    if (data.admin) {
+      setAdmin(true);
     }
 
     if (queryParams) {
@@ -518,8 +522,8 @@ const FreeOutput = ({ containerQuan }) => {
                 </>
               )}
             </div>
-            {(user?.userType == "Company_Admin" && orderData.length > 0) ||
-            (user?.userType == "Company_planner" && orderData.length > 0) ? (
+            {(user?.userType == "Company_Admin" && admin) ||
+            (user?.userType == "Company_planner" && admin) ? (
               <>
                 <div
                   className="two-button"

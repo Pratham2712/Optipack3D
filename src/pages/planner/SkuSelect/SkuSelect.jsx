@@ -70,7 +70,16 @@ const SkuSelect = () => {
     const info = {
       sku_code: [data.sku_code],
     };
-    if (`${data.sku_code}` in quan) return;
+    if (`${data.sku_code}` in quan) {
+      toast.error("Already added", {
+        style: {
+          border: "1px solid #713200",
+          padding: "16px",
+          color: "#713200",
+        },
+      });
+      return;
+    }
     setQuan((prev) => ({ ...prev, [data.sku_code]: data.quantity }));
     dispatch(getSkuByCodeThunk(info));
     setValue("sku_code", "");
