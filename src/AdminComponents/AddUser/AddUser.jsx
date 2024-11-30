@@ -59,17 +59,17 @@ const AddUser = ({ user, setUser }) => {
     return "";
   };
   const addUser = (data) => {
-    const extractedDomain = extractDomain(data.email);
-    if (extractedDomain != company) {
-      toast.error("Enter your company email", {
-        style: {
-          border: "1px solid #713200",
-          padding: "16px",
-          color: "#713200",
-        },
-      });
-      return;
-    }
+    // const extractedDomain = extractDomain(data.email);
+    // if (extractedDomain != company) {
+    //   toast.error("Enter your company email", {
+    //     style: {
+    //       border: "1px solid #713200",
+    //       padding: "16px",
+    //       color: "#713200",
+    //     },
+    //   });
+    //   return;
+    // }
 
     dispatch(sendEmailThunk(data)).then((data) => {
       if (data.payload["ERROR"]) {
