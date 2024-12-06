@@ -25,7 +25,11 @@ import { planner_contSelection } from "../../../constants/links";
 
 const schema = yup.object().shape({
   sku_code: yup.number().required("SKU code is required"),
-  quantity: yup.number().required("Quantity is required"),
+  quantity: yup
+    .number()
+    .required("Quantity is required")
+    .max(2000, "Quantity must not exceed 2000. For more SKUs Contact us")
+    .min(1, "Quantity must be at least 1"),
 });
 
 const heading = ["Code", "Name", "Quantity", "Length", "Width", "Height"];

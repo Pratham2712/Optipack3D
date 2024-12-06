@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./Breadcrumb.css";
 import notification from "../../assests/Notification.png";
 import author from "../../assests/user-circle.png";
@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logoutThunk } from "../../redux/Slices/authSlice";
 import toast from "react-hot-toast";
 import UploadImagePop from "../../AdminComponents/UploadImagePop/UploadImagePop";
+import { profile } from "../../constants/links";
 const Breadcrumb = () => {
   const location = useLocation();
   const pathnames = location.pathname.split("/").filter((x) => x);
@@ -15,6 +16,7 @@ const Breadcrumb = () => {
   const [uploadPop, setUploadPop] = useState(false);
   const dispatch = useDispatch();
   const divRef = useRef(null);
+  const navigate = useNavigate();
 
   const isLogin = useSelector((state) => state.rootReducer.authSlice.isLogin);
   const imageUrl = useSelector(
@@ -135,6 +137,11 @@ const Breadcrumb = () => {
                   {" "}
                   <i class="fa-solid fa-upload"></i>
                   {imageUrl ? "Update image" : "Upload image"}
+                </div>
+                <div onClick={() => navigate(profile)}>
+                  {" "}
+                  <i class="fa-regular fa-user"></i>
+                  Profile
                 </div>
               </div>
             )}

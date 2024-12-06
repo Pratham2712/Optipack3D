@@ -15,6 +15,7 @@ import {
   planner_order,
   planner_skuSelection,
   privacy_policy,
+  profile,
   set_password,
   signupurl,
   stagewise_loading,
@@ -40,6 +41,7 @@ import StageLoading from "./pages/StageLoading/StageLoading";
 import SetPassword from "./pages/SetPassword/SetPassword";
 import Contact from "./pages/Contact/Contact";
 import Blog from "./pages/Blog/Blog";
+import Profile from "./pages/admin/Profile/Profile";
 
 export const UnAuthRoutes = ({ skuData, setSkuData, inputs, setInputs }) => {
   return (
@@ -107,6 +109,7 @@ export const AuthRoutes = ({
       <Route path={join} element={<Join />}></Route>
       <Route path={loginurl} element={<Login />}></Route>
       <Route path={signupurl} element={<Signup />}></Route>
+      <Route path={profile} element={<Profile />}></Route>
 
       {isPassword == false ? (
         <>

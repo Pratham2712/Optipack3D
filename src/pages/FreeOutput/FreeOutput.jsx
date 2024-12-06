@@ -16,22 +16,23 @@ import AssignPopup from "../../PlannerComponents/AssignPopup/AssignPopup";
 import toast from "react-hot-toast";
 import { rgbaToHex } from "../../Util/util";
 
-const heading = [
-  " ",
-  "Name",
-  "Length",
-  "Width",
-  "Height",
-  "Number of boxes per strip",
-  "Total cases",
-  "Filled cases",
-];
 const FreeOutput = ({ containerQuan }) => {
   const modelRef = useRef(null);
   const location = useLocation();
+  const orderNumToSku = location.state?.orderNum;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [is700, setIs700] = useState(window.innerWidth < 700);
+  const [heading, setHeading] = useState([
+    " ",
+    "Name",
+    "Length",
+    "Width",
+    "Height",
+    "Number of boxes per strip",
+    "Total cases",
+    "Filled cases",
+  ]);
   const [totalCasesSum, setTotalCasesSum] = useState(0);
   const [totalFilled, setTotalFilled] = useState(0);
   const [premium, setPremium] = useState(false);
@@ -51,6 +52,7 @@ const FreeOutput = ({ containerQuan }) => {
   const tableData = useSelector(
     (state) => state.rootReducer.mainSlice.data.data.df
   );
+
   const [filled, setFilled] = useState([]);
   const boxInfo = useSelector(
     (state) => state.rootReducer.mainSlice.data.data.box_info
@@ -101,6 +103,15 @@ const FreeOutput = ({ containerQuan }) => {
     setShareit(!shareit);
   };
 
+  const calUsedContainer = () => {
+    let a = 0;
+    volume?.forEach((item) => {
+      if (item > 0) {
+        a++;
+      }
+    });
+    return a;
+  };
   const postData = (data) => {
     const formData = new FormData();
     Object.keys(data)?.forEach((key) => {
@@ -252,6 +263,16 @@ const FreeOutput = ({ containerQuan }) => {
     setTotalCasesSum(totalSum);
   }, [boxInfo, tableData]);
 
+  useEffect(() => {
+    if (orderNumToSku) {
+      setHeading((prevArray) => {
+        const newArray = [...prevArray];
+        newArray.splice(2, 0, "Order Number");
+        return newArray;
+      });
+    }
+  }, [orderNumToSku]);
+
   const url = `${window.location.origin}${location.pathname}${location.search}`;
   const title = "Check out this amazing website!";
 
@@ -350,6 +371,17 @@ const FreeOutput = ({ containerQuan }) => {
                           <td style={{ background: colorsData[index] }}>
                             {matchingSku?.sku}
                           </td>
+                          {orderNumToSku ? (
+                            <td>
+                              {" "}
+                              {orderNumToSku[matchingSku?.sku]?.map(
+                                (item) => `#${item}`
+                              )}{" "}
+                            </td>
+                          ) : (
+                            <></>
+                          )}
+
                           <td>{sku_info?.[index]?.[1]}</td>
                           <td>{sku_info?.[index]?.[2]}</td>
                           <td>{sku_info?.[index]?.[3]}</td>
@@ -379,26 +411,37 @@ const FreeOutput = ({ containerQuan }) => {
               className="container-tabs"
               style={{ marginBottom: mobileView ? "1rem" : "" }}
             >
-              {container?.map((ele, index) => (
-                <button
-                  className="cont_btn"
-                  style={{
-                    marginTop: "2rem",
-                    backgroundColor: index == contIndex ? "black" : "#F0F0F0",
-                    color: index == contIndex ? "white" : "black",
-                    padding: mobileView ? "9px 13px" : "",
-                    fontSize: mobileView ? "0.8rem" : "",
-                  }}
-                  onClick={() => {
-                    setContIndex(index);
-                  }}
-                >
-                  Container {index + 1}
-                </button>
-              ))}
+              {volume?.map((ele, index) => {
+                if (ele > 0) {
+                  return (
+                    <button
+                      className="cont_btn"
+                      style={{
+                        marginTop: "2rem",
+                        backgroundColor:
+                          index == contIndex ? "black" : "#F0F0F0",
+                        color: index == contIndex ? "white" : "black",
+                        padding: mobileView ? "9px 13px" : "",
+                        fontSize: mobileView ? "0.8rem" : "",
+                      }}
+                      onClick={() => {
+                        setContIndex(index);
+                      }}
+                    >
+                      Container {index + 1}
+                    </button>
+                  );
+                }
+              })}
             </div>
             {!mobileView && (
               <div className="container-info">
+                <p>
+                  Container used:{" "}
+                  <span id="container-type">{`${calUsedContainer()} / ${
+                    volume?.length
+                  }`}</span>
+                </p>
                 <p>
                   Container type:{" "}
                   <span id="container-type">{containerType}</span>
