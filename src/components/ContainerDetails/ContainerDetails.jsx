@@ -68,41 +68,26 @@ const ContainerDetails = ({
     <div>
       <Toaster />
       <div id="containerDetails" class="container-details-container">
-        <label for="numContainers" class="num">
-          Number of Containers:{"   "}
-        </label>
-        {/* <input
-          type="number"
-          id="numContainers"
-          name="numContainers"
-          min="1"
-          max="2"
-          defaultValue={skuData.numContainers0}
-          onChange={(e) => {
-            if (e.target.value <= 2 && e.target.value > 0) {
-              setSkuData((prev) => ({
-                ...prev,
-                numContainers0: e.target.value,
-              }));
-            }
-          }}
-          className="num-containers-input"
-        /> */}
-        <select
-          name="numContainers"
-          id="numContainers"
-          onChange={(e) => {
-            setSkuData((prev) => ({
-              ...prev,
-              numContainers0: e.target.value,
-            }));
-          }}
-          style={{ width: "10%" }}
-        >
-          <option value="1">1</option>
-          <option value="2">2</option>
-        </select>
         <div id="typeInputs" class="container-types">
+          <div>
+            <label for="numContainers" class="num">
+              Number of Containers:{"   "}
+            </label>
+            <select
+              name="numContainers"
+              id="numContainers"
+              onChange={(e) => {
+                setSkuData((prev) => ({
+                  ...prev,
+                  numContainers0: e.target.value,
+                }));
+              }}
+              style={{ height: "fit-content" }}
+            >
+              <option value="1">1</option>
+              <option value="2">2</option>
+            </select>
+          </div>
           {Array.from({ length: totalContainers }).map((_, index) => (
             <div key={index} className="container-row">
               <label

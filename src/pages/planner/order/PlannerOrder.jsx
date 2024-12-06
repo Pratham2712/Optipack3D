@@ -16,6 +16,7 @@ import {
   EditOrderThunk,
 } from "../../../redux/Slices/plannerSlice";
 import { planner_skuSelection } from "../../../constants/links";
+import OrderTable from "../../../AdminComponents/OrderTable/OrderTable";
 
 const schema = yup.object().shape({
   order_number: yup
@@ -223,6 +224,7 @@ const PlannerOrder = () => {
               </form>
             )}
           </div>
+          <OrderTable />
         </div>
       )}
     </>

@@ -6,6 +6,7 @@ import home from "../../assests/home.png";
 import optimization from "../../assests/optimization.png";
 import setting from "../../assests/features_svg/icons8-settings.svg";
 import support from "../../assests/support.png";
+import orders from "../../assests/order.png";
 import Popup from "../Popup/Popup";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -49,28 +50,26 @@ const Sidebar = () => {
     <div>
       <div class="navbar">
         <img src={logo} alt="User Image" class="user-image" />
-        <a href="#" onClick={() => setPremium(!premium)}>
-          <img src={path_outline} class="cta" />
-        </a>
+
         <a
           href="#"
-          onClick={() => navigateToUrl("home")}
+          onClick={() => navigateToUrl("setting")}
           style={{
-            background: location.pathname == admin_setting ? "black" : "",
+            background: location.pathname == planner_order ? "black" : "",
           }}
         >
           <img
-            src={home}
+            src={setting}
             class="cta"
             style={{
               filter:
-                location.pathname == admin_setting
+                location.pathname == planner_order
                   ? "invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%)"
                   : "",
             }}
           />
           <span class="tooltip" style={{ width: "fit-content" }}>
-            Home
+            Go to orders
           </span>
         </a>
         <a
@@ -95,27 +94,31 @@ const Sidebar = () => {
             Create load plan
           </span>
         </a>
+        <a href="#" onClick={() => setPremium(!premium)}>
+          <img src={path_outline} class="cta" />
+        </a>
         <a
           href="#"
-          onClick={() => navigateToUrl("setting")}
+          onClick={() => navigateToUrl("home")}
           style={{
-            background: location.pathname == planner_order ? "black" : "",
+            background: location.pathname == admin_setting ? "black" : "",
           }}
         >
           <img
-            src={setting}
+            src={home}
             class="cta"
             style={{
               filter:
-                location.pathname == planner_order
+                location.pathname == admin_setting
                   ? "invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%)"
                   : "",
             }}
           />
           <span class="tooltip" style={{ width: "fit-content" }}>
-            Go to orders
+            Setting
           </span>
         </a>
+
         <a href="#" onClick={() => setPremium(!premium)}>
           <img src={support} class="cta" />
           <span class="tooltip" style={{ width: "fit-content" }}>

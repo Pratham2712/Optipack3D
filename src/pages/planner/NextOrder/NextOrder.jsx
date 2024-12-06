@@ -26,7 +26,11 @@ const heading = ["Number", "Date", "Source", "Destination"];
 const heading2 = ["Name", "Quantity", "Length", "Width", "Height"];
 const schema = yup.object().shape({
   container_name: yup.string().required("Container name is required"),
-  containerQuantity: yup.number().required("Quantity is required"),
+  containerQuantity: yup
+    .number()
+    .required("Quantity is required")
+    .min(1, "Quantity must be at least 1")
+    .max(5, "For more than 5 container. Contact us"),
 });
 
 const NextOrder = ({ containerQuan, setContainerQuan }) => {
@@ -142,7 +146,35 @@ const NextOrder = ({ containerQuan, setContainerQuan }) => {
       });
 
       dispatch(getSkuByOrderThunk(data)).then((data) => {
-        if (data.payload["SUCCESS"]?.message) {
+        let isEmpty = true;
+        let transformedData = {};
+        if (data.payload["SUCCESS"]) {
+          const sku = data.payload["SUCCESS"]?.result;
+
+          for (const [key, skuList] of Object.entries(sku)) {
+            if (skuList.length > 0) {
+              isEmpty = false;
+            }
+            skuList?.forEach((item) => {
+              if (!transformedData[item.sku_name]) {
+                transformedData[item.sku_name] = [];
+              }
+              transformedData[item.sku_name].push(key);
+            });
+          }
+
+          if (isEmpty) {
+            toast.error(`SKUs is not added to order`, {
+              style: {
+                border: "1px solid #713200",
+                padding: "16px",
+                color: "#713200",
+              },
+            });
+            return;
+          }
+        }
+        if (data.payload["SUCCESS"]?.message && !isEmpty) {
           const result = data.payload["SUCCESS"]?.result;
           let skuArray = [];
           skuArray = Object.values(result).flat();
@@ -154,7 +186,7 @@ const NextOrder = ({ containerQuan, setContainerQuan }) => {
           });
           queryParams.append("admin", true);
           const url = `/freeOutput?${queryParams.toString()}`;
-          navigate(url);
+          navigate(url, { state: { orderNum: transformedData } });
         }
       });
     }
@@ -363,6 +395,8 @@ const NextOrder = ({ containerQuan, setContainerQuan }) => {
                           style={{ marginTop: "0.5rem" }}
                           placeholder="Type here"
                           {...register("containerQuantity")}
+                          max={5}
+                          min={1}
                         />
                         {errors.containerQuantity && (
                           <p className="error-order">
