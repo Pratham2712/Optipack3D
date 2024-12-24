@@ -59,7 +59,7 @@ const Sidebar = () => {
           }}
         >
           <img
-            src={setting}
+            src={orders}
             class="cta"
             style={{
               filter:
@@ -105,7 +105,7 @@ const Sidebar = () => {
           }}
         >
           <img
-            src={home}
+            src={setting}
             class="cta"
             style={{
               filter:

@@ -75,7 +75,7 @@ const SkuSelect = () => {
       sku_code: [data.sku_code],
     };
     if (`${data.sku_code}` in quan) {
-      toast.error("Already added", {
+      toast.error("Already added, please edit on the right", {
         style: {
           border: "1px solid #713200",
           padding: "16px",
@@ -179,12 +179,10 @@ const SkuSelect = () => {
       const sheet = workbook.Sheets[sheetName];
 
       const jsonData = XLSX.utils.sheet_to_json(sheet); // Convert sheet to JSON
-      console.log(quan);
       const extractedCodes = jsonData
         .filter((row) => !Object.keys(quan).includes(`${row.sku_code}`))
         .map((row) => row.code);
       setCodeArray(extractedCodes);
-      console.log(extractedCodes); // You can view the code array in the console
       const info = {
         sku_code: extractedCodes,
       };
@@ -248,21 +246,29 @@ const SkuSelect = () => {
                   id="addLoadDetailsButton"
                 >
                   Add order details
-                  <img
-                    src={unlock}
-                    alt="Lock Icon"
-                    id="addLoadDetailsIcon"
-                    className="icon"
-                  />
                 </button>
 
-                <div>
-                  <div className="order-data">
+                <div style={{ marginTop: "2rem" }}>
+                  <table>
+                    <tr className="user-head">
+                      <th>Order Number</th>
+                      <th>Order Date</th>
+                      <th>Source</th>
+                      <th>Destination</th>
+                    </tr>
+                    <tr>
+                      <td>#{result?.order_number}</td>
+                      <td>{result?.planned_start_date}</td>
+                      <td>{result?.source_location}</td>
+                      <td> {result?.destination_location}</td>
+                    </tr>
+                  </table>
+                  {/* <div className="order-data">
                     <div>Order Number: #{result?.order_number} </div>
                     <div>Order Date: {result?.planned_start_date} </div>
                     <div>Source: {result?.source_location} </div>
                     <div>Destination: {result?.destination_location} </div>
-                  </div>
+                  </div> */}
                   <div className="order-button">
                     <button className="btn-apply" onClick={() => setEdit(true)}>
                       Edit details

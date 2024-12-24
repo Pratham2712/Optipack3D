@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import { getOrderDataThunk } from "../../redux/Slices/plannerSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { planner_skuSelection } from "../../constants/links";
 
 const heading = [
   " ",
@@ -8,7 +10,7 @@ const heading = [
   "Order Date",
   "Source",
   "Destination",
-  "Assigned User",
+  "SKUs",
   "Delete",
 ];
 const OrderTable = () => {
@@ -16,6 +18,7 @@ const OrderTable = () => {
   const allOrders = useSelector(
     (state) => state.rootReducer.plannerSlice.data.allOrders
   );
+  const navigate = useNavigate();
 
   //fucntion ================================================================================================================
   const formatDate = (date) => {
@@ -32,11 +35,27 @@ const OrderTable = () => {
     return formattedDate;
   };
 
+  const EditOrder = (index) => {
+    const queryParams = new URLSearchParams();
+    const data = {
+      order_number: allOrders?.[index]?.order_number,
+      planned_start_date: allOrders?.[index]?.planned_start_date,
+      source_location: allOrders?.[index]?.source_location,
+      destination_location: allOrders?.[index]?.destination_location,
+    };
+    Object.keys(data).forEach((key) => {
+      queryParams.append(key, data[key]);
+    });
+    const url = `${planner_skuSelection}?${queryParams.toString()}`;
+    navigate(url);
+  };
+
   useEffect(() => {
     dispatch(getOrderDataThunk());
   }, []);
   return (
     <div style={{ width: "82%", margin: "2rem auto" }}>
+      <h2 style={{ marginBottom: "1.5rem" }}>Open/Unallocated Order</h2>
       <div className="user-content">
         <table>
           <tr className="user-head">
@@ -53,10 +72,21 @@ const OrderTable = () => {
               <td>{formatDate(item?.planned_start_date)}</td>
               <td>{item?.source_location}</td>
               <td>{item?.destination_location}</td>
-              <td>
+              {/* <td>
                 {item?.assigned_users?.map((ele) => (
                   <div>{ele}</div>
                 ))}
+              </td> */}
+
+              <td>
+                <div>
+                  <button
+                    className="btn-apply"
+                    onClick={() => EditOrder(index)}
+                  >
+                    Edit
+                  </button>
+                </div>
               </td>
               <td>
                 <div>

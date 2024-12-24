@@ -332,7 +332,7 @@ const Login = () => {
           </span>
         </div>
         <div style={{ position: "relative" }}>
-          <h1>Welcome to our platform</h1>
+          {/* <h1>Welcome to our platform</h1> */}
           <h1>{forgot ? "Verify account" : "Login to your account"}</h1>
           <p className="subtitle">Design your optimized load plan</p>
           {/* <div className="all-errors2">{errorMsg}</div> */}

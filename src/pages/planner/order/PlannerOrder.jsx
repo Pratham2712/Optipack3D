@@ -113,12 +113,12 @@ const PlannerOrder = () => {
               }}
             >
               Add order details
-              <img
+              {/* <img
                 src={unlock}
                 alt="Lock Icon"
                 id="addLoadDetailsIcon"
                 className="icon"
-              />
+              /> */}
             </button>
             {!displayInput && (
               <form>

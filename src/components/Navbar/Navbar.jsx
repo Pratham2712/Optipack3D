@@ -78,15 +78,20 @@ const Navbar = () => {
           </ul>
         </div>
         <div className={`nav-buttons ${menuOpen ? "open" : ""}`}>
-          <NavLink
-            to={free_trail}
-            style={{
-              textDecoration: "none",
-            }}
-            className="btn-secondary"
-          >
-            Free Trial
-          </NavLink>
+          {!isLogin ? (
+            <NavLink
+              to={free_trail}
+              style={{
+                textDecoration: "none",
+              }}
+              className="btn-secondary"
+            >
+              Free Trial
+            </NavLink>
+          ) : (
+            <></>
+          )}
+
           {isLogin ? (
             <button
               style={{
@@ -98,7 +103,7 @@ const Navbar = () => {
               className="btn-secondary"
               onClick={redirect}
             >
-              Go to console
+              My Load Planner
             </button>
           ) : (
             <NavLink
