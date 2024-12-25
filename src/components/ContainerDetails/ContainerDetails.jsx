@@ -11,6 +11,8 @@ const ContainerDetails = ({
   setSkuData,
   setContSuccess,
   setShowCont,
+  setActiveStep,
+  activeStep,
 }) => {
   const truckSpecs = {
     "General Purpose container 20'": {
@@ -56,6 +58,9 @@ const ContainerDetails = ({
   const submit = () => {
     setContSuccess(true);
     setShowCont(false);
+    if (activeStep <= 2) {
+      setActiveStep(2);
+    }
     toast.success("Container details confirmed", {
       style: {
         border: "1px solid #713200",

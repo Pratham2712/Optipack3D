@@ -14,7 +14,8 @@ import { stagewise_loading } from "../../constants/links";
 import { createLoadplanThunk } from "../../redux/Slices/plannerSlice";
 import AssignPopup from "../../PlannerComponents/AssignPopup/AssignPopup";
 import toast from "react-hot-toast";
-import { rgbaToHex } from "../../Util/util";
+import TableDetail from "./TableDetail";
+import Note from "./Note";
 
 const FreeOutput = ({ containerQuan }) => {
   const modelRef = useRef(null);
@@ -23,18 +24,7 @@ const FreeOutput = ({ containerQuan }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [is700, setIs700] = useState(window.innerWidth < 700);
-  const [heading, setHeading] = useState([
-    " ",
-    "Name",
-    "Length",
-    "Width",
-    "Height",
-    "Number of boxes per strip",
-    "Total cases",
-    "Filled cases",
-  ]);
-  const [totalCasesSum, setTotalCasesSum] = useState(0);
-  const [totalFilled, setTotalFilled] = useState(0);
+
   const [premium, setPremium] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
   const [contIndex, setContIndex] = useState(0);
@@ -49,26 +39,15 @@ const FreeOutput = ({ containerQuan }) => {
   const [admin, setAdmin] = useState(false);
   //useSelector=========================================================================================================================
   const loading = useSelector((state) => state.rootReducer.mainSlice.loading);
-  const tableData = useSelector(
-    (state) => state.rootReducer.mainSlice.data.data.df
-  );
 
   const [filled, setFilled] = useState([]);
   const boxInfo = useSelector(
     (state) => state.rootReducer.mainSlice.data.data.box_info
   );
-  const container = useSelector(
-    (state) => state.rootReducer.mainSlice.data.data.container_indices
-  );
   const dimension = useSelector(
     (state) => state.rootReducer.mainSlice.data.data.container_inf
   );
-  const num_skus = useSelector(
-    (state) => state.rootReducer.mainSlice.data.data.num_skus
-  );
-  const sku_info = useSelector(
-    (state) => state.rootReducer.mainSlice.data.data.sku_info
-  );
+
   const containerType = useSelector(
     (state) => state.rootReducer.mainSlice.data.data.container_type
   );
@@ -78,9 +57,7 @@ const FreeOutput = ({ containerQuan }) => {
   const volume = useSelector(
     (state) => state.rootReducer.mainSlice.data.data.vol_occ_curr
   );
-  const colorsData = useSelector(
-    (state) => state.rootReducer.mainSlice.data.data.colors
-  );
+
   const isLogin = useSelector((state) => state.rootReducer.authSlice.isLogin);
   const orderData = useSelector(
     (state) => state.rootReducer.plannerSlice.data.orderData
@@ -247,32 +224,6 @@ const FreeOutput = ({ containerQuan }) => {
     setInputData(data);
   }, [location.search]);
 
-  useEffect(() => {
-    const sums = boxInfo?.[0]?.map((_, index) =>
-      boxInfo.reduce((sum, arr) => sum + arr[index], 0)
-    );
-    setFilled(sums);
-    setTotalFilled(sums?.reduce((sum, curr) => sum + curr));
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(tableData, "text/html");
-    const totalCasesElements = doc.querySelectorAll("tbody tr td:nth-child(6)");
-    const totalSum = Array.from(totalCasesElements).reduce((sum, td) => {
-      const value = parseFloat(td.textContent);
-      return sum + (isNaN(value) ? 0 : value);
-    }, 0);
-    setTotalCasesSum(totalSum);
-  }, [boxInfo, tableData]);
-
-  useEffect(() => {
-    if (orderNumToSku) {
-      setHeading((prevArray) => {
-        const newArray = [...prevArray];
-        newArray.splice(1, 0, "Order Number");
-        return newArray;
-      });
-    }
-  }, [orderNumToSku]);
-
   const url = `${window.location.origin}${location.pathname}${location.search}`;
   const title = "Check out this amazing website!";
 
@@ -306,106 +257,14 @@ const FreeOutput = ({ containerQuan }) => {
               </div>
             )}
 
-            <div style={{ fontSize: "1.5rem", marginTop: "1rem" }}>
-              {mobileView ? "Order Visualization :" : "Order Information :"}{" "}
-            </div>
-            {/* <div className="table" style={{ display: "flex" }}>
-              <div
-              className="table-info"
-              dangerouslySetInnerHTML={{ __html: tableData }}
-              ></div>
-              <div>
-                <table className="table-info filled_table">
-                <tr>
-                <th>Filled cases</th>
-                </tr>
-                {filled?.map((ele) => (
-                    <tr style={{ padding: "11.7px" }}>{ele}</tr>
-                    ))}
-                    <tbody></tbody>
-                    </table>
-                    </div>
-                    <div>
-                <table className="table-info filled_table">
-                <tr>
-                <th>Info Cases</th>
-                </tr>
-                {colorsData?.map((ele, index) => {
-                  const matchingSku = skuData.find(
-                    (item) => rgbaToHex(item.color) == ele
-                    );
-                    return (
-                      <tr
-                      style={{
-                        padding: "11.7px",
-                        background: ele,
-                        }}
-                      >
-                        {matchingSku ? (
-                          <>{matchingSku.sku}</>
-                          ) : (
-                            <>No match found</>
-                            )}
-                            </tr>
-                            );
-                            })}
-                            </table>
-                            </div>
-                            </div> */}
-            {!mobileView && (
-              <div className="table" style={{ display: "flex" }}>
-                <div className="table-info">
-                  <table>
-                    <tr>
-                      {heading.map((ele) => (
-                        <th>{ele}</th>
-                      ))}
-                    </tr>
-                    {num_skus?.map((_, index) => {
-                      const matchingSku = skuData.find(
-                        (item) => rgbaToHex(item.color) == colorsData[index]
-                      );
-                      return (
-                        <tr>
-                          <td>{index + 1}</td>
-                          {orderNumToSku ? (
-                            <td>
-                              {" "}
-                              {orderNumToSku[matchingSku?.sku]?.map(
-                                (item) => `#${item}`
-                              )}{" "}
-                            </td>
-                          ) : (
-                            <></>
-                          )}
-                          <td style={{ background: colorsData[index] }}>
-                            {matchingSku?.sku}
-                          </td>
-
-                          <td>{sku_info?.[index]?.[1]}</td>
-                          <td>{sku_info?.[index]?.[2]}</td>
-                          <td>{sku_info?.[index]?.[3]}</td>
-                          <td>{sku_info?.[index]?.[4]}</td>
-                          <td>{numCases[index]}</td>
-                          <td>{filled?.[index]}</td>
-                        </tr>
-                      );
-                    })}
-                  </table>
-                </div>
-              </div>
-            )}
-            {!mobileView && (
-              <div
-                className="note"
-                style={{
-                  display: totalFilled < totalCasesSum ? "block" : "none",
-                }}
-              >
-                There are still boxes that need to be filled in the container.
-                Recommend you to go back and change the number of container.
-              </div>
-            )}
+            <TableDetail
+              mobileView={mobileView}
+              orderNumToSku={orderNumToSku}
+              filled={filled}
+              skuData={skuData}
+              numCases={numCases}
+            />
+            <Note mobileView={mobileView} setFilled={setFilled} />
 
             <div
               className="container-tabs"

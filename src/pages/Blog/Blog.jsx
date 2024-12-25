@@ -9,8 +9,7 @@ const Blog = () => {
       <Navbar />
       <main className="blog-main">
         <h1 className="blog-title">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga, est
-          unde fugiat possimus amet iusto.lorem5
+          Common Mistakes in Container Loading and How to Avoid Them
         </h1>
         <div className="blog-image">
           <img src={image} alt="cover image" />

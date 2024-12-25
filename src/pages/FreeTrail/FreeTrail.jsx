@@ -1,29 +1,27 @@
 import React, { useEffect, useState } from "react";
 import "./FreeTrail.css";
-import Sidebar from "../../components/Sidebar/Sidebar";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 import unlock from "../../assests/unlock.png";
 import lock from "../../assests/lock.png";
 import tick from "../../assests/tick.png";
 import DimensionInput from "../../components/DimensionInput/DimensionInput";
 import ContainerDetails from "../../components/ContainerDetails/ContainerDetails";
-import { getDataThunk } from "../../redux/Slices/mainSlice";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { free_output } from "../../constants/links";
+import { useSelector } from "react-redux";
 import Popup from "../../components/Popup/Popup";
 import toast, { Toaster } from "react-hot-toast";
 import Loader from "../../components/Loader/Loader";
+import Steps from "./Steps";
 
 const FreeTrail = ({ skuData, setSkuData, inputs, setInputs }) => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [premium, setPremium] = useState(false);
   const [is700, setIs700] = useState(window.innerWidth < 700);
   const [showInput, setShowInput] = useState(false);
   const [inputSuccess, setInputSuccess] = useState(false);
   const [contSuccess, setContSuccess] = useState(false);
   const [showCont, setShowCont] = useState(false);
+  const [activeStep, setActiveStep] = useState(0);
 
   const loading = useSelector((state) => state.rootReducer.mainSlice.loading);
 
@@ -150,7 +148,7 @@ const FreeTrail = ({ skuData, setSkuData, inputs, setInputs }) => {
           {/* {!is700 ? <Sidebar className="hide-sidebar" /> : <></>} */}
           <div className="container-form">
             <h1>Load Builder (Trial Version)</h1>
-            <div style={{ margin: "2rem 0", textAlign: "left" }}>
+            {/* <div style={{ margin: "2rem 0", textAlign: "left" }}>
               <div
                 style={{
                   background: "#f8f9fa",
@@ -171,7 +169,8 @@ const FreeTrail = ({ skuData, setSkuData, inputs, setInputs }) => {
                   </li>
                 </ol>
               </div>
-            </div>
+            </div> */}
+            <Steps activeStep={activeStep} />
             <form>
               <button
                 type="button"
@@ -204,6 +203,8 @@ const FreeTrail = ({ skuData, setSkuData, inputs, setInputs }) => {
                     setInputs={setInputs}
                     handleInputChange={handleInputChange}
                     setShowInput={setShowInput}
+                    setActiveStep={setActiveStep}
+                    activeStep={activeStep}
                   />
                 )}
               </div>
@@ -238,6 +239,8 @@ const FreeTrail = ({ skuData, setSkuData, inputs, setInputs }) => {
                     handleInputChange={handleInputChange}
                     setContSuccess={setContSuccess}
                     setShowCont={setShowCont}
+                    setActiveStep={setActiveStep}
+                    activeStep={activeStep}
                   />
                 )}
               </div>

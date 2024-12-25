@@ -6,6 +6,7 @@ import {
   blog,
   change_password,
   contact_us,
+  faq,
   free_output,
   free_trail,
   join,
@@ -42,6 +43,7 @@ import SetPassword from "./pages/SetPassword/SetPassword";
 import Contact from "./pages/Contact/Contact";
 import Blog from "./pages/Blog/Blog";
 import Profile from "./pages/admin/Profile/Profile";
+import Faq from "./pages/Faq/Faq";
 
 export const UnAuthRoutes = ({ skuData, setSkuData, inputs, setInputs }) => {
   return (
@@ -68,6 +70,7 @@ export const UnAuthRoutes = ({ skuData, setSkuData, inputs, setInputs }) => {
       <Route path={contact_us} element={<Contact />}></Route>
       <Route path={stagewise_loading} element={<StageLoading />}></Route>
       <Route path={blog} element={<Blog />}></Route>
+      <Route path={faq} element={<Faq />}></Route>
       <Route path={"*"} element={<Navigate to="/" />}></Route>
     </Routes>
   );
@@ -125,6 +128,7 @@ export const AuthRoutes = ({
       <Route path={privacy_policy} element={<Privacy />}></Route>
       <Route path={stagewise_loading} element={<StageLoading />}></Route>
       <Route path={blog} element={<Blog />}></Route>
+      <Route path={faq} element={<Faq />}></Route>
       <Route path={contact_us} element={<Contact />}></Route>
       {/* admin ====================================================================================================== */}
       {userType == "Company_Admin" ? (
