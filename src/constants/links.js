@@ -11,6 +11,7 @@ export const term_condition = "/term-conditions";
 export const privacy_policy = "/privacy-policy";
 export const contact_us = "/contact-us";
 export const blog = "/blog";
+export const faq = "/faq";
 export const profile = "/profile";
 export const stagewise_loading = "/stagewise-loading";
 export const admin_setting = "/admin/setting";

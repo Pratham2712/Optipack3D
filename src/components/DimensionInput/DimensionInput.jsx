@@ -14,6 +14,8 @@ const DimensionInput = ({
   setInputs,
   handleInputChange,
   setShowInput,
+  setActiveStep,
+  activeStep,
 }) => {
   const loading = useSelector((state) => state.rootReducer.mainSlice.loading);
 
@@ -152,6 +154,9 @@ const DimensionInput = ({
     }
     if (isValid) {
       setInputSuccess(true);
+      if (activeStep <= 1) {
+        setActiveStep(1);
+      }
       setErrField({});
       setShowInput(false);
       toast.success("Loading details confirmed", {

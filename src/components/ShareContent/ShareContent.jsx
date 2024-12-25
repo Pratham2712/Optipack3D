@@ -17,10 +17,19 @@ import {
 } from "react-share";
 import "./ShareContent.css";
 import cross from "../../assests/cross.png";
+import { IconButton, Tooltip } from "@mui/material";
+import CopyToClipboard from "react-copy-to-clipboard";
 
 const ShareContent = ({ url, title, setShareit, shareit }) => {
   const popupRef = useRef(null);
   const [image, setImage] = useState(localStorage.getItem("screenshot"));
+
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    setCopied(true);
+    setTimeout(() => setCopied(false), 200000);
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -81,7 +90,24 @@ const ShareContent = ({ url, title, setShareit, shareit }) => {
             className="close-icon"
             onClick={() => setShareit(false)}
           />
+          <CopyToClipboard
+            text={window.location.href} // Current URL
+            onCopy={handleCopy}
+          >
+            <button
+              style={{
+                background: "inherit",
+                color: "black",
+                border: "1px solid grey",
+                borderRadius: "50%",
+                fontSize: "15px",
+              }}
+            >
+              <i class="fa-regular fa-copy"></i>
+            </button>
+          </CopyToClipboard>
         </div>
+
         <div className="share-close">
           <button onClick={() => setShareit(false)}>close</button>
         </div>
