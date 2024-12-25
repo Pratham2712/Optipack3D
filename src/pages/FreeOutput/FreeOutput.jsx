@@ -267,7 +267,7 @@ const FreeOutput = ({ containerQuan }) => {
     if (orderNumToSku) {
       setHeading((prevArray) => {
         const newArray = [...prevArray];
-        newArray.splice(2, 0, "Order Number");
+        newArray.splice(1, 0, "Order Number");
         return newArray;
       });
     }
@@ -368,9 +368,6 @@ const FreeOutput = ({ containerQuan }) => {
                       return (
                         <tr>
                           <td>{index + 1}</td>
-                          <td style={{ background: colorsData[index] }}>
-                            {matchingSku?.sku}
-                          </td>
                           {orderNumToSku ? (
                             <td>
                               {" "}
@@ -381,6 +378,9 @@ const FreeOutput = ({ containerQuan }) => {
                           ) : (
                             <></>
                           )}
+                          <td style={{ background: colorsData[index] }}>
+                            {matchingSku?.sku}
+                          </td>
 
                           <td>{sku_info?.[index]?.[1]}</td>
                           <td>{sku_info?.[index]?.[2]}</td>

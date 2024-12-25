@@ -25,17 +25,20 @@ const validationSchema = yup.object().shape({
     .number()
     .typeError("Length must be a number")
     .required("Length is required")
-    .integer("Length cannot have decimal values"),
+    .integer("Length cannot have decimal values")
+    .max(5900, "Length must be below 5900"),
   width: yup
     .number()
     .typeError("Width must be a number")
     .required("Width is required")
-    .integer("Width cannot have decimal values"),
+    .integer("Width cannot have decimal values")
+    .max(2352, "Width must be below 2352"),
   height: yup
     .number()
     .typeError("Height must be a number")
     .required("Height is required")
-    .integer("Height cannot have decimal values"),
+    .integer("Height cannot have decimal values")
+    .max(2393, "Height must be below 2393"),
   numberOfCases: yup
     .number()
     .typeError("Number of Cases must be a number")

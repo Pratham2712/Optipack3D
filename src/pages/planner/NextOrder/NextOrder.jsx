@@ -19,8 +19,9 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { getContainerThunk } from "../../../redux/Slices/companyAdminSlice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import tick from "../../../assests/tick.png";
+import { contact_us } from "../../../constants/links";
 
 const heading = ["Number", "Date", "Source", "Destination"];
 const heading2 = ["Name", "Quantity", "Length", "Width", "Height"];
@@ -98,7 +99,7 @@ const NextOrder = ({ containerQuan, setContainerQuan }) => {
     }));
     dispatch(getContainerByNameThunk(info));
     setValue("container_name", "");
-    setValue("containerQuantity", "");
+    setValue("containerQuantity", 1);
   };
 
   const finalObject = (input) => {
@@ -272,6 +273,20 @@ const NextOrder = ({ containerQuan, setContainerQuan }) => {
       setAddContFinish(false);
     }
   };
+
+  const formatDate = (date) => {
+    const dateObj = new Date(date);
+    const formattedDate = dateObj.toLocaleString("en-IN", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      //   hour: "2-digit",
+      //   minute: "2-digit",
+      // second: "2-digit",
+      hour12: true, // for 12-hour format, set to false for 24-hour format
+    });
+    return formattedDate;
+  };
   //useEffect=-================================================================================================
   useEffect(() => {
     dispatch(getContainerThunk());
@@ -333,11 +348,18 @@ const NextOrder = ({ containerQuan, setContainerQuan }) => {
                             Select order
                           </option>
 
-                          {allOrderNumber?.map((ele) => (
-                            <option value={ele?.order_number}>
-                              #{ele?.order_number}
-                            </option>
-                          ))}
+                          {allOrderNumber?.map((ele) => {
+                            if (ele?.assigned_users.length === 0) {
+                              return (
+                                <option value={ele?.order_number}>
+                                  <div>
+                                    #{ele?.order_number} -{" "}
+                                    {formatDate(ele?.planned_start_date)}
+                                  </div>
+                                </option>
+                              );
+                            }
+                          })}
                         </select>
                       </div>
                     </div>
@@ -390,19 +412,40 @@ const NextOrder = ({ containerQuan, setContainerQuan }) => {
                       </div>
                       <div className="settings-group">
                         <label> Quantity</label>
-                        <input
+                        {/* <input
                           type="number"
                           style={{ marginTop: "0.5rem" }}
                           placeholder="Type here"
                           {...register("containerQuantity")}
                           max={5}
                           min={1}
-                        />
+                        /> */}
+                        <select
+                          {...register("containerQuantity")}
+                          style={{ marginTop: "0.5rem" }}
+                        >
+                          {[...Array(5)].map((_, index) => {
+                            return (
+                              <option value={index + 1}>{index + 1}</option>
+                            );
+                          })}
+                        </select>
                         {errors.containerQuantity && (
                           <p className="error-order">
                             {errors.containerQuantity.message}
                           </p>
                         )}
+                        <p
+                          style={{
+                            fontSize: "0.8rem",
+                            color: "skyblue",
+                            marginTop: "1rem",
+                          }}
+                        >
+                          If you wish to add more than 5, please{" "}
+                          <Link to={contact_us}> contact us </Link>or upgrade to
+                          premium
+                        </p>
                       </div>
                     </div>
                     <div className="order-two-buttons">
