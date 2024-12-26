@@ -22,6 +22,7 @@ import { getContainerThunk } from "../../../redux/Slices/companyAdminSlice";
 import { Link, useNavigate } from "react-router-dom";
 import tick from "../../../assests/tick.png";
 import { contact_us } from "../../../constants/links";
+import { rgbaToHex } from "../../../Util/util";
 
 const heading = ["Number", "Date", "Source", "Destination"];
 const heading2 = ["Name", "Quantity", "Length", "Width", "Height"];
@@ -51,6 +52,7 @@ const NextOrder = ({ containerQuan, setContainerQuan }) => {
   const [editQuan, setEditQuan] = useState({});
   const [addOrderFinish, setAddOrderFinish] = useState(false);
   const [addContFinish, setAddContFinish] = useState(false);
+  const [orderColorData, setOrderColorData] = useState({});
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -102,6 +104,7 @@ const NextOrder = ({ containerQuan, setContainerQuan }) => {
     setValue("containerQuantity", 1);
   };
 
+  const tempOrderColorData = {};
   const finalObject = (input) => {
     // Initialize the output object
     const output = {
@@ -125,7 +128,8 @@ const NextOrder = ({ containerQuan, setContainerQuan }) => {
 
       // Add color if available
       if (colors[index]) {
-        output[`color${index}`] = colors[index]; // Color
+        output[`color${index}`] = colors[index];
+        tempOrderColorData[rgbaToHex(colors[index])] = sku.orderNumber;
       }
     });
 
@@ -137,6 +141,7 @@ const NextOrder = ({ containerQuan, setContainerQuan }) => {
 
     return output;
   };
+
   const onSubmit = () => {
     if (orderData.length > 0 && containerData.length > 0) {
       const data = {
@@ -148,46 +153,52 @@ const NextOrder = ({ containerQuan, setContainerQuan }) => {
 
       dispatch(getSkuByOrderThunk(data)).then((data) => {
         let isEmpty = true;
-        let transformedData = {};
         if (data.payload["SUCCESS"]) {
-          const sku = data.payload["SUCCESS"]?.result;
-
-          for (const [key, skuList] of Object.entries(sku)) {
-            if (skuList.length > 0) {
-              isEmpty = false;
-            }
-            skuList?.forEach((item) => {
-              if (!transformedData[item.sku_name]) {
-                transformedData[item.sku_name] = [];
-              }
-              transformedData[item.sku_name].push(key);
-            });
-          }
-
           if (isEmpty) {
-            toast.error(`SKUs is not added to order`, {
-              style: {
-                border: "1px solid #713200",
-                padding: "16px",
-                color: "#713200",
-              },
-            });
-            return;
+            const sku = data.payload["SUCCESS"]?.result;
+
+            for (const [key, skuList] of Object.entries(sku)) {
+              if (skuList.length > 0) {
+                isEmpty = false;
+              }
+            }
+            if (isEmpty) {
+              toast.error(`SKUs is not added to order`, {
+                style: {
+                  border: "1px solid #713200",
+                  padding: "16px",
+                  color: "#713200",
+                },
+              });
+              return;
+            }
           }
         }
         if (data.payload["SUCCESS"]?.message && !isEmpty) {
           const result = data.payload["SUCCESS"]?.result;
           let skuArray = [];
-          skuArray = Object.values(result).flat();
+          skuArray = Object.entries(result).flatMap(([orderNumber, items]) =>
+            items?.map((item) => ({
+              ...item,
+              orderNumber,
+            }))
+          );
+
           const final = finalObject(skuArray);
           console.log(final);
+
           const queryParams = new URLSearchParams();
           Object.keys(final).forEach((key) => {
             queryParams.append(key, final[key]);
           });
           queryParams.append("admin", true);
           const url = `/freeOutput?${queryParams.toString()}`;
-          navigate(url, { state: { orderNum: transformedData } });
+          console.log(tempOrderColorData);
+          navigate(url, {
+            state: {
+              orderColorData: tempOrderColorData,
+            },
+          });
         }
       });
     }

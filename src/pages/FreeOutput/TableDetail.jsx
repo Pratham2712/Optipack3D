@@ -3,10 +3,10 @@ import { useSelector } from "react-redux";
 import { rgbaToHex } from "../../Util/util";
 const TableDetail = ({
   mobileView,
-  orderNumToSku,
   filled,
   skuData,
   numCases,
+  orderColorData,
 }) => {
   const [heading, setHeading] = useState([
     " ",
@@ -30,14 +30,14 @@ const TableDetail = ({
   );
   //useEffect ===================================================================================================================
   useEffect(() => {
-    if (orderNumToSku) {
+    if (orderColorData) {
       setHeading((prevArray) => {
         const newArray = [...prevArray];
         newArray.splice(1, 0, "Order Number");
         return newArray;
       });
     }
-  }, [orderNumToSku]);
+  }, [orderColorData]);
   return (
     <>
       <div style={{ fontSize: "1.5rem", marginTop: "1rem" }}>
@@ -59,13 +59,8 @@ const TableDetail = ({
                 return (
                   <tr>
                     <td>{index + 1}</td>
-                    {orderNumToSku ? (
-                      <td>
-                        {" "}
-                        {orderNumToSku[matchingSku?.sku]?.map(
-                          (item) => `#${item}`
-                        )}{" "}
-                      </td>
+                    {orderColorData ? (
+                      <td>#{orderColorData[colorsData[index]]}</td>
                     ) : (
                       <></>
                     )}

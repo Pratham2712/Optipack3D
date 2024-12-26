@@ -72,6 +72,7 @@ const FreeTrail = ({ skuData, setSkuData, inputs, setInputs }) => {
       numContainers0: skuData.numContainers0,
       sumContainers: skuData.numContainers0,
       numTypes: inputs.length,
+      containerType0: skuData.containerType0,
     };
     inputs.forEach((index, i) => {
       Object.keys(skuData).forEach((key) => {
@@ -112,18 +113,13 @@ const FreeTrail = ({ skuData, setSkuData, inputs, setInputs }) => {
     if (isValid && inputSuccess && contSuccess) {
       console.log("SKU Data is valid:", filteredSkuData);
 
-      // dispatch(getDataThunk(formData)).then((data) => {
-      //   if (data?.payload) {
-      //     setInputSuccess(true);
       const url = `/freeOutput?${queryParams.toString()}`;
       navigate(url);
-      // navigate(free_output, { state: { filteredSkuData } });
-      //   }
-      // });
     } else {
       console.error("Validation failed. Please check the console for details.");
     }
   };
+
   useEffect(() => {
     const handleResize = () => {
       setIs700(window.innerWidth < 700);

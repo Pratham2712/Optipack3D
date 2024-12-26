@@ -20,7 +20,7 @@ import Note from "./Note";
 const FreeOutput = ({ containerQuan }) => {
   const modelRef = useRef(null);
   const location = useLocation();
-  const orderNumToSku = location.state?.orderNum;
+  const orderColorData = location.state?.orderColorData;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [is700, setIs700] = useState(window.innerWidth < 700);
@@ -259,7 +259,7 @@ const FreeOutput = ({ containerQuan }) => {
 
             <TableDetail
               mobileView={mobileView}
-              orderNumToSku={orderNumToSku}
+              orderColorData={orderColorData}
               filled={filled}
               skuData={skuData}
               numCases={numCases}

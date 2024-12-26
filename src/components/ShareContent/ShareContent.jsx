@@ -101,6 +101,7 @@ const ShareContent = ({ url, title, setShareit, shareit }) => {
                 border: "1px solid grey",
                 borderRadius: "50%",
                 fontSize: "15px",
+                padding: "10px 13px",
               }}
             >
               <i class="fa-regular fa-copy"></i>
