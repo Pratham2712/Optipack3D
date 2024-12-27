@@ -153,6 +153,19 @@ export const uploadImageThunk = createAsyncThunk(
     }
   }
 );
+export const deleteOrderThunk = createAsyncThunk(
+  "/delete_order",
+  async (data) => {
+    try {
+      console.log(data, "slice");
+
+      const res = await axios.post(`${BASE_URL}/delete_order`, data);
+      return res.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  }
+);
 const initialState = {
   loading: false,
   updateDone: false,
@@ -187,6 +200,7 @@ const initialState = {
     assignLoadplanThunk: IDLE,
     getOrderDataThunk: IDLE,
     uploadImageThunk: IDLE,
+    deleteOrderThunk: IDLE,
   },
 };
 
@@ -387,6 +401,7 @@ const plannerSlice = createSlice({
           case SUCCESS:
             state.loading = false;
             state.successMsg = payload[SUCCESS]?.message;
+            state.data.skuData = Object.values(payload[SUCCESS]?.result)[0];
             state.updateDone = !state.updateDone;
             break;
           case ERROR:
@@ -555,6 +570,31 @@ const plannerSlice = createSlice({
       })
       .addCase(uploadImageThunk.rejected, (state, action) => {
         state.status.uploadImageThunk = ERROR;
+        state.loading = false;
+        state.errorData.message = action.error.message;
+      })
+      //deleteOrderThunk===========================================================================================
+      .addCase(deleteOrderThunk.pending, (state, { payload }) => {
+        state.loading = true;
+      })
+      .addCase(deleteOrderThunk.fulfilled, (state, { payload }) => {
+        switch (Object.keys(payload)[0]) {
+          case SUCCESS:
+            state.loading = false;
+            state.successMsg = payload[SUCCESS]?.message;
+            state.updateDone = !state.updateDone;
+            break;
+          case ERROR:
+            state.loading = false;
+            state.isError = true;
+            state.errorData.message = payload[ERROR];
+            break;
+          default:
+            break;
+        }
+      })
+      .addCase(deleteOrderThunk.rejected, (state, action) => {
+        state.status.deleteOrderThunk = ERROR;
         state.loading = false;
         state.errorData.message = action.error.message;
       });

@@ -15,6 +15,7 @@ import editIcon from "../../../assests/edit.png";
 import {
   deleteSku,
   getSkuByCodeThunk,
+  getSkuByOrderThunk,
   getSkuCodeNameThunk,
   saveSkuThunk,
 } from "../../../redux/Slices/plannerSlice";
@@ -74,7 +75,10 @@ const SkuSelect = () => {
     const info = {
       sku_code: [data.sku_code],
     };
-    if (`${data.sku_code}` in quan) {
+    if (
+      `${data.sku_code}` in quan ||
+      skuData?.some((item) => data.sku_code === item.sku_code)
+    ) {
       toast.error("Already added, please edit on the right", {
         style: {
           border: "1px solid #713200",
@@ -211,6 +215,10 @@ const SkuSelect = () => {
     queryParams.forEach((value, key) => {
       data[key] = value;
     });
+    const info = {
+      order_numbers: [data?.order_number],
+    };
+    dispatch(getSkuByOrderThunk(info));
 
     setResult(data);
   }, [location.search]);
@@ -367,10 +375,10 @@ const SkuSelect = () => {
                 <div
                   className="sku-list"
                   style={{
-                    padding: skuData.length > 0 ? "2rem 2rem" : "0rem 0rem",
+                    padding: skuData?.length > 0 ? "2rem 2rem" : "0rem 0rem",
                   }}
                 >
-                  {skuData.length > 0 && (
+                  {skuData?.length > 0 && (
                     <>
                       <div className="load-head">
                         Order #{result?.order_number} details
@@ -412,7 +420,7 @@ const SkuSelect = () => {
                                     type="number"
                                     autoFocus
                                     style={{ padding: "0.2rem" }}
-                                    value={quan[ele?.sku_code]}
+                                    value={quan[ele?.sku_code] || ele?.quantity}
                                     onChange={(e) =>
                                       setQuan((prev) => ({
                                         ...prev,
@@ -421,7 +429,7 @@ const SkuSelect = () => {
                                     }
                                   />
                                 ) : (
-                                  quan[ele?.sku_code]
+                                  quan[ele?.sku_code] || ele?.quantity
                                 )}
                               </div>
                             </td>
