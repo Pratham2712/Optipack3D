@@ -1,8 +1,13 @@
-import React, { useEffect } from "react";
-import { getOrderDataThunk } from "../../redux/Slices/plannerSlice";
+import React, { useEffect, useState } from "react";
+import {
+  deleteOrderThunk,
+  getOrderDataThunk,
+} from "../../redux/Slices/plannerSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { planner_skuSelection } from "../../constants/links";
+import ConfirmPopup from "../../AdminComponents/ConfirmPopup/ConfirmPopup";
+import toast from "react-hot-toast";
 
 const heading = [
   " ",
@@ -15,12 +20,41 @@ const heading = [
 ];
 const OrderTable = () => {
   const dispatch = useDispatch();
+  const [confirm, setConfirm] = useState(false);
+  const [orderNumber, setOrderNumber] = useState(null);
   const allOrders = useSelector(
     (state) => state.rootReducer.plannerSlice.data.allOrders
   );
   const navigate = useNavigate();
 
   //fucntion ================================================================================================================
+  const DeleteOrder = () => {
+    const data = {
+      order_number: orderNumber,
+    };
+    dispatch(deleteOrderThunk(data)).then((data) => {
+      if (data.payload["ERROR"]) {
+        toast.error(data.payload["ERROR"], {
+          style: {
+            border: "1px solid #713200",
+            padding: "16px",
+            color: "#713200",
+          },
+        });
+      }
+      if (data.payload["SUCCESS"]?.message) {
+        toast.success(data.payload["SUCCESS"]?.message, {
+          style: {
+            border: "1px solid #713200",
+            padding: "16px",
+            color: "#713200",
+          },
+        });
+        dispatch(getOrderDataThunk());
+      }
+      setConfirm(false);
+    });
+  };
   const formatDate = (date) => {
     const dateObj = new Date(date);
     const formattedDate = dateObj.toLocaleString("en-IN", {
@@ -55,6 +89,16 @@ const OrderTable = () => {
   }, []);
   return (
     <div style={{ width: "82%", margin: "2rem auto" }}>
+      {confirm ? (
+        <ConfirmPopup
+          confirm={confirm}
+          setConfirm={setConfirm}
+          message={"Delete Order"}
+          removeUser={DeleteOrder}
+        />
+      ) : (
+        <></>
+      )}
       <h2 style={{ marginBottom: "1.5rem" }}>Open/Unallocated Order</h2>
       <div className="user-content">
         <table>
@@ -90,7 +134,15 @@ const OrderTable = () => {
               </td>
               <td>
                 <div>
-                  <button className="btn-apply">Delete</button>
+                  <button
+                    className="btn-apply"
+                    onClick={() => {
+                      setConfirm(true);
+                      setOrderNumber(item?.order_number);
+                    }}
+                  >
+                    Delete
+                  </button>
                 </div>
               </td>
             </tr>
