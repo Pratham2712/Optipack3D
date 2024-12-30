@@ -44,6 +44,35 @@ const NextOrder = ({ containerQuan, setContainerQuan }) => {
     "rgba(255, 111, 60,1)",
     "rgba(247, 7, 118,1)",
     "rgba(239, 213, 16,1)",
+    "rgba(255, 99, 132, 1)",
+    "rgba(54, 162, 235, 1)",
+    "rgba(255, 206, 86, 1)",
+    "rgba(75, 192, 192, 1)",
+    "rgba(153, 102, 255, 1)",
+    "rgba(255, 159, 64, 1)",
+    "rgba(201, 203, 207, 1)",
+    "rgba(255, 99, 71, 1)",
+    "rgba(144, 238, 144, 1)",
+    "rgba(173, 216, 230, 1)",
+    "rgba(255, 182, 193, 1)",
+    "rgba(60, 179, 113, 1)",
+    "rgba(255, 140, 0, 1)",
+    "rgba(220, 20, 60, 1)",
+    "rgba(0, 128, 128, 1)",
+    "rgba(138, 43, 226, 1)",
+    "rgba(255, 228, 181, 1)",
+    "rgba(112, 128, 144, 1)",
+    "rgba(199, 21, 133, 1)",
+    "rgba(70, 130, 180, 1)",
+    "rgba(255, 215, 0, 1)",
+    "rgba(123, 104, 238, 1)",
+    "rgba(240, 128, 128, 1)",
+    "rgba(46, 139, 87, 1)",
+    "rgba(244, 67, 54, 1)",
+    "rgba(33, 150, 243, 1)",
+    "rgba(76, 175, 80, 1)",
+    "rgba(156, 39, 176, 1)",
+    "rgba(255, 193, 7, 1)",
   ]);
   const [is700, setIs700] = useState(window.innerWidth < 700);
   const [showOrder, setShowOrder] = useState(false);
@@ -85,6 +114,20 @@ const NextOrder = ({ containerQuan, setContainerQuan }) => {
     const info = {
       container_name: data.container_name,
     };
+    const totalContainer = Object.keys(containerQuan)?.reduce(
+      (acc, curr) => acc + containerQuan[curr],
+      0
+    );
+    if (totalContainer + data.containerQuantity > 10) {
+      toast("Upgrade to premium version for more containers", {
+        style: {
+          border: "1px solid #713200",
+          padding: "16px",
+          color: "#713200",
+        },
+      });
+      return;
+    }
     if (`${data.container_name}` in containerQuan) {
       toast.error(`${data.container_name} is already added`, {
         style: {
@@ -206,6 +249,16 @@ const NextOrder = ({ containerQuan, setContainerQuan }) => {
 
   //function=============================================================================================
   const getOrder = () => {
+    if (orderData?.length > 3) {
+      toast("Upgrade to premium version for more orders", {
+        style: {
+          border: "1px solid #713200",
+          padding: "16px",
+          color: "#713200",
+        },
+      });
+      return;
+    }
     if (
       orderNumber &&
       !orderData?.find((val) => val.order_number == orderNumber)
