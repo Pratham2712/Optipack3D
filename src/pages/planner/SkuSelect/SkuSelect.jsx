@@ -75,6 +75,16 @@ const SkuSelect = () => {
     const info = {
       sku_code: [data.sku_code],
     };
+    if (skuData?.length > 7) {
+      toast("Upgrade to premium version for more SKUs", {
+        style: {
+          border: "1px solid #713200",
+          padding: "16px",
+          color: "#713200",
+        },
+      });
+      return;
+    }
     if (
       `${data.sku_code}` in quan ||
       skuData?.some((item) => data.sku_code === item.sku_code)
