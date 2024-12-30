@@ -34,7 +34,7 @@ const FreeOutput = ({ containerQuan }) => {
   const [skuData, setSkuData] = useState([]);
   const [numCases, setNumCases] = useState([]);
   const [inputData, setInputData] = useState({});
-  const [mobileView, setMobileView] = useState(true);
+  const [mobileView, setMobileView] = useState(false);
   const [stagewiseData, setStagewiseData] = useState({});
   const [admin, setAdmin] = useState(false);
   //useSelector=========================================================================================================================
