@@ -99,6 +99,7 @@ const StageLoading = () => {
           style={{
             "--swiper-navigation-color": "#cc9c87",
             "--swiper-pagination-color": "#cc9c87",
+            height: "375px",
           }}
           pagination={{
             type: "progressbar",
@@ -113,11 +114,13 @@ const StageLoading = () => {
             setImgColors(imgData[swiper.activeIndex + 1]?.color);
           }}
         >
-          {Object.keys(imgData)?.map((ele) => {
+          {Object.keys(imgData)?.map((ele, index) => {
             if (imgData[ele]?.screenshot) {
               return (
-                <SwiperSlide>
-                  <img src={imgData[ele]?.screenshot} />
+                <SwiperSlide key={index}>
+                  <div className="swiper-zoom-container">
+                    <img src={imgData[ele]?.screenshot} />
+                  </div>
                 </SwiperSlide>
               );
             }
